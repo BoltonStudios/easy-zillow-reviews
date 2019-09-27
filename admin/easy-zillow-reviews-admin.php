@@ -20,19 +20,19 @@ function ezrwp_settings_init(){
     // Register Zillow Professionals Reviews Settings
     register_setting(
         'ezrwp_professional_reviews', //option group
-        'ezrwp_options' // option name
+        'ezrwp_professional_reviews_options' // option name
     );
     
     // Register Zillow Lender Reviews Settings
     register_setting(
         'ezrwp_lender_reviews', //option group
-        'ezrwp_options' // option name
+        'ezrwp_lender_reviews_options' // option name
     );
     
     // Register General Settings
     register_setting(
         'ezrwp_general', //option group
-        'ezrwp_options' // option name
+        'ezrwp_general_options' // option name
     );
 
 
@@ -269,7 +269,7 @@ function ezrwp_section_for_support_cb( $args ) {
 function ezrwp_zwsid_text_field_cb( $args ) {
     
     // Get the value of the setting we've registered with register_setting()
-    $options = $GLOBALS['ezrwp_options'];
+    $options = get_option('ezrwp_professional_reviews_options');
     
     $setting = ''; // Zillow Web Services ID (ZWSID)
     if( isset( $options[$args['label_for']] ) ){
@@ -278,7 +278,7 @@ function ezrwp_zwsid_text_field_cb( $args ) {
     ?>
 
     <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Zillow Web Services ID</label>
-    <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
+    <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
 
     <p>For Professional Reviews.</p>
 
@@ -288,7 +288,7 @@ function ezrwp_zwsid_text_field_cb( $args ) {
 function ezrwp_zmpid_text_field_cb( $args ) {
     
     // Get the value of the setting we've registered with register_setting()
-    $options = $GLOBALS['ezrwp_options'];
+    $options = get_option('ezrwp_lender_reviews_options');
     
     $setting = ''; // Zillow Mortgages Partner ID (ZWPID)
     if( isset( $options[$args['label_for']] ) ){
@@ -297,7 +297,7 @@ function ezrwp_zmpid_text_field_cb( $args ) {
     ?>
 
     <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Zillow Mortgages Partner ID</label>
-    <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
+    <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_lender_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
 
     <p>For Lender Reviews.</p>
 
@@ -305,8 +305,8 @@ function ezrwp_zmpid_text_field_cb( $args ) {
 }
 // Zillow Screenname callback
 function ezrwp_screenname_text_field_cb( $args ) {
-    
-    $options = $GLOBALS['ezrwp_options'];
+
+    $options = get_option('ezrwp_professional_reviews_options');
     
     $setting = '';
     if( isset( $options[$args['label_for']] ) ){
@@ -315,7 +315,7 @@ function ezrwp_screenname_text_field_cb( $args ) {
     ?>
 
     <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Zillow Screenname</label>
-    <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
+    <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
 
     <p>The screenname of the user whose reviews you want to display.</p>
 
@@ -324,7 +324,7 @@ function ezrwp_screenname_text_field_cb( $args ) {
 // Zillow NMLSID callback
 function ezrwp_nmlsid_text_field_cb( $args ) {
     
-    $options = $GLOBALS['ezrwp_options'];
+    $options = get_option('ezrwp_lender_reviews_options');
     
     $setting = '';
     if( isset( $options[$args['label_for']] ) ){
@@ -333,7 +333,7 @@ function ezrwp_nmlsid_text_field_cb( $args ) {
     ?>
 
     <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">NMLS Number</label>
-    <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
+    <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_lender_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
 
     <p>The NMLS # of the lender whose reviews you want to display.</p>
 
@@ -342,7 +342,7 @@ function ezrwp_nmlsid_text_field_cb( $args ) {
 // Zillow Lender Company Name callback
 function ezrwp_company_name_text_field_cb( $args ) {
     
-    $options = $GLOBALS['ezrwp_options'];
+    $options = get_option('ezrwp_lender_reviews_options');
     
     $setting = '';
     if( isset( $options[$args['label_for']] ) ){
@@ -351,7 +351,7 @@ function ezrwp_company_name_text_field_cb( $args ) {
     ?>
 
     <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Lender Company Name</label>
-    <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
+    <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_lender_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
 
     <p>The Company Name of the lender whose reviews you want to display, exactly as it appears on Zillow. Example "Great  Loans, LLC".</p>
 
@@ -360,7 +360,7 @@ function ezrwp_company_name_text_field_cb( $args ) {
 // Zillow Review Count callback
 function ezrwp_count_number_field_cb( $args ) {
     
-    $options = $GLOBALS['ezrwp_options'];
+    $options = get_option('ezrwp_general_options');
     
     $setting = 1;
     if( isset( $options[$args['label_for']] ) ){
@@ -369,7 +369,7 @@ function ezrwp_count_number_field_cb( $args ) {
     ?>
 
     <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Review Count</label>
-    <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="1" max="10" required />
+    <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="1" max="10" required />
 
     <p>The count of reviews you would like to return. 10 is maximum.</p>
     <?php
@@ -378,7 +378,7 @@ function ezrwp_count_number_field_cb( $args ) {
 // Zillow Review Layout callback
 function ezrwp_layout_select_field_cb( $args ) {
     
-    $options = $GLOBALS['ezrwp_options'];
+    $options = get_option('ezrwp_general_options');
     
     $setting = '';
     if( isset( $options[$args['label_for']] ) ){
@@ -389,7 +389,7 @@ function ezrwp_layout_select_field_cb( $args ) {
     <select id="<?php echo esc_attr( $args['label_for'] ); ?>"
             class="ezrwp-setting ezrwp_layout"
             data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>"
-            name="ezrwp_options[<?php echo esc_attr( $args['label_for'] ); ?>]">
+            name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]">
         <option value="list" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'list', false ) ) : ( '' ); ?>>
         <?php esc_html_e( 'List', 'ezrwp' ); ?>
         </option>
@@ -404,7 +404,7 @@ function ezrwp_layout_select_field_cb( $args ) {
 // Zillow Reviews Grid Columns callback
 function ezrwp_cols_number_field_cb( $args ) {
     
-    $options = $GLOBALS['ezrwp_options'];
+    $options = get_option('ezrwp_general_options');
     
     $setting = 3;
     if( isset( $options[$args['label_for']] ) ){
@@ -413,7 +413,7 @@ function ezrwp_cols_number_field_cb( $args ) {
     ?>
 
     <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Grid Columns</label>
-    <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="2" max="6" required />
+    <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="2" max="6" required />
 
     <?php
 }
@@ -421,7 +421,7 @@ function ezrwp_cols_number_field_cb( $args ) {
 // Zillow Mandatory Disclaimer callback
 function ezrwp_disclaimer_pill_field_cb( $args ) {
     
-    $options = $GLOBALS['ezrwp_options'];
+    $options = get_option('ezrwp_general_options');
     
     $setting = '';
     if( isset( $options[$args['label_for']] ) ){
@@ -432,7 +432,7 @@ function ezrwp_disclaimer_pill_field_cb( $args ) {
     <select id="<?php echo esc_attr( $args['label_for'] ); ?>"
             class="ezrwp-setting"
             data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>"
-            name="ezrwp_options[<?php echo esc_attr( $args['label_for'] ); ?>]">
+            name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]">
         <option value="0" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], '0', false ) ) : ( '' ); ?>>
         <?php esc_html_e( 'On', 'ezrwp' ); ?>
         </option>
@@ -455,7 +455,7 @@ function ezrwp_disclaimer_pill_field_cb( $args ) {
 // Zillow Hide Date callback
 function ezrwp_hide_date_field_cb( $args ) {
     
-    $options = $GLOBALS['ezrwp_options'];
+    $options = get_option('ezrwp_general_options');
     
     $setting = '';
     if( isset( $options[$args['label_for']] ) ){
@@ -464,14 +464,14 @@ function ezrwp_hide_date_field_cb( $args ) {
     ?>
 
     <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Date</label>
-    <input name="ezrwp_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The time elapsed since the review was written. Example: 6 days ago.
+    <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The time elapsed since the review was written. Example: 6 days ago.
  <?php
 }
 
 // Zillow Hide Stars callback
 function ezrwp_hide_stars_field_cb( $args ) {
     
-    $options = $GLOBALS['ezrwp_options'];
+    $options = get_option('ezrwp_general_options');
     
     $setting = '';
     if( isset( $options[$args['label_for']] ) ){
@@ -480,14 +480,14 @@ function ezrwp_hide_stars_field_cb( $args ) {
     ?>
 
     <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Stars</label>
-    <input name="ezrwp_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The overall star rating for the specific review.
+    <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The overall star rating for the specific review.
  <?php
 }
 
 // Zillow Hide Reviewer Summary callback
 function ezrwp_hide_reviewer_summary_field_cb( $args ) {
     
-    $options = $GLOBALS['ezrwp_options'];
+    $options = get_option('ezrwp_general_options');
     
     $setting = '';
     if( isset( $options[$args['label_for']] ) ){
@@ -496,14 +496,14 @@ function ezrwp_hide_reviewer_summary_field_cb( $args ) {
     ?>
 
     <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Reviewer Summary</label>
-    <input name="ezrwp_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The summary around the reviewer. Example: "Sold a Single Family home in 2013 for approximately $500K in Roswell, GA."
+    <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The summary around the reviewer. Example: "Sold a Single Family home in 2013 for approximately $500K in Roswell, GA."
  <?php
 }
 
 // Zillow Hide View All Link callback
 function ezrwp_hide_view_all_link_field_cb( $args ) {
     
-    $options = $GLOBALS['ezrwp_options'];
+    $options = get_option('ezrwp_general_options');
     
     $setting = '';
     if( isset( $options[$args['label_for']] ) ){
@@ -512,14 +512,14 @@ function ezrwp_hide_view_all_link_field_cb( $args ) {
     ?>
 
     <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide View All Link</label>
-    <input name="ezrwp_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The link to your Zillow profile with text "View All Reviews".
+    <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The link to your Zillow profile with text "View All Reviews".
  <?php
 }
 
 // Zillow Hide View All Reviews Link callback
 function ezrwp_hide_zillow_logo_field_cb( $args ) {
     
-    $options = $GLOBALS['ezrwp_options'];
+    $options = get_option('ezrwp_general_options');
     
     $setting = '';
     if( isset( $options[$args['label_for']] ) ){
@@ -528,13 +528,13 @@ function ezrwp_hide_zillow_logo_field_cb( $args ) {
     ?>
 
     <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Zillow Logo</label>
-    <input name="ezrwp_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> Important: Consult the <a href="https://www.zillow.com/howto/api/BrandingRequirements.htm" target="_blank">Zillow Branding Requirements</a> <span class="dashicons dashicons-external" style="font-size: 14px;"></span> before you hide the Zillow logo.
+    <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> Important: Consult the <a href="https://www.zillow.com/howto/api/BrandingRequirements.htm" target="_blank">Zillow Branding Requirements</a> <span class="dashicons dashicons-external" style="font-size: 14px;"></span> before you hide the Zillow logo.
  <?php
 }
 // Zillow Review Quote Font Size callback
 function ezrwp_quote_font_size_field_cb( $args ) {
     
-    $options = $GLOBALS['ezrwp_options'];
+    $options = get_option('ezrwp_general_options');
     
     $setting = '';
     if( isset( $options[$args['label_for']] ) ){
@@ -543,7 +543,7 @@ function ezrwp_quote_font_size_field_cb( $args ) {
     ?>
 
     <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Review Text Font Size</label>
-    <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="1" />
+    <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="1" />
 
     <p>The font size for the review quote text in pixels. Default is 18px.</p>
 
@@ -553,7 +553,7 @@ function ezrwp_quote_font_size_field_cb( $args ) {
 // Zillow Reviewer Description Font Size callback
 function ezrwp_reviewer_description_font_size_field_cb( $args ) {
     
-    $options = $GLOBALS['ezrwp_options'];
+    $options = get_option('ezrwp_general_options');
     
     $setting = '';
     if( isset( $options[$args['label_for']] ) ){
@@ -562,7 +562,7 @@ function ezrwp_reviewer_description_font_size_field_cb( $args ) {
     ?>
 
     <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Review Text Font Size</label>
-    <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="1" />
+    <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="1" />
 
     <p>The font size for the reviewer description text in pixels. Default is 16px.</p>
 

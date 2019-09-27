@@ -159,55 +159,11 @@ if ( function_exists( 'ezrwp_fs' ) ) {
                     // Premium Version
                     if ( ezrwp_fs()->is_plan( 'premium', true ) ) {
                         
-                        // new EasyZillowTeamReviews();
-                        new EasyZillowLenderReviews();
+                        require_once EASYZILLOWREVIEWS_PATH . 'premium/easy-zillow-reviews-premium.php';
+                        new EasyZillowReviews_Premium();
                     }
                 }
             }
-            // Fetch Lender data from Zillow
-            /*function ezrwpFetchLenderDataFromZillow($zmpid, $nlmsid, $companyName, $count){
-
-                // Number of reviews to display.
-                $reviewLimit = floor($count) > 0 ? floor($count) : '';
-
-                // Create Zillow Data object.
-                $zillowData = new EasyZillowReviewsData();
-
-                // Contstruct the Zillow URL for an Individual Loan Officer.
-                $zillowLenderReviewsURL = 'https://mortgageapi.zillow.com/zillowLenderReviews?partnerId='. $zmpid .'&nmlsId='.$nlmsid.'&reviewLimit='. $reviewLimit;
-
-                // If the user set a Company Name, add it to the Zillow URL to fetch Company reviews.
-                if($companyName != ''){
-                    $companyName = str_replace(' ', '%20', $companyName);
-                    $zillowLenderReviewsURL = $zillowLenderReviewsURL . '&companyName='.$companyName;
-                }
-
-                // Fetch data from Zillow.
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_URL, $zillowLenderReviewsURL);
-                $result = curl_exec($ch);
-                curl_close($ch);
-                $json = json_decode($result);
-
-                // Pass data to EasyZillowReviewsData object.
-                $zillowData->hasReviews = ($json->error) ? false : true;
-                if($zillowData->hasReviews){
-
-                    // Success
-                    $zillowData->profileURL = $json->profileURL;
-                    $zillowData->reviews = $json->reviews;
-                    $zillowData->reviewCount = $json->totalReviews;
-                } else{
-
-                    // Error
-                    $zillowData->message = $json->error;
-                }
-
-                // Return EasyZillowReviewsData object.
-                return $zillowData;
-            }*/
 
             // Add Inline Styles to Footer
             function ezrwp_add_inline_styles(){

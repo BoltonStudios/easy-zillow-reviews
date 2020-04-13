@@ -5,7 +5,7 @@ Tags: zillow, reviews
 Requires at least: 4.0.0
 Tested up to: 5.4.0
 Requires PHP: 5.4
-Stable tag: 1.1.1
+Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,12 @@ The premium version of this plugin requires a **Zillow Mortgages Partner ID (ZPI
 3. Settings.
 
 == Changelog ==
+
+= 1.1.3 =
+* Added more fields to Upgrader class, which assists with backwards compatibility from v1.0 to v1.1.
+
+= 1.1.2 =
+* Bug Fix: Migrated backwards compatibility patch to main plugin file to better support updates, in addition to activations.
 
 = 1.1.1 =
 * Bug Fix: Added backwards compatibility for new database option names.

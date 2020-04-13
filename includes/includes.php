@@ -12,6 +12,11 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-easy-zillo
 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-easy-zillow-reviews-i18n.php';
 
 /**
+ * The class responsible for defining the plugin upgrade functionality.
+ */
+require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-easy-zillow-reviews-upgrader.php';
+
+/**
  * The class responsible for defining all actions that occur in the admin area.
  */
 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-easy-zillow-reviews-admin.php';

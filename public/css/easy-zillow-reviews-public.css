@@ -1,4 +1,11 @@
-/* CSS Document */
+/**
+ * CSS Document
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+body .ezrwp-wrapper {
+  padding: 15px 0;
+}
 body .ezrwp-wrapper .ezrwp-content blockquote {
   quotes: "" "";
   color: #666;
@@ -16,6 +23,7 @@ body .ezrwp-wrapper .ezrwp-content blockquote:before {
   background-image: url("../images/ezrwp-sprite.png");
   background-repeat: no-repeat;
   background-size: 98px;
+  content: "";
   width: 20px;
   height: 18px;
   position: absolute;

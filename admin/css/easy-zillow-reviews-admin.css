@@ -1,0 +1,10 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+.ezrwp-setting {
+  width: 200px;
+}
+#disclaimer-warning {
+  display: none;
+}

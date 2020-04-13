@@ -1,4 +1,8 @@
-/* CSS Document */
+/**
+ * CSS Document
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
 @xs:      ~"only screen and (max-width: 480px)";
 @xs-hs:      ~"only screen and (min-width: 480px) and (max-width: 768px)";
 @sm:      ~"only screen and (min-width: 768px) and (max-width: 992px)";
@@ -6,6 +10,7 @@
 @lg:     ~"only screen and (min-width: 1200px) ";
 body{
     .ezrwp-wrapper{
+        padding: 15px 0;
         .ezrwp-content{
             blockquote{
                 quotes: "" "";
@@ -23,6 +28,7 @@ body{
                     background-image: url("../images/ezrwp-sprite.png");
                     background-repeat: no-repeat;
                     background-size: 98px;
+                    content: "";
                     width: 20px;
                     height: 18px;
                     position: absolute;
@@ -32,7 +38,7 @@ body{
                 &:after {
                     content: "";
                 }
-                 cite {
+                cite {
                     display: block;
                     font-style: normal;
                     font-weight: 600;

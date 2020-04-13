@@ -1,57 +1,115 @@
 <?php
 
-// Widget
-class EasyZillowReviewsWidget extends WP_Widget{
+/**
+ * The Easy_Zillow_Reviews_Lender_Widget class
+ *
+ * Adds the Easy Zillow Reviews Lender widget to WordPress
+ *
+ *
+ * @link       https://www.boltonstudios.com
+ * @since      1.1.0
+ * @package    Easy_Zillow_Reviews
+ * @subpackage Easy_Zillow_Reviews/includes
+ * @author     Aaron Bolton <aaron@boltonstudios.com>
+ */
     
-    // Setup widget
+class Easy_Zillow_Reviews_Lender_Widget_Init extends Easy_Zillow_Reviews_Lender{
+
+    function __construct(){
+        
+        add_action('widgets_init', array($this, 'init'));
+    }
+    function init(){
+
+        $lender_widget = new Easy_Zillow_Reviews_Lender_Widget();
+
+        // Get saved admin settings and defaults
+        $general_options = get_option('ezrwp_general_options'); // General admin tab settings
+        $lender_reviews_options = get_option('ezrwp_lender_reviews_options'); // Lender Reviews admin tab settings
+        $layout = isset($general_options['ezrwp_layout']) ? $general_options['ezrwp_layout'] : 'list';
+        $grid_columns = isset($general_options['ezrwp_cols']) ? $general_options['ezrwp_cols'] : 3;
+        $count = isset($general_options['ezrwp_count']) ? $general_options['ezrwp_count'] : 3;
+        
+        // Pass saved admin settings to this Easy_Zillow_Reviews_Lender_Widget_Init class instance
+        $this->set_general_options($general_options);
+        $this->set_lender_reviews_options($lender_reviews_options);
+        $this->set_layout($layout);
+        $this->set_grid_columns($grid_columns);
+        $this->set_count($count);
+
+        // Pass this Easy_Zillow_Reviews_Lender_Widget_Init class instance to the Easy_Zillow_Reviews_Lender_Widget class instance
+        $lender_widget->set_lender_reviews($this);
+
+        // Register widget
+        register_widget($lender_widget);
+    }
+}
+class Easy_Zillow_Reviews_Lender_Widget extends WP_Widget{
+
+	/**
+	 * The Easy_Zillow_Reviews_Lender class instance
+	 *
+	 * @since    1.1.0
+	 * @access   protected
+	 * @var      Easy_Zillow_Reviews_Lender  $lender_reviews  
+	 */
+    private $lender_reviews;
+    
+    /**
+     * Setup the widget
+     *
+     * @since    1.1.0
+     */
     public function __construct() {
 		$widget_ops = array( 
-			'classname' => 'ezrwp_widget',
-			'description' => 'Display Zillow Reviews',
+			'classname' => 'ezrwp_lender_widget',
+			'description' => 'Display Zillow Lender Reviews',
 		);
-		parent::__construct( 'ezrwp_widget', 'Easy Zillow Reviews', $widget_ops );
+		parent::__construct( 'ezrwp_lender_widget', 'Zillow Lender Reviews', $widget_ops );
 	}
     
-    // Output content
+    /**
+     * Render the widget content on the public-facing website.
+     *
+     * @since    1.1.0
+     */
     public function widget( $args, $instance ) {
         
-        // Vars
-        $options = $GLOBALS['ezrwpOptions'];
+        // Defaults
+        $lender_reviews = $this->get_lender_reviews();
+        $layout = $lender_reviews->get_layout();
+        $cols = $lender_reviews->get_grid_columns();
+        $count = $lender_reviews->get_count();
         
-        // Get widget review count 
+        // Get widget instance settings 
         if( ! empty( $instance['count'] ) ){
-            $count = $instance['count']; // widget count ettings
-        } elseif( $options['ezrwp_count'] ){
-            $count = $options['ezrwp_count']; // fallback to review count in Settings
-        } else{
-            $count = 3; // default
+            $count = $instance['count'];
         }
-        // Get widget review layout
         if( ! empty( $instance['layout'] ) ){
-            $layout = $instance['layout']; // widget count ettings
-        } elseif( $options['ezrwp_layout'] ){
-            $layout = $options['ezrwp_layout']; // fallback to review count in Settings
-        } else{
-            $layout = null;
+            $layout = $instance['layout'];
         }
         // Get widget review layout
         if( ! empty( $instance['cols'] ) ){
-            $cols = $instance['cols']; // widget count ettings
-        } elseif( $options['ezrwp_cols'] ){
-            $cols = $options['ezrwp_cols']; // fallback to review count in Settings
-        } else{
-            $cols = null;
+            $cols = $instance['cols'];
         }
+        
         // Get widget title
 		if ( ! empty( $instance['title'] ) ){
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
-		}
-        // Get reviews
-        $zillowData = ezrwpFetchProDataFromZillow( $options['ezrwp_zwsid'], $options['ezrwp_screenname'], $count );
-        if( $zillowData -> hasReviews ){
-            $output = $zillowData -> getReviews($layout, $cols);
+        }
+
+        // Fetch reviews from Zillow
+        $lender_reviews->fetch_reviews_from_zillow( $count );
+
+        // Render output
+        if( $lender_reviews->get_has_reviews() ){
+
+            // Success
+            $output = $lender_reviews->layout_lender_reviews( $layout, $cols );
         } else {
-            $output = '<p>Unable to load reviews. Zillow says: <strong>'. $zillowData -> message .'</strong>.</p>';
+
+            // Error
+            $output = '<p>Unable to load reviews. Zillow says: <strong>'. $lender_reviews -> get_message() .'</strong>.</p>';
         }
         // Output content
         echo $args['before_widget'];
@@ -59,7 +117,11 @@ class EasyZillowReviewsWidget extends WP_Widget{
         echo $args['after_widget'];
 	}
     
-    // Widget Admin
+    /**
+     * Render the widget options form on the admin Widgets page.
+     *
+     * @since    1.1.0
+     */
     public function form( $instance ) {
 		// outputs the options form on admin
         $title = ! empty( $instance['title'] ) ? $instance['title'] : esc_html__( '', 'text_domain' );
@@ -67,7 +129,7 @@ class EasyZillowReviewsWidget extends WP_Widget{
         $layout = ! empty( $instance['layout'] ) ? $instance['layout'] : esc_html__( '', 'text_domain' );
         $cols = ! empty( $instance['cols'] ) ? $instance['cols'] : esc_html__( '', 'text_domain' );
 		?>
-        <p>Add your Zillow Web Services ID and Screenname in Settings -> Zillow Reviews.</p>
+        <p>Add your Zillow Mortgages Partner ID, NMLS#, and Company Name if applicable in Settings -> Zillow Reviews -> Lender Reviews.</p>
 		<p>
             <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>">
                 <?php esc_attr_e( 'Title:', 'text_domain' ); ?>
@@ -89,10 +151,10 @@ class EasyZillowReviewsWidget extends WP_Widget{
             class="widefat ezrwp_layout"
             name="<?php echo esc_attr( $this->get_field_name( 'layout' ) ); ?>]"
                     onchange="ezrwpToggleGridCols(this)">
-                <option value="list" <?php echo (esc_attr( $layout ) == 'list') ? selected : '' ; ?>>
+                <option value="list" <?php echo (esc_attr( $layout ) == 'list') ? 'selected' : '' ; ?>>
                 <?php esc_html_e( 'List', 'ezrwp' ); ?>
                 </option>
-                <option value="grid" <?php echo (esc_attr( $layout ) == 'grid') ? selected : '' ; ?>>
+                <option value="grid" <?php echo (esc_attr( $layout ) == 'grid') ? 'selected' : '' ; ?>>
                 <?php esc_html_e( 'Grid', 'ezrwp' ); ?>
                 </option>
             </select>
@@ -115,7 +177,11 @@ class EasyZillowReviewsWidget extends WP_Widget{
 		<?php 
 	}
     
-    // Process widget options on save
+    /**
+     * Process widget options on save
+     *
+     * @since    1.1.0
+     */
     public function update( $new_instance, $old_instance ) {
 		// processes widget options to be saved
         $instance = array();
@@ -126,7 +192,26 @@ class EasyZillowReviewsWidget extends WP_Widget{
 
 		return $instance;
 	}
+    
+    /**
+     * Get the value of lender_reviews
+     *
+     * @since    1.1.0
+     */
+    public function get_lender_reviews()
+    {
+            return $this->lender_reviews;
+    }
+
+    /**
+     * Set the value of lender_reviews
+     *
+     * @return  self
+     */ 
+    public function set_lender_reviews($lender_reviews)
+    {
+            $this->lender_reviews = $lender_reviews;
+
+            return $this;
+    }
 }
-add_action( 'widgets_init', function(){
-	register_widget( 'EasyZillowReviewsWidget' ); // Requires PHP 5.3+
-});

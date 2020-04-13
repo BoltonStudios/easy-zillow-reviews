@@ -3,9 +3,9 @@ Contributors: boltonstudios
 Donate link: http://ko-fi.com/boltonstudios
 Tags: zillow, reviews
 Requires at least: 4.0.0
-Tested up to: 5.0.2
+Tested up to: 5.4.0
 Requires PHP: 5.4
-Stable tag: 1.0.3
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,20 +13,28 @@ Display reviews from Zillow on your website.
 
 == Description ==
 
-*Easy Zillow Reviews* is a bridge between your WordPress website and your Zillow Profile. This plugin adds a new widget and shortcode that allows you to embed reviews from Zillow on your website.
+*Easy Zillow Reviews* is a bridge between your WordPress website and your Zillow Profile. This plugin provides widget and shortcodes that allow you to embed reviews from Zillow on your website.
 
+* Free Professional Reviews for individual realtors
 * Compliant with Zillow's [Terms of Use](https://www.zillow.com/corp/Terms.htm) and [Branding Requirements](https://www.zillow.com/howto/api/BrandingRequirements.htm). See important details in the Requirements section below.
 * Display up to 10 reviews
+* Grid and List layout options
 * Widget and Shortcode options
 * Mobile responsive
 * Lightweight (71kb)
-* Free
+
+= Premium Version =
+* **All Free Features**
+* Lender Reviews
+* Team Reviews
+* Individual Loan Officer Reviews
+* Company Profile Reviews 
 
 = Requirements =
 
-This plugin requires a **Zillow Web Services ID (ZWSID)** and **Zillow Screenname**. Sign-up for a Zillow Web Services ID at [Zillow.com](https://www.zillow.com/howto/api/APIOverview.htm).
+The free version of this plugin requires a **Zillow Web Services ID (ZWSID)** and **Zillow Screenname**. Sign-up for a Zillow Web Services ID at [Zillow.com](https://www.zillow.com/howto/api/APIOverview.htm). Your Zillow Screenname appears at the end of your profile link. For example: https://www.zillow.com/profile/**my-screenname**/
 
-Your Zillow Screenname appears at the end of your profile link. For example: https://www.zillow.com/profile/**my-screenname**/
+The premium version of this plugin requires a **Zillow Mortgages Partner ID** and **NMLS#** or **Company Name**. Sign-up for a Zillow Mortgages Partner ID at [Zillow.com](https://www.zillow.com/mortgage/api/#/).
 
 = Limitations =
 

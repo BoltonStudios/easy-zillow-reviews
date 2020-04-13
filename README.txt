@@ -73,6 +73,9 @@ The premium version of this plugin requires a **Zillow Mortgages Partner ID (ZPI
 
 == Changelog ==
 
+= 1.1.1 =
+* Bug Fix: Added backwards compatibility for new database option names.
+
 = 1.1.0 =
 * New Feature: Option to upgrade for access to Lender Reviews.
 * New Feature: Tabbed Settings interface improves organization of plugin options.

@@ -16,7 +16,7 @@
  * Plugin Name:       Easy Zillow Reviews
  * Plugin URI:        https://wordpress.org/plugins/easy-zillow-reviews/
  * Description:       Display reviews from Zillow on your site.
- * Version:           1.1.0
+ * Version:           1.1.1
  * Author:            Aaron Bolton
  * Author URI:        https://www.boltonstudios.com
  * License:           GPL-2.0+
@@ -37,7 +37,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'EASY_ZILLOW_REVIEWS_VERSION', '1.1.0' );
+define( 'EASY_ZILLOW_REVIEWS_VERSION', '1.1.1' );
 
 /**
  * The code that runs during plugin activation.

@@ -5,7 +5,7 @@ Tags: zillow, reviews
 Requires at least: 4.0.0
 Tested up to: 5.4.0
 Requires PHP: 5.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +13,7 @@ Display reviews from Zillow on your website.
 
 == Description ==
 
-*Easy Zillow Reviews* is a bridge between your WordPress website and your Zillow Profile. This plugin provides widget and shortcodes that allow you to embed reviews from Zillow on your website.
+*Easy Zillow Reviews* is a bridge between your WordPress website and your Zillow Profile. This plugin provides widgets and shortcodes that allow you to embed reviews from Zillow on your website.
 
 = Free Version =
 * Display up to 10 Zillow Professional reviews (individuals and teams)

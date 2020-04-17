@@ -13,41 +13,63 @@
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
     
-class Easy_Zillow_Reviews_Professional_Widget_Init extends Easy_Zillow_Reviews_Professional{
+class Easy_Zillow_Reviews_Professional_Widget_Init{
+		
+    /**	
+     *	The reviews fetched from the Zillow API Network, and relevant user options.
+     *	
+     * @since    1.1.0	
+     * @access   private	
+     * @var      Easy_Zillow_Reviews_Professional    $zillow_professional_reviews   	
+    */	
+    private $zillow_professional_reviews;
 
-    function __construct(){
-        
+    function __construct( $zillow_professional_reviews ){
+
+        // The constructor accepts an object containing reviews data, and stores the object.
+        $this->set_zillow_professional_reviews( $zillow_professional_reviews );
+
+        // Initialize the widget
         add_action('widgets_init', array($this, 'init'));
     }
     function init(){
 
+        // Create a new widget instance
         $professional_widget = new Easy_Zillow_Reviews_Professional_Widget();
-
-        // Get saved admin settings and defaults
-        $general_options = get_option('ezrwp_general_options'); // General admin tab settings
-        $professional_reviews_options = get_option('ezrwp_professional_reviews_options'); // Professionals Reviews admin tab settings
-        $layout = isset($general_options['ezrwp_layout']) ? $general_options['ezrwp_layout'] : 'list';
-        $grid_columns = isset($general_options['ezrwp_cols']) ? $general_options['ezrwp_cols'] : 3;
-        $count = isset($general_options['ezrwp_count']) ? $general_options['ezrwp_count'] : 3;
         
-        // Pass saved admin settings to this Easy_Zillow_Reviews_Professional_Widget_Init class instance
-        $this->set_general_options($general_options);
-        $this->set_professional_reviews_options($professional_reviews_options);
-        $this->set_layout($layout);
-        $this->set_grid_columns($grid_columns);
-        $this->set_count($count);
+        // Pass the reviews data to the Easy_Zillow_Reviews_Professional_Widget instance
+        $professional_widget->set_professional_reviews($this->get_zillow_professional_reviews());
 
-        // Pass this Easy_Zillow_Reviews_Professional_Widget_Init class instance to the Easy_Zillow_Reviews_Professional_Widget class instance
-        $professional_widget->set_professional_reviews($this);
-
-        // Register widget
+        // Register widget with WordPress
         register_widget($professional_widget);
+    }
+    
+    /**
+     * Get the value of zillow_professional_reviews
+     *
+     * @since    1.1.4
+     */
+    public function get_zillow_professional_reviews()
+    {
+            return $this->zillow_professional_reviews;
+    }
+
+    /**
+     * Set the value of zillow_professional_reviews
+     *
+     * @return  self
+     */ 
+    public function set_zillow_professional_reviews($zillow_professional_reviews)
+    {
+            $this->zillow_professional_reviews = $zillow_professional_reviews;
+
+            return $this;
     }
 }
 class Easy_Zillow_Reviews_Professional_Widget extends WP_Widget{
 
 	/**
-	 * The Easy_Zillow_Reviews_Professional class instance
+	 * The reviews fetched from the Zillow API Network, and relevant user options.
 	 *
 	 * @since    1.1.0
 	 * @access   protected

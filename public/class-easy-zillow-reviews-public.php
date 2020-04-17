@@ -3,18 +3,11 @@
 /**
  * The public-facing functionality of the plugin.
  *
- * @link       https://www.boltonstudios.com
- * @since      1.0.0
- *
- * @package    Easy_Zillow_Reviews
- * @subpackage Easy_Zillow_Reviews/public
- */
-
-/**
- * The public-facing functionality of the plugin.
- *
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the public-facing stylesheet and JavaScript.
+ *
+ * @link       https://www.boltonstudios.com
+ * @since      1.0.0
  *
  * @package    Easy_Zillow_Reviews
  * @subpackage Easy_Zillow_Reviews/public

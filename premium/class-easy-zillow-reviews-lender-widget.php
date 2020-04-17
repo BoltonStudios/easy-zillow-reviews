@@ -14,34 +14,58 @@
  */
     
 class Easy_Zillow_Reviews_Lender_Widget_Init extends Easy_Zillow_Reviews_Lender{
+		
+    /**	
+     *	The reviews fetched from the Zillow API Network, and relevant user options.
+     *	
+     * @since    1.1.4
+     * @access   private	
+     * @var      Easy_Zillow_Reviews_Lender    $zillow_lender_reviews   	
+    */	
+    private $zillow_lender_reviews;
 
-    function __construct(){
-        
+    function __construct( $zillow_lender_reviews ){
+
+        // The constructor accepts an object containing reviews data, and stores the object.
+        $this->set_zillow_lender_reviews( $zillow_lender_reviews );
+
+        // Initialize the widget
         add_action('widgets_init', array($this, 'init'));
     }
     function init(){
 
         $lender_widget = new Easy_Zillow_Reviews_Lender_Widget();
 
-        // Get saved admin settings and defaults
-        $general_options = get_option('ezrwp_general_options'); // General admin tab settings
-        $lender_reviews_options = get_option('ezrwp_lender_reviews_options'); // Lender Reviews admin tab settings
-        $layout = isset($general_options['ezrwp_layout']) ? $general_options['ezrwp_layout'] : 'list';
-        $grid_columns = isset($general_options['ezrwp_cols']) ? $general_options['ezrwp_cols'] : 3;
-        $count = isset($general_options['ezrwp_count']) ? $general_options['ezrwp_count'] : 3;
-        
-        // Pass saved admin settings to this Easy_Zillow_Reviews_Lender_Widget_Init class instance
-        $this->set_general_options($general_options);
-        $this->set_lender_reviews_options($lender_reviews_options);
-        $this->set_layout($layout);
-        $this->set_grid_columns($grid_columns);
-        $this->set_count($count);
-
         // Pass this Easy_Zillow_Reviews_Lender_Widget_Init class instance to the Easy_Zillow_Reviews_Lender_Widget class instance
         $lender_widget->set_lender_reviews($this);
+        
+        // Pass the reviews data to the Easy_Zillow_Reviews_Lender_Widget instance
+        $lender_widget->set_lender_reviews($this->get_zillow_lender_reviews());
 
         // Register widget
         register_widget($lender_widget);
+    }
+    
+    /**
+     * Get the value of zillow_lender_reviews
+     *
+     * @since    1.1.4
+     */
+    public function get_zillow_lender_reviews()
+    {
+            return $this->zillow_lender_reviews;
+    }
+
+    /**
+     * Set the value of zillow_lender_reviews
+     *
+     * @return  self
+     */ 
+    public function set_zillow_lender_reviews($zillow_lender_reviews)
+    {
+            $this->zillow_lender_reviews = $zillow_lender_reviews;
+
+            return $this;
     }
 }
 class Easy_Zillow_Reviews_Lender_Widget extends WP_Widget{

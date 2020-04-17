@@ -62,10 +62,14 @@ class Easy_Zillow_Reviews_Professional extends Easy_Zillow_Reviews_Data{
 
     // Constructor
     public function __construct(){
+
+        $this->init();
+        $this->set_professional_reviews_options( get_option('ezrwp_professional_reviews_options') );
+        $this->set_zwsid( $this->professional_reviews_options['ezrwp_zwsid'] );
+        $this->set_screenname( $this->professional_reviews_options['ezrwp_screenname'] );
     }
 
     // Methods
-    
     /**
      * Get lender reviews data from Zillow using the Zillow ProReviews API.
      *
@@ -73,8 +77,8 @@ class Easy_Zillow_Reviews_Professional extends Easy_Zillow_Reviews_Data{
      */
     public function fetch_reviews_from_zillow($count){
         
-        $zwsid = $this->professional_reviews_options['ezrwp_zwsid'];
-        $screenname = $this->professional_reviews_options['ezrwp_screenname'];
+        $zwsid = $this->get_zwsid();
+        $screenname = $this->get_screenname();
         $disallowed_characters = array("-", " ");
         $screenname = str_replace($disallowed_characters, "%20", $screenname);
         $toggle_team_members = $this->get_show_team_members() ? '&returnTeamMemberReviews=true' : '';
@@ -87,7 +91,7 @@ class Easy_Zillow_Reviews_Professional extends Easy_Zillow_Reviews_Data{
          *  LOCAL DEVELOPMENT ONLY. Comment out for Production
          * 
          *
-         *
+         */
         $arrContextOptions = array(
             "ssl" => array(
                 "verify_peer" => false,
@@ -103,11 +107,11 @@ class Easy_Zillow_Reviews_Professional extends Easy_Zillow_Reviews_Data{
 
         /*
          *
-         *  PRODUCTION. Uncomment for Production
+         *  PRODUCTION ONLY. Uncomment for Production
          * 
          */
         // Fetch data from Zillow.
-        $xml = simplexml_load_file($url) or die("Error: Cannot create object");
+        //$xml = simplexml_load_file($url) or die("Error: Cannot create object");
         /*
         *
         *  END PRODUCTION ONLY.
@@ -135,15 +139,22 @@ class Easy_Zillow_Reviews_Professional extends Easy_Zillow_Reviews_Data{
     public function layout_reviews( $as_layout, $number_cols ){
 
         // User Options
-        $hide_date = isset($this->get_general_options()['ezrwp_hide_date']) == 1 ? true : false;
-        $hide_stars = isset($this->general_options['ezrwp_hide_stars']) == 1 ? true : false;
-        $hide_reviewer_summary = isset($this->general_options['ezrwp_hide_reviewer_summary']) == 1 ? true : false;
-        $layout = ($as_layout == '') ? $this->layout : $as_layout;
-        $number_cols = ($number_cols == '') ? $this->grid_columns : $number_cols;
+        $hide_date = $this->get_hide_date();
+        $hide_stars = $this->get_hide_stars();
+        $hide_reviewer_summary = $this->get_hide_reviewer_summary();
+        $hide_disclaimer = $this->get_hide_disclaimer();
+        $hide_view_all_link = $this->get_hide_view_all_link();
+        $hide_zillow_logo = $this->get_hide_zillow_logo();
+        $layout = ($as_layout == '') ? $this->get_layout() : $as_layout;
+        $number_cols = ($number_cols == '') ? $this->get_grid_columns() : $number_cols;
 
         // Output
         $i = 0;
         $reviews_output = '';
+        $template = new Easy_Zillow_Reviews_Template_Loader();
+        $template->set_hide_disclaimer( $hide_disclaimer );
+        $template->set_hide_view_all_link( $hide_view_all_link );
+        $template->set_hide_zillow_logo( $hide_zillow_logo );
 
         // Professional Reviews
         foreach($this->reviews->review as $review) :
@@ -153,7 +164,7 @@ class Easy_Zillow_Reviews_Professional extends Easy_Zillow_Reviews_Data{
             if( !$hide_date ){
                 $date = 
                     '<div class="ezrwp-date">
-                        '. $this->convert_date_to_time_elapsed(date( "Y-m-d", strtotime($review->reviewDate))) .'
+                        '. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime($review->reviewDate))) .'
                     </div>';
             }
             if( !$hide_stars ){
@@ -195,7 +206,7 @@ class Easy_Zillow_Reviews_Professional extends Easy_Zillow_Reviews_Data{
             }
         endforeach;
 
-        return $this->generate_reviews_wrapper($reviews_output, $layout, $number_cols);
+        return $template->generate_reviews_wrapper($reviews_output, $layout, $number_cols);
     }
     
     /**

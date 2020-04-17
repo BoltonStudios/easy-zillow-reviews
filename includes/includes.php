@@ -40,12 +40,17 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-easy-zillo
 /**
  *
  */
+require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-easy-zillow-reviews-template-loader.php';
+
+/**
+ *
+ */
 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-easy-zillow-reviews-professional.php';
 
 /**
  *
  */
-require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-easy-zillow-reviews-professional-shortcodes.php';
+require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-easy-zillow-reviews-professional-shortcodes.php';
 
 /**
  *

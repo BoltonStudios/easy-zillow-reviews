@@ -1,8 +1,6 @@
 <?php
 
 /**
- * Fired during plugin activation.
- *
  * This class defines all code necessary to migrate old plugin options to the new format.
  *
  * @since      1.1.2
@@ -33,7 +31,7 @@ class Easy_Zillow_Reviews_Upgrader {
         $general_options = get_option('ezrwp_general_options'); // General admin tab settings
         $professional_reviews_options = get_option('ezrwp_professional_reviews_options'); // Professionals Reviews admin tab settings
         
-        if( $old_options != null){
+        if( $old_options != null ){
 
             // Migrate ezrwp_options to ezrwp_general_options
             $general_options["ezrwp_count"] = $old_options["ezrwp_count"];

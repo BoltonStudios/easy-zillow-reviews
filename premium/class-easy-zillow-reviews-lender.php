@@ -24,8 +24,40 @@ class Easy_Zillow_Reviews_Lender extends Easy_Zillow_Reviews_Data{
 	 */
     private $lender_reviews_options;
 
+	/**
+	 * 
+	 *
+	 * @since    1.1.4
+	 * @access   private
+	 * @var      string   $zwsid    The.
+	 */
+    private $zmpid;
+
+	/**
+	 * 
+	 *
+	 * @since    1.1.4
+	 * @access   private
+	 * @var      string   $screenname   The
+	 */
+    private $nmlsid;
+
+	/**
+	 * 
+	 *
+	 * @since    1.1.4
+	 * @access   private
+	 * @var      string   $company_name   The
+	 */
+    private $company_name;
+
     // Constructor
     public function __construct(){
+
+        $this->init();
+        $this->set_lender_reviews_options( get_option('ezrwp_lender_reviews_options') );
+        $this->set_zmpid( $this->lender_reviews_options['ezrwp_zmpid'] );
+        $this->set_nmlsid( $this->lender_reviews_options['ezrwp_nmlsid'] );
     }
 
     // Methods
@@ -36,11 +68,12 @@ class Easy_Zillow_Reviews_Lender extends Easy_Zillow_Reviews_Data{
      * @since    1.1.0
      */
     public function fetch_reviews_from_zillow($count){
-
-        $zmpid = $this->lender_reviews_options['ezrwp_zmpid'];
-        $nmlsid = $this->lender_reviews_options['ezrwp_nmlsid'];
+        
+        $zmpid = $this->get_zmpid();
+        $nmlsid = $this->get_nmlsid();
         $disallowed_characters = array("-", " ");
-        $company_name = str_replace($disallowed_characters, "%20", $this->lender_reviews_options['ezrwp_company_name']);
+        $company_name = $this->get_company_name();
+        $company_name = str_replace($disallowed_characters, "%20", $company_name);
 
         // Contstruct the Zillow URL for an Individual Loan Officer.
         $zillow_url = 'https://mortgageapi.zillow.com/zillowLenderReviews?partnerId='. $zmpid .'&nmlsId='.$nmlsid.'&reviewLimit='. $count;
@@ -66,7 +99,7 @@ class Easy_Zillow_Reviews_Lender extends Easy_Zillow_Reviews_Data{
         }
         $this->set_has_reviews( $zillow_api_error ? false : true );
 
-        // Pass the Zillow data to this Easy_Zillow_Reviews_Data child object instance.
+        // Store Zillow data in this Easy_Zillow_Reviews_Data child object instance.
         if($this->get_has_reviews()){
 
             // Success
@@ -89,15 +122,22 @@ class Easy_Zillow_Reviews_Lender extends Easy_Zillow_Reviews_Data{
     public function layout_lender_reviews($as_layout, $number_cols){
 
         // User Options
-        $hide_date = isset($this->general_options['ezrwp_hide_date']) == 1 ? true : false;
-        $hide_stars = isset($this->general_options['ezrwp_hide_stars']) == 1 ? true : false;
-        $hide_reviewer_summary = isset($this->general_options['ezrwp_hide_reviewer_summary']) == 1 ? true : false;
-        $layout = ($as_layout == '') ? $this->layout : $as_layout;
-        $number_cols = ($number_cols == '') ? $this->grid_columns : $number_cols;
+        $hide_date = $this->get_hide_date();
+        $hide_stars = $this->get_hide_stars();
+        $hide_reviewer_summary = $this->get_hide_reviewer_summary();
+        $hide_disclaimer = $this->get_hide_disclaimer();
+        $hide_view_all_link = $this->get_hide_view_all_link();
+        $hide_zillow_logo = $this->get_hide_zillow_logo();
+        $layout = ($as_layout == '') ? $this->get_layout() : $as_layout;
+        $number_cols = ($number_cols == '') ? $this->get_grid_columns() : $number_cols;
 
         // Output
         $i = 0;
         $reviews_output = '';
+        $template = new Easy_Zillow_Reviews_Template_Loader();
+        $template->set_hide_disclaimer( $hide_disclaimer );
+        $template->set_hide_view_all_link( $hide_view_all_link );
+        $template->set_hide_zillow_logo( $hide_zillow_logo );
 
         // Lender Reviews
         foreach($this->reviews as $review) :
@@ -112,13 +152,13 @@ class Easy_Zillow_Reviews_Lender extends Easy_Zillow_Reviews_Data{
 
             $loan_summary = $loan_service_provided . " " . $loan_type . " " . $loan_program . " " . $loan_purpose;
 
-            if( !$hide_date ){
+            if( $hide_date == false ){
                 $date = 
                     '<div class="ezrwp-date">
-                        '. $this->convert_date_to_time_elapsed(date( "Y-m-d", strtotime($review_date))) .'
+                        '. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime($review_date))) .'
                     </div>';
             }
-            if( !$hide_stars ){
+            if( $hide_stars == false ){
                 $stars = $review->rating;
                 $star_count = floor($stars); // count whole stars
                 $half_star_toggle = '';
@@ -131,7 +171,7 @@ class Easy_Zillow_Reviews_Lender extends Easy_Zillow_Reviews_Data{
                     <div class="ezrwp-stars ezrwp-stars-'. $star_count .' '. $half_star_toggle .'"></div>
                 ';
             }
-            if( !$hide_reviewer_summary ){
+            if( $hide_reviewer_summary == false ){
                 $reviewer_summary = '<span class="review-summary">who '. $loan_summary .' loan.</span>';
             }
             $reviewer_info = '
@@ -157,7 +197,7 @@ class Easy_Zillow_Reviews_Lender extends Easy_Zillow_Reviews_Data{
             }
         endforeach;
 
-        return $this->generate_reviews_wrapper($reviews_output, $layout, $number_cols);
+        return $template->generate_reviews_wrapper($reviews_output, $layout, $number_cols);
     }
 
     /**
@@ -291,7 +331,7 @@ class Easy_Zillow_Reviews_Lender extends Easy_Zillow_Reviews_Data{
     /**
      * Get the value of lender_reviews_options
      *
-     * @since    1.1.0
+     * @since    1.1.4
      */
     public function get_lender_reviews_options()
     {
@@ -308,6 +348,69 @@ class Easy_Zillow_Reviews_Lender extends Easy_Zillow_Reviews_Data{
             $this->lender_reviews_options = $lender_reviews_options;
 
             return $this;
+    }
+    
+    /**
+     * Get the value of zmpid
+     *
+     * @since    1.1.4
+     */
+    public function get_zmpid(){
+
+        return $this->zmpid;
+    }
+
+    /**
+     * Set the value of zmpid
+     *
+     * @return  self
+     */ 
+    public function set_zmpid($zmpid){
+
+        $this->zmpid = $zmpid;
+        return $this;
+    }
+    
+    /**
+     * Get the value of nmlsid
+     *
+     * @since    1.1.4
+     */
+    public function get_nmlsid(){
+
+        return $this->nmlsid;
+    }
+
+    /**
+     * Set the value of nmlsid
+     *
+     * @return  self
+     */ 
+    public function set_nmlsid($nmlsid){
+
+        $this->nmlsid = $nmlsid;
+        return $this;
+    }
+    
+    /**
+     * Get the value of company_name
+     *
+     * @since    1.1.4
+     */
+    public function get_company_name(){
+
+        return $this->company_name;
+    }
+
+    /**
+     * Set the value of company_name
+     *
+     * @return  self
+     */ 
+    public function set_company_name($company_name){
+
+        $this->company_name = $company_name;
+        return $this;
     }
 }
 ?>

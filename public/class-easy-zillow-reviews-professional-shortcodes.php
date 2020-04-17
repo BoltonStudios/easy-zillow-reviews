@@ -1,9 +1,9 @@
 <?php
 
 /**
- * The Easy_Zillow_Reviews_Lender_Shortcodes class
+ * The Easy_Zillow_Reviews_Professional_Shortcodes class
  *
- * Adds the [ez-zillow-lender-reviews] shortcode to WordPress
+ * Adds the [ez-zillow-reviews] shortcode to WordPress
  *
  *
  * @link       https://www.boltonstudios.com
@@ -13,21 +13,21 @@
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
     
-class Easy_Zillow_Reviews_Lender_Shortcodes{
+class Easy_Zillow_Reviews_Professional_Shortcodes{
 
 	/**
 	 *
 	 *
 	 * @since    1.1.4
 	 * @access   private
-	 * @var      Easy_Zillow_Reviews_Lender   $zillow_lender_data    
+	 * @var      Easy_Zillow_Reviews_Professional    $zillow_professional_data    
 	 */
-    private $zillow_lender_data;
+    private $zillow_professional_data;
 
     // Constructor
-    function __construct( $zillow_lender_data ){
+    function __construct( $zillow_professional_data ){
 
-        $this->zillow_lender_data = $zillow_lender_data;
+        $this->zillow_professional_data = $zillow_professional_data;
 
         add_action('plugins_loaded', array($this, 'init'));
     }
@@ -35,12 +35,12 @@ class Easy_Zillow_Reviews_Lender_Shortcodes{
     // Methods
     function init(){
         
-        add_shortcode('ez-zillow-lender-reviews', array($this, 'display_lender_reviews'));
+        add_shortcode('ez-zillow-reviews', array($this, 'display_professional_reviews'));
     }
-    function display_lender_reviews($atts){
+    function display_professional_reviews($atts){
 
         // Get saved admin settings and defaults
-        $reviews = $this->get_zillow_lender_data();
+        $reviews = $this->get_zillow_professional_data();
 
         // Get attributes from shortcode
         if( isset( $atts ) ){
@@ -57,16 +57,16 @@ class Easy_Zillow_Reviews_Lender_Shortcodes{
 
         // Review count cannot be more than 10 or less than 0.
         $count = ($count > 10 ) ? 10 : $count;
-        $count = floor($count) > 0 ? floor($count) : 1;
+        $count = floor($count) > 0 ? floor( $count ) : 1;
 
         // Fetch reviews from Zillow
-        $reviews->fetch_reviews_from_zillow($count);
+        $reviews->fetch_reviews_from_zillow( $count );
 
         // Render output
-        if( $reviews -> get_has_reviews() ){
+        if( $reviews->get_has_reviews() ){
 
             // Success
-            $output = $reviews -> layout_lender_reviews($layout, $cols);
+            $output = $reviews->layout_reviews( $layout, $cols );
         } else {
 
             // Error
@@ -76,23 +76,23 @@ class Easy_Zillow_Reviews_Lender_Shortcodes{
     }
     
     /**
-     * Get the value of zillow_lender_data
+     * Get the value of zillow_professional_data
      *
      * @since    1.1.0
      */
-    public function get_zillow_lender_data(){
+    public function get_zillow_professional_data(){
 
-        return $this->zillow_lender_data;
+        return $this->zillow_professional_data;
     }
 
     /**
-     * Set the value of zillow_lender_data
+     * Set the value of zillow_professional_data
      *
      * @return  self
      */ 
-    public function set_zillow_lender_data( $zillow_lender_data ){
+    public function set_zillow_professional_data( $zillow_professional_data ){
 
-        $this->zillow_lender_data = $zillow_lender_data;
+        $this->zillow_professional_data = $zillow_professional_data;
         return $this;
     }
 }

@@ -16,7 +16,7 @@
  * Plugin Name:       Easy Zillow Reviews
  * Plugin URI:        https://wordpress.org/plugins/easy-zillow-reviews/
  * Description:       Display reviews from Zillow on your site.
- * Version:           1.1.3
+ * Version:           1.1.4
  * Author:            Aaron Bolton
  * Author URI:        https://www.boltonstudios.com
  * License:           GPL-2.0+
@@ -37,7 +37,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'EASY_ZILLOW_REVIEWS_VERSION', '1.1.3' );
+define( 'EASY_ZILLOW_REVIEWS_VERSION', '1.1.4' );
 
 /**
  * The code that runs during plugin activation.
@@ -124,22 +124,22 @@ function run_easy_zillow_reviews() {
 
 			// Signal that SDK was initiated.
 			do_action('ezrwp_fs_loaded');
-		}
-
+        }
+        
 		// Load the essential plugin features including settings and admin
 		$plugin = new Easy_Zillow_Reviews();
 
-		// Run the Upgrader
+		// Run the Upgrader.
 		new Easy_Zillow_Reviews_Upgrader();
 
-		// Fetch Zillow Data and prepare it for use
-		new Easy_Zillow_Reviews_Data();
+		// Get the Zillow Professional data
+		$zillow_professional_reviews = new Easy_Zillow_Reviews_Professional();
 		
 		// Define plugin shortcodes
-		new Easy_Zillow_Reviews_Professional_Shortcodes();
+		new Easy_Zillow_Reviews_Professional_Shortcodes( $zillow_professional_reviews );
 
 		// Define plugin widget
-		new Easy_Zillow_Reviews_Professional_Widget_Init();
+		new Easy_Zillow_Reviews_Professional_Widget_Init( $zillow_professional_reviews );
 
 		// This IF block will be auto removed from the Free version.
 		if ( ezrwp_fs()->is__premium_only() ) {
@@ -151,16 +151,19 @@ function run_easy_zillow_reviews() {
 				require_once plugin_dir_path( __FILE__ ) . 'premium/class-easy-zillow-reviews-premium.php';
 
 				// Load Premium Features and pass the plugin object to be modified
-				new Easy_Zillow_Reviews_Premium($plugin);
+				new Easy_Zillow_Reviews_Premium( $plugin );
+
+                // Get the Zillow Professional data
+                $zillow_lender_reviews = new Easy_Zillow_Reviews_Lender();
 
 				// Define Premium shortcodes
-				new Easy_Zillow_Reviews_Lender_Shortcodes();
+				new Easy_Zillow_Reviews_Lender_Shortcodes( $zillow_lender_reviews );
 				
 				// Define Premium widget
-				new Easy_Zillow_Reviews_Lender_Widget_Init();
+				new Easy_Zillow_Reviews_Lender_Widget_Init( $zillow_lender_reviews );
 			}
         }
-		
+        
 		// Run Plugin
 		$plugin->run();
 	}

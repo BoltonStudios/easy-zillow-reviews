@@ -1,9 +1,9 @@
 <?php
 
 /**
- * The Easy_Zillow_Reviews_Data class
+ * The Easy_Zillow_Reviews_Template class
  *
- * Adds the [ez-zillow-reviews] shortcode to WordPress
+ * 
  *
  *
  * @link       https://www.boltonstudios.com
@@ -102,6 +102,56 @@ class Easy_Zillow_Reviews_Data{
     private $hide_date;
     
 	/**
+	 * 
+     * 
+	 *
+	 * @since    1.1.4
+	 * @access   private
+	 * @var      bool   $hide_disclaimer  
+	 */
+    private $hide_disclaimer;
+    
+	/**
+	 * 
+     * 
+	 *
+	 * @since    1.1.4
+	 * @access   private
+	 * @var      bool   $hide_stars 
+	 */
+    private $hide_stars;
+    
+	/**
+	 * 
+     * 
+	 *
+	 * @since    1.1.4
+	 * @access   private
+	 * @var      bool   $hide_reviewer_summary 
+	 */
+    private $hide_reviewer_summary;
+    
+	/**
+	 * 
+     * 
+	 *
+	 * @since    1.1.4
+	 * @access   private
+	 * @var      bool   $hide_view_all_link  
+	 */
+    private $hide_view_all_link;
+    
+	/**
+	 * 
+     * 
+	 *
+	 * @since    1.1.4
+	 * @access   private
+	 * @var      bool   $hide_zillow_logo  
+	 */
+    private $hide_zillow_logo;
+    
+	/**
 	 * The total number of reviews that this profile has on Zillow.
      * This is determined by the results of the plugin's call to the Zillow API Network.
 	 *
@@ -119,10 +169,27 @@ class Easy_Zillow_Reviews_Data{
 	 * @var      array   $reviews   
 	 */
     protected $reviews;
+    
+	/**
+	 * 
+	 *
+	 * @since    1.1.4
+	 * @access   protected
+	 * @var      int   $quote_font_size  
+	 */
+    protected $quote_font_size;
+    
+	/**
+	 * 
+	 *
+	 * @since    1.1.4
+	 * @access   protected
+	 * @var      int   $reviewer_description_font_size  
+	 */
+    protected $reviewer_description_font_size;
 
     // Constructor
     public function __construct(){
-        add_action('plugins_loaded', array($this, 'init'));
     }
 
     // Methods
@@ -133,107 +200,28 @@ class Easy_Zillow_Reviews_Data{
         $layout = isset($general_options['ezrwp_layout']) ? $general_options['ezrwp_layout'] : 'list';
         $grid_columns = isset($general_options['ezrwp_cols']) ? $general_options['ezrwp_cols'] : 3;
         $count = isset($general_options['ezrwp_count']) ? $general_options['ezrwp_count'] : 3;
+        $hide_date = isset($general_options['ezrwp_hide_date']) ? $general_options['ezrwp_hide_date'] : 0;
+        $hide_disclaimer = isset($general_options['ezrwp_disclaimer']) ? $general_options['ezrwp_disclaimer'] : 0;
+        $hide_stars = isset($general_options['ezrwp_hide_stars']) ? $general_options['ezrwp_hide_stars'] : 0;
+        $hide_reviewer_summary = isset($general_options['ezrwp_hide_reviewer_summary']) ? $general_options['ezrwp_hide_reviewer_summary'] : 0;
+        $hide_view_all_link = isset($general_options['ezrwp_hide_view_all_link']) ? $general_options['ezrwp_hide_view_all_link'] : 0;
+        $hide_zillow_logo = isset($general_options['ezrwp_hide_zillow_logo']) ? $general_options['ezrwp_hide_zillow_logo'] : 0;
+        $quote_font_size = isset($general_options['ezrwp_quote_font_size']) ? $general_options['ezrwp_quote_font_size'] : 18;
+        $reviewer_description_font_size = isset($general_options['ezrwp_review_description_font_size']) ? $general_options['ezrwp_review_description_font_size'] : 16;
         
-        // Pass saved admin settings to this Easy_Zillow_Reviews_Professional_Shortcode class instance
+        // Store options in this class instance
         $this->set_general_options($general_options);
         $this->set_layout($layout);
         $this->set_grid_columns($grid_columns);
         $this->set_count($count);
-        $this->set_hide_date($hide_date = isset($this->get_general_options()['ezrwp_hide_date']) == 1 ? true : false);
-    }
-
-    /**
-     * Build the HTML output for the Zillow Reviews
-     */ 
-    public function generate_reviews_wrapper($reviews_output, $as_layout, $number_cols){
-
-        // User Options
-        $hide_disclaimer = isset($this->general_options['ezrwp_disclaimer']) == 1 ? true : false;
-        $hide_view_all_link = isset($this->general_options['ezrwp_hide_view_all_link']) == 1 ? true : false;
-        $hide_zillow_logo = isset($this->general_options['ezrwp_hide_zillow_logo']) == 1 ? true : false;
-
-        // Layout Options
-        // Get Layout
-        $layout = $this->layout;
-        if( isset($as_layout) && $as_layout != null ){
-            $layout = $as_layout;
-        }
-
-        // Get Grid Columns
-        $grid_columns = $this->grid_columns;
-        if( $layout == "grid" ){
-            // Grid
-            if(isset($number_cols) && $number_cols != null){
-                $grid_columns = $number_cols;
-            }
-        }
-        $grid_columns_class = ($layout == "grid" && $grid_columns > 0) ? 'ezrwp-grid-'. $grid_columns : '';
-
-        // Other options
-        $view_all_link = '';
-        if( !$hide_view_all_link ){
-            $view_all_link = '<p class="ezrwp-call-to-action"><a href="'. $this->url . '#reviews" class="z-profile-link" target="_blank" rel="nofollow">View all '. $this->info->reviewCount .' reviews.</a></p>';
-        }
-
-        $zillow_logo = '';
-        if( !$hide_zillow_logo ){
-            $zillow_logo = '<p class="ezrwp-attribution"><a href="'. $this->url . '" class="z-profile-link" target="_blank" rel="nofollow"><img src="//www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" width="150" height="38" alt="Real Estate on Zillow"></a></p>';
-        }
-
-        $mandatory_disclaimer = '';
-        if( !$hide_disclaimer ){
-            $mandatory_disclaimer = '
-                <p class="ezrwp-mandatory-disclaimer">© Zillow, Inc., 2006-2016. Use is subject to <a href="https://www.zillow.com/corp/Terms.htm" target="_blank">Terms of Use</a><br />
-                    <a href="https://www.zillow.com/wikipages/What-is-a-Zestimate/" target="_blank">What\'s a Zestimate?</a>
-                </p>';
-        }
-
-        $wrapper_start = '<div class="ezrwp-wrapper ezrwp-'. $layout .' '. $grid_columns_class .'"><div class="ezrwp-content">';
-        $wrapper_end = '</div></div>';
-
-        $output = $wrapper_start;
-        $output .= $reviews_output;
-        $output .= $view_all_link;
-        $output .= $zillow_logo;
-        $output .= $mandatory_disclaimer;
-        $output .= $wrapper_end;
-
-        return $output;
-
-    }
-
-    /**
-     * Convert date to time elapsed
-     *
-     * @since    1.1.0
-     */
-    public function convert_date_to_time_elapsed($datetime, $full = false) {
-        $now = new DateTime;
-        $ago = new DateTime($datetime);
-        $diff = $now->diff($ago);
-
-        $diff->w = floor($diff->d / 7);
-        $diff->d -= $diff->w * 7;
-
-        $string = array(
-                'y' => 'year',
-                'm' => 'month',
-                'w' => 'week',
-                'd' => 'day',
-                'h' => 'hour',
-                'i' => 'minute',
-                's' => 'second',
-        );
-        foreach ($string as $k => &$v) {
-                if ($diff->$k) {
-                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
-                } else {
-                unset($string[$k]);
-                }
-        }
-
-        if (!$full) $string = array_slice($string, 0, 1);
-        return $string ? implode(', ', $string) . ' ago' : 'just now';
+        $this->set_hide_date(($hide_date == 1) ? true : false);
+        $this->set_hide_disclaimer(($hide_disclaimer == 1) ? true : false);
+        $this->set_hide_stars(($hide_stars == 1) ? true : false);
+        $this->set_hide_reviewer_summary(($hide_reviewer_summary == 1) ? true : false);
+        $this->set_hide_view_all_link(($hide_view_all_link == 1) ? true : false);
+        $this->set_hide_zillow_logo(($hide_zillow_logo == 1) ? true : false);
+        $this->set_quote_font_size($quote_font_size);
+        $this->set_reviewer_description_font_size($reviewer_description_font_size);
     }
     
     /**
@@ -458,6 +446,146 @@ class Easy_Zillow_Reviews_Data{
     public function set_hide_date($hide_date)
     {
             $this->hide_date = $hide_date;
+
+            return $this;
+    }
+
+    /**
+     * Get the value of $hide_stars
+     */ 
+    public function get_hide_stars()
+    {
+            return $this->hide_stars;
+    }
+
+    /**
+     * Set the value of $hide_stars
+     *
+     * @return  self
+     */ 
+    public function set_hide_stars($hide_stars)
+    {
+            $this->hide_stars = $hide_stars;
+
+            return $this;
+    }
+
+    /**
+     * Get the value of $hide_reviewer_summary
+     */ 
+    public function get_hide_reviewer_summary()
+    {
+            return $this->hide_reviewer_summary;
+    }
+
+    /**
+     * Set the value of $hide_reviewer_summary
+     *
+     * @return  self
+     */ 
+    public function set_hide_reviewer_summary($hide_reviewer_summary)
+    {
+            $this->hide_hide_reviewer_summary = $hide_reviewer_summary;
+
+            return $this;
+    }
+
+    /**
+     * Get the value of $hide_disclaimer
+     */ 
+    public function get_hide_disclaimer()
+    {
+            return $this->hide_disclaimer;
+    }
+
+    /**
+     * Set the value of $hide_disclaimer
+     *
+     * @return  self
+     */ 
+    public function set_hide_disclaimer($hide_disclaimer)
+    {
+            $this->hide_disclaimer = $hide_disclaimer;
+
+            return $this;
+    }
+
+    /**
+     * Get the value of $hide_view_all_link
+     */ 
+    public function get_hide_view_all_link()
+    {
+            return $this->hide_view_all_link;
+    }
+
+    /**
+     * Set the value of $hide_view_all_link
+     *
+     * @return  self
+     */ 
+    public function set_hide_view_all_link($hide_view_all_link)
+    {
+            $this->hide_view_all_link = $hide_view_all_link;
+
+            return $this;
+    }
+
+    /**
+     * Get the value of $hide_zillow_logo
+     */ 
+    public function get_hide_zillow_logo()
+    {
+            return $this->hide_zillow_logo;
+    }
+
+    /**
+     * Set the value of $hide_zillow_logo
+     *
+     * @return  self
+     */ 
+    public function set_hide_zillow_logo($hide_zillow_logo)
+    {
+            $this->hide_zillow_logo = $hide_zillow_logo;
+
+            return $this;
+    }
+
+    /**
+     * Get the value of $quote_font_size
+     */ 
+    public function get_quote_font_size()
+    {
+            return $this->quote_font_size;
+    }
+
+    /**
+     * Set the value of $quote_font_size
+     *
+     * @return  self
+     */ 
+    public function set_quote_font_size($quote_font_size)
+    {
+            $this->quote_font_size = $quote_font_size;
+
+            return $this;
+    }
+
+    /**
+     * Get the value of $reviewer_description_font_size
+     */ 
+    public function get_reviewer_description_font_size()
+    {
+            return $this->reviewer_description_font_size;
+    }
+
+    /**
+     * Set the value of $reviewer_description_font_size
+     *
+     * @return  self
+     */ 
+    public function set_reviewer_description_font_size($reviewer_description_font_size)
+    {
+            $this->reviewer_description_font_size = $reviewer_description_font_size;
 
             return $this;
     }

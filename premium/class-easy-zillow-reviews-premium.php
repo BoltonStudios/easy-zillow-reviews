@@ -29,7 +29,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Premium' ) ) {
          *
          * @since    1.1.0
          * @access   private
-         * @var      Easy_Zillow_Reviews    $base_plugin
+         * @var      Easy_Zillow_Reviews_Base    $base_plugin
          */
         private $base_plugin;
         
@@ -214,7 +214,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Premium' ) ) {
         /**
          * Get $base_plugin
          *
-         * @return  Easy_Zillow_Reviews
+         * @return  Easy_Zillow_Reviews_Base
          */ 
         public function get_base_plugin()
         {
@@ -224,11 +224,11 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Premium' ) ) {
         /**
          * Set $base_plugin
          *
-         * @param  Easy_Zillow_Reviews  $base_plugin  $base_plugin
+         * @param  Easy_Zillow_Reviews_Base  $base_plugin  $base_plugin
          *
          * @return  self
          */ 
-        public function set_base_plugin(Easy_Zillow_Reviews $base_plugin)
+        public function set_base_plugin(Easy_Zillow_Reviews_Base $base_plugin)
         {
             $this->base_plugin = $base_plugin;
 

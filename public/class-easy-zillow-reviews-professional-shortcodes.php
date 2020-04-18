@@ -38,7 +38,7 @@ class Easy_Zillow_Reviews_Professional_Shortcodes{
         add_shortcode('ez-zillow-reviews', array($this, 'display_professional_reviews'));
     }
     function display_professional_reviews($atts){
-
+        
         // Get saved admin settings and defaults
         $reviews = $this->get_zillow_professional_data();
 

@@ -125,7 +125,7 @@ class Easy_Zillow_Reviews_Professional extends Easy_Zillow_Reviews_Data{
             // Success
             $this->set_info($xml->response->result->proInfo);
             $this->set_url($xml->response->result->proInfo->profileURL);
-            $this->set_review_count($xml->response->result->proInfo->review_count);
+            $this->set_review_count($xml->response->result->proInfo->reviewCount);
             $this->set_reviews($xml->response->result->proReviews);
         }
     }
@@ -147,6 +147,8 @@ class Easy_Zillow_Reviews_Professional extends Easy_Zillow_Reviews_Data{
         $hide_zillow_logo = $this->get_hide_zillow_logo();
         $layout = ($as_layout == '') ? $this->get_layout() : $as_layout;
         $number_cols = ($number_cols == '') ? $this->get_grid_columns() : $number_cols;
+        $profile_url = $this->get_url();
+        $review_count = $this->get_review_count();
 
         // Output
         $i = 0;
@@ -155,6 +157,8 @@ class Easy_Zillow_Reviews_Professional extends Easy_Zillow_Reviews_Data{
         $template->set_hide_disclaimer( $hide_disclaimer );
         $template->set_hide_view_all_link( $hide_view_all_link );
         $template->set_hide_zillow_logo( $hide_zillow_logo );
+        $template->set_profile_url( $profile_url );
+        $template->set_review_count( $review_count );
 
         // Professional Reviews
         foreach($this->reviews->review as $review) :

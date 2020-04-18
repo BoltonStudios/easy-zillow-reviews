@@ -5,7 +5,7 @@ Tags: zillow, reviews
 Requires at least: 4.0.0
 Tested up to: 5.4.0
 Requires PHP: 5.4
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,10 +21,9 @@ Display reviews from Zillow on your website.
 * Grid and List layout options
 * Widget and Shortcode options
 * Mobile responsive
-* Lightweight (71kb)
 
 = Premium Version =
-* All Free Features
+* All Free Versin Features
 * Lender Reviews
 * Individual Loan Officer Reviews
 * Company Profile Reviews 
@@ -72,6 +71,11 @@ The premium version of this plugin requires a **Zillow Mortgages Partner ID (ZPI
 3. Settings.
 
 == Changelog ==
+
+= 1.1.4 =
+* Bug Fix: Please check your widgets to confirm that Easy Zillow Reviews is still active. Changed plugin widget name back to 'ezrwp_widget' (free version) 
+* Bug Fix: Restored options to style and hide reviews output.
+* Bug Fix: Resolved miscellaneous notices when WP_DEBUG is true.
 
 = 1.1.3 =
 * Added more fields to Upgrader class, which assists with backwards compatibility from v1.0 to v1.1.

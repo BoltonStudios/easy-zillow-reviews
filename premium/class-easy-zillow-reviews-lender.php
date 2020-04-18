@@ -143,11 +143,12 @@ class Easy_Zillow_Reviews_Lender extends Easy_Zillow_Reviews_Data{
         foreach($this->reviews as $review) :
             $reviewer_name = $review->reviewerName->displayName;
             $description = $review->content;
-            $loan_service_provided = $this->format_loan_service_provided($review->serviceProvided);
-            $loan_program = $this->format_loan_program( $review->loanProgram );
-            $loan_purpose = $this->format_loan_purpose($review->loanPurpose);
-            $loan_type = $this->format_loan_type($review->loanType);
-            $url = site_url();
+
+            // Check if these properties exist in the Zillow Reviews API response and store their values
+            $loan_service_provided = property_exists($review, 'serviceProvided') ? $this->format_loan_service_provided($review->serviceProvided) : '';
+            $loan_program = property_exists($review, 'loanProgram') ? $this->format_loan_program( $review->loanProgram ) : '';
+            $loan_purpose = property_exists($review, 'loanPurpose') ? $this->format_loan_purpose($review->loanPurpose) : '';
+            $loan_type = property_exists($review, 'loanType') ? $this->format_loan_type($review->loanType) : '';
             $review_date = $review->created;
 
             $loan_summary = $loan_service_provided . " " . $loan_type . " " . $loan_program . " " . $loan_purpose;

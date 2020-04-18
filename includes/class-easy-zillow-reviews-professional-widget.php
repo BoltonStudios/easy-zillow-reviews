@@ -84,10 +84,10 @@ class Easy_Zillow_Reviews_Professional_Widget extends WP_Widget{
      */
     public function __construct() {
 		$widget_ops = array( 
-			'classname' => 'ezrwp_profesional_widget',
+			'classname' => 'ezrwp_widget',
 			'description' => 'Display Zillow Professional Reviews',
 		);
-		parent::__construct( 'ezrwp_professional_widget', 'Zillow Professional Reviews', $widget_ops );
+		parent::__construct( 'ezrwp_widget', 'Zillow Professional Reviews', $widget_ops );
 	}
     
     /**

@@ -34,6 +34,37 @@ class Easy_Zillow_Reviews_Template_Loader{
 	 * @var      bool   $hide_view_all_link  
 	 */
     private $hide_view_all_link;
+    
+	/**
+	 * 
+     * 
+	 *
+	 * @since    1.1.4
+	 * @access   private
+	 * @var      bool   $hide_zillow_logo
+	 */
+    private $hide_zillow_logo;
+    
+	/**
+	 * 
+     * 
+	 *
+	 * @since    1.1.4
+	 * @access   private
+	 * @var      bool   $profile_url
+	 */
+    private $profile_url;
+    
+	/**
+	 * 
+     * 
+	 *
+	 * @since    1.1.4
+	 * @access   private
+	 * @var      bool   $review_count
+	 */
+    private $review_count;
+
 
     // Constructor
     public function __construct(){
@@ -46,39 +77,27 @@ class Easy_Zillow_Reviews_Template_Loader{
     /**
      * Build the HTML output for the Zillow Reviews
      */ 
-    public function generate_reviews_wrapper($reviews_output, $as_layout, $number_cols){
+    public function generate_reviews_wrapper( $reviews_output, $layout, $grid_columns ){
 
         // User Options
         $hide_disclaimer = $this->get_hide_disclaimer();
         $hide_view_all_link = $this->get_hide_view_all_link();
         $hide_zillow_logo = $this->get_hide_zillow_logo();
+        $profile_url = $this->get_profile_url();
+        $review_count = $this->get_review_count();
 
         // Layout Options
-        // Get Layout
-        $layout = $this->layout;
-        if( isset($as_layout) && $as_layout != null ){
-            $layout = $as_layout;
-        }
-
-        // Get Grid Columns
-        $grid_columns = $this->grid_columns;
-        if( $layout == "grid" ){
-            // Grid
-            if(isset($number_cols) && $number_cols != null){
-                $grid_columns = $number_cols;
-            }
-        }
         $grid_columns_class = ($layout == "grid" && $grid_columns > 0) ? 'ezrwp-grid-'. $grid_columns : '';
 
         // Other options
         $view_all_link = '';
         if( $hide_view_all_link == false ){
-            $view_all_link = '<p class="ezrwp-call-to-action"><a href="'. $this->url . '#reviews" class="z-profile-link" target="_blank" rel="nofollow">View all '. $this->info->reviewCount .' reviews.</a></p>';
+            $view_all_link = '<p class="ezrwp-call-to-action"><a href="'. $profile_url . '#reviews" class="z-profile-link" target="_blank" rel="nofollow">View all '. $review_count .' reviews.</a></p>';
         }
 
         $zillow_logo = '';
         if( $hide_zillow_logo == false ){
-            $zillow_logo = '<p class="ezrwp-attribution"><a href="'. $this->url . '" class="z-profile-link" target="_blank" rel="nofollow"><img src="//www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" width="150" height="38" alt="Real Estate on Zillow"></a></p>';
+            $zillow_logo = '<p class="ezrwp-attribution"><a href="'. $profile_url . '" class="z-profile-link" target="_blank" rel="nofollow"><img src="//www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" width="150" height="38" alt="Real Estate on Zillow"></a></p>';
         }
 
         $mandatory_disclaimer = '';
@@ -236,6 +255,46 @@ class Easy_Zillow_Reviews_Template_Loader{
     public function set_hide_zillow_logo($hide_zillow_logo)
     {
             $this->hide_zillow_logo = $hide_zillow_logo;
+
+            return $this;
+    }
+
+    /**
+     * Get the value of $profile_url
+     */ 
+    public function get_profile_url()
+    {
+            return $this->profile_url;
+    }
+
+    /**
+     * Set the value of $profile_url
+     *
+     * @return  self
+     */ 
+    public function set_profile_url($profile_url)
+    {
+            $this->profile_url = $profile_url;
+
+            return $this;
+    }
+
+    /**
+     * Get the value of $review_count
+     */ 
+    public function get_review_count()
+    {
+            return $this->review_count;
+    }
+
+    /**
+     * Set the value of $review_count
+     *
+     * @return  self
+     */ 
+    public function set_review_count($review_count)
+    {
+            $this->review_count = $review_count;
 
             return $this;
     }

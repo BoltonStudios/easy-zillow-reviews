@@ -87,7 +87,7 @@ class Easy_Zillow_Reviews_Data{
 	 * This is determined by the results of the plugin's call to the Zillow API Network.
 	 * @since    1.1.0
 	 * @access   private
-	 * @var      string   $info
+	 * @var      SimpleXMLElement   $info
 	 */
     private $info;
     

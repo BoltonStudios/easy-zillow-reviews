@@ -12,516 +12,520 @@
  * @subpackage Easy_Zillow_Reviews/admin
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
-class Easy_Zillow_Reviews_Admin {
 
-	// Properties
-	/**
-	 * The title of this plugin.
-	 *
-	 * @since    1.1.0
-	 * @access   private
-	 * @var      string    $plugin_name   The title of this plugin.
-	 */
-	private $plugin_name;
+if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
 
-	/**
-	 * The ID of this plugin.
-	 *
-	 * @since    1.1.0
-	 * @access   private
-	 * @var      string    $plugin_slug    The ID of this plugin.
-	 */
-	private $plugin_slug;
+    class Easy_Zillow_Reviews_Admin {
 
-	/**
-	 * The version of this plugin.
-	 *
-	 * @since    1.1.0
-	 * @access   private
-	 * @var      string    $version    The current version of this plugin.
-	 */
-	private $version;
+        // Properties
+        /**
+         * The title of this plugin.
+         *
+         * @since    1.1.0
+         * @access   private
+         * @var      string    $plugin_name   The title of this plugin.
+         */
+        private $plugin_name;
 
-	/**
-	 * The tabs that separate plugin options in the admin interface.
-	 *
-	 * @since    1.1.0
-	 * @access   private
-	 * @var      string  
-	 */
-	private $tabs;
+        /**
+         * The ID of this plugin.
+         *
+         * @since    1.1.0
+         * @access   private
+         * @var      string    $plugin_slug    The ID of this plugin.
+         */
+        private $plugin_slug;
 
-	/**
-	 * The object that contains methods used to build the plugin settings.
-	 *
-	 * @since    1.1.0
-	 * @access   private
-	 * @var      Easy_Zillow_Reviews_Admin_Settings 
-	 */
-	private $settings;
+        /**
+         * The version of this plugin.
+         *
+         * @since    1.1.0
+         * @access   private
+         * @var      string    $version    The current version of this plugin.
+         */
+        private $version;
 
-	// Constructor
-	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @since	1.1.0
-	 * @param	string								$plugin_name	The title of this plugin.
-	 * @param	string								$plugin_slug	The id of this plugin.
-	 * @param	string								$version		The version of this plugin.
-	 * @param	Easy_Zillow_Reviews_Admin_Settings	$settings		The default settings for this plugin.
-	 */
-	public function __construct( $plugin_name, $plugin_slug, $version, $settings ) {
+        /**
+         * The tabs that separate plugin options in the admin interface.
+         *
+         * @since    1.1.0
+         * @access   private
+         * @var      string  
+         */
+        private $tabs;
 
-		$this->plugin_name = $plugin_name;
-		$this->plugin_slug = $plugin_slug;
-		$this->version = $version;
-		$this->settings = $settings;
-		$this->tabs = $settings->get_tabs();
-	}
+        /**
+         * The object that contains methods used to build the plugin settings.
+         *
+         * @since    1.1.0
+         * @access   private
+         * @var      Easy_Zillow_Reviews_Admin_Settings 
+         */
+        private $settings;
 
-	// Methods
-	/**
-	 * Add plugin admin options page
-	 *
-	 * @since    1.1.0
-	 */
-	public function add_options_page(){
-        add_submenu_page(
-            'options-general.php', //$parent_slug
-            $this->plugin_name, //$page_title
-            $this->plugin_name, //$menu_title
-            'manage_options', //$capability
-            $this->plugin_slug, //$menu_slug
-            array($this, 'render_settings_page') //$function
-        );
-	}
+        // Constructor
+        /**
+         * Initialize the class and set its properties.
+         *
+         * @since	1.1.0
+         * @param	string								$plugin_name	The title of this plugin.
+         * @param	string								$plugin_slug	The id of this plugin.
+         * @param	string								$version		The version of this plugin.
+         * @param	Easy_Zillow_Reviews_Admin_Settings	$settings		The default settings for this plugin.
+         */
+        public function __construct( $plugin_name, $plugin_slug, $version, $settings ) {
 
-	/**
-	 * Add action links to the plugin in the Plugins list table
-	 *
-	 * @since    1.1.0
-	 */
-	public function admin_plugin_listing_actions( $links ) {
+            $this->plugin_name = $plugin_name;
+            $this->plugin_slug = $plugin_slug;
+            $this->version = $version;
+            $this->settings = $settings;
+            $this->tabs = $settings->get_tabs();
+        }
 
-		return array_merge(array('settings' => '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_slug ) . '">' . __( 'Settings', 'domain' ) . '</a>'), $links);
-	}
+        // Methods
+        /**
+         * Add plugin admin options page
+         *
+         * @since    1.1.0
+         */
+        public function add_options_page(){
+            add_submenu_page(
+                'options-general.php', //$parent_slug
+                $this->plugin_name, //$page_title
+                $this->plugin_name, //$menu_title
+                'manage_options', //$capability
+                $this->plugin_slug, //$menu_slug
+                array($this, 'render_settings_page') //$function
+            );
+        }
 
-	/**
-	 * Register the plugin settings
-	 *
-	 * @since    1.1.0
-	 */
-	public function init_settings(){
+        /**
+         * Add action links to the plugin in the Plugins list table
+         *
+         * @since    1.1.0
+         */
+        public function admin_plugin_listing_actions( $links ) {
 
-		// Register sections in the settings page
-		register_setting(
-            'ezrwp_lender_reviews', //option group
-            'ezrwp_lender_reviews_options' // option name
-		);
-		// Tabs
-		foreach($this->tabs as $tab){
-			register_setting(
-				$tab[1], //option group
-				$tab[2] // option name
-			);
-		}
-		// Sections
-		foreach($this->settings->get_sections() as $section){
-			add_settings_section(
-				$section['id'], // id
-				$section['title'], // title
-				$section['id'] . '_cb', // callback
-				$section['page'] // page
-			);
-		}
-		// Fields
-		foreach($this->settings->get_settings() as $setting){
-			add_settings_field(
-				$setting['id'],
-				$setting['title'],
-				$setting['callback'],
-				$setting['tab'],
-				$setting['section'], [
-					'label_for' => $setting['id'],
-					'class' => 'ezrwp_row',
-					'ezrwp_custom_data' => 'custom',
-				]
-			);
-		}
+            return array_merge(array('settings' => '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_slug ) . '">' . __( 'Settings', 'domain' ) . '</a>'), $links);
+        }
 
-		/*
-		 *
-		 *  Free Plugin Version Callbacks
-		 * 
-		 */
+        /**
+         * Register the plugin settings
+         *
+         * @since    1.1.0
+         */
+        public function init_settings(){
 
-		// Section Callbacks
-		// Section callbacks accept an $args parameter, which is an array.
-		// $args have the following keys defined: id, title, callback.
-		// the values are defined at the add_settings_section() function.
+            // Register sections in the settings page
+            register_setting(
+                'ezrwp_lender_reviews', //option group
+                'ezrwp_lender_reviews_options' // option name
+            );
+            // Tabs
+            foreach($this->tabs as $tab){
+                register_setting(
+                    $tab[1], //option group
+                    $tab[2] // option name
+                );
+            }
+            // Sections
+            foreach($this->settings->get_sections() as $section){
+                add_settings_section(
+                    $section['id'], // id
+                    $section['title'], // title
+                    $section['id'] . '_cb', // callback
+                    $section['page'] // page
+                );
+            }
+            // Fields
+            foreach($this->settings->get_settings() as $setting){
+                add_settings_field(
+                    $setting['id'],
+                    $setting['title'],
+                    $setting['callback'],
+                    $setting['tab'],
+                    $setting['section'], [
+                        'label_for' => $setting['id'],
+                        'class' => 'ezrwp_row',
+                        'ezrwp_custom_data' => 'custom',
+                    ]
+                );
+            }
 
-		 // Professional Reviews Section
-		function ezrwp_section_for_zillow_professional_parameters_cb( $args ) {
-			?>
-			<hr />
-			<p id="<?php echo esc_attr( $args['id'] ); ?>">
-				For Professional Reviews, sign-up for a <strong>Zillow Web Services ID (ZWSID)</strong> at <a href="https://www.zillow.com/howto/api/APIOverview.htm" target="_blank">https://www.zillow.com/howto/api/APIOverview.htm</a>. <span class="dashicons dashicons-external" style="font-size: 14px;"></span>
-			</p>
-			<?php
-		}
-		function ezrwp_section_for_defaults_cb( $args ) {
-			?>
-			<hr />
-			<p id="<?php echo esc_attr( $args['id'] ); ?>">
-				Please find the default plugin settings below. You may override the default settings using the widget and shortcode options.
-			</p>
-			<p id="<?php echo esc_attr( $args['id'] ); ?>-2">
-				Example shortcode with default plugin settings: <code>[ez-zillow-reviews]</code>
-			</p>
-			<p id="<?php echo esc_attr( $args['id'] ); ?>-3">
-				Example shortcode with overrides: <code>[ez-zillow-reviews layout="grid" columns="2" count="4"]</code>
-			</p>
-			<?php
-		}
-		function ezrwp_section_for_appearance_cb( $args ) {
-			?>
-			<hr />
-			<?php
-		}
-		function ezrwp_section_for_support_cb( $args ) {
-			?>
-			<hr />
-			<p>Your PHP version is <?php echo PHP_VERSION;?></p>
-			<hr />
-			<?php
-		}
-		// Field Callbacks
-		// Field callbacks can accept an $args parameter, which is an array.
-		// $args is defined at the add_settings_field() function.
-		// wordpress has magic interaction with the following keys: label_for, class.
-		// the "label_for" key value is used for the "for" attribute of the <label>.
-		// the "class" key value is used for the "class" attribute of the <tr> containing the field.
-		// you can add custom key value pairs to be used inside your callbacks.
+            /*
+            *
+            *  Free Plugin Version Callbacks
+            * 
+            */
 
-		// ZWSID callback
-		function ezrwp_zwsid_text_field_cb( $args ) {
-			
-			// Get the value of the setting we've registered with register_setting()
-			$options = get_option('ezrwp_professional_reviews_options');
-			
-			$setting = ''; // Zillow Web Services ID (ZWSID)
-			if( isset( $options[$args['label_for']] ) ){
-				$setting = $options[$args['label_for']];
-			};
-			?>
+            // Section Callbacks
+            // Section callbacks accept an $args parameter, which is an array.
+            // $args have the following keys defined: id, title, callback.
+            // the values are defined at the add_settings_section() function.
 
-			<label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Zillow Web Services ID</label>
-			<input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
+            // Professional Reviews Section
+            function ezrwp_section_for_zillow_professional_parameters_cb( $args ) {
+                ?>
+                <hr />
+                <p id="<?php echo esc_attr( $args['id'] ); ?>">
+                    For Professional Reviews, sign-up for a <strong>Zillow Web Services ID (ZWSID)</strong> at <a href="https://www.zillow.com/howto/api/APIOverview.htm" target="_blank">https://www.zillow.com/howto/api/APIOverview.htm</a>. <span class="dashicons dashicons-external" style="font-size: 14px;"></span>
+                </p>
+                <?php
+            }
+            function ezrwp_section_for_defaults_cb( $args ) {
+                ?>
+                <hr />
+                <p id="<?php echo esc_attr( $args['id'] ); ?>">
+                    Please find the default plugin settings below. You may override the default settings using the widget and shortcode options.
+                </p>
+                <p id="<?php echo esc_attr( $args['id'] ); ?>-2">
+                    Example shortcode with default plugin settings: <code>[ez-zillow-reviews]</code>
+                </p>
+                <p id="<?php echo esc_attr( $args['id'] ); ?>-3">
+                    Example shortcode with overrides: <code>[ez-zillow-reviews layout="grid" columns="2" count="4"]</code>
+                </p>
+                <?php
+            }
+            function ezrwp_section_for_appearance_cb( $args ) {
+                ?>
+                <hr />
+                <?php
+            }
+            function ezrwp_section_for_support_cb( $args ) {
+                ?>
+                <hr />
+                <p>Your PHP version is <?php echo PHP_VERSION;?></p>
+                <hr />
+                <?php
+            }
+            // Field Callbacks
+            // Field callbacks can accept an $args parameter, which is an array.
+            // $args is defined at the add_settings_field() function.
+            // wordpress has magic interaction with the following keys: label_for, class.
+            // the "label_for" key value is used for the "for" attribute of the <label>.
+            // the "class" key value is used for the "class" attribute of the <tr> containing the field.
+            // you can add custom key value pairs to be used inside your callbacks.
 
-			<p>For Professional Reviews.</p>
+            // ZWSID callback
+            function ezrwp_zwsid_text_field_cb( $args ) {
+                
+                // Get the value of the setting we've registered with register_setting()
+                $options = get_option('ezrwp_professional_reviews_options');
+                
+                $setting = ''; // Zillow Web Services ID (ZWSID)
+                if( isset( $options[$args['label_for']] ) ){
+                    $setting = $options[$args['label_for']];
+                };
+                ?>
 
-			<?php
-		}
-		
-		// Zillow Screenname callback
-		function ezrwp_screenname_text_field_cb( $args ) {
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Zillow Web Services ID</label>
+                <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
 
-			$options = get_option('ezrwp_professional_reviews_options');
-			
-			$setting = '';
-			if( isset( $options[$args['label_for']] ) ){
-				$setting = $options[$args['label_for']];
-			};
-			?>
+                <p>For Professional Reviews.</p>
 
-			<label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Zillow Screenname</label>
-			<input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
+                <?php
+            }
+            
+            // Zillow Screenname callback
+            function ezrwp_screenname_text_field_cb( $args ) {
 
-			<p>The screenname of the user whose reviews you want to display.</p>
+                $options = get_option('ezrwp_professional_reviews_options');
+                
+                $setting = '';
+                if( isset( $options[$args['label_for']] ) ){
+                    $setting = $options[$args['label_for']];
+                };
+                ?>
 
-			<?php
-		}
-		
-		// Zillow Review Count callback
-		function ezrwp_count_number_field_cb( $args ) {
-			
-			$options = get_option('ezrwp_general_options');
-			
-			$setting = 1;
-			if( isset( $options[$args['label_for']] ) ){
-				$setting = $options[$args['label_for']];
-			};
-			?>
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Zillow Screenname</label>
+                <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
 
-			<label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Review Count</label>
-			<input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="1" max="10" required />
+                <p>The screenname of the user whose reviews you want to display.</p>
 
-			<p>The count of reviews you would like to return. Choose a number from 1 to 10.</p>
-			<?php
-		}
+                <?php
+            }
+            
+            // Zillow Review Count callback
+            function ezrwp_count_number_field_cb( $args ) {
+                
+                $options = get_option('ezrwp_general_options');
+                
+                $setting = 1;
+                if( isset( $options[$args['label_for']] ) ){
+                    $setting = $options[$args['label_for']];
+                };
+                ?>
 
-		// Zillow Review Layout callback
-		function ezrwp_layout_select_field_cb( $args ) {
-			
-			$options = get_option('ezrwp_general_options');
-			
-			$setting = '';
-			if( isset( $options[$args['label_for']] ) ){
-				$setting = $options[$args['label_for']];
-			};
-			?>
-				
-			<select id="<?php echo esc_attr( $args['label_for'] ); ?>"
-					class="ezrwp-setting ezrwp_layout"
-					data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>"
-					name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]">
-				<option value="list" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'list', false ) ) : ( '' ); ?>>
-				<?php esc_html_e( 'List', 'ezrwp' ); ?>
-				</option>
-				<option value="grid" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'grid', false ) ) : ( '' ); ?>>
-				<?php esc_html_e( 'Grid', 'ezrwp' ); ?>
-				</option>
-			</select>
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Review Count</label>
+                <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="1" max="10" required />
 
-			<?php
-		}
+                <p>The count of reviews you would like to return. Choose a number from 1 to 10.</p>
+                <?php
+            }
 
-		// Zillow Reviews Grid Columns callback
-		function ezrwp_cols_number_field_cb( $args ) {
-			
-			$options = get_option('ezrwp_general_options');
-			
-			$setting = 3;
-			if( isset( $options[$args['label_for']] ) ){
-				$setting = $options[$args['label_for']];
-			};
-			?>
+            // Zillow Review Layout callback
+            function ezrwp_layout_select_field_cb( $args ) {
+                
+                $options = get_option('ezrwp_general_options');
+                
+                $setting = '';
+                if( isset( $options[$args['label_for']] ) ){
+                    $setting = $options[$args['label_for']];
+                };
+                ?>
+                    
+                <select id="<?php echo esc_attr( $args['label_for'] ); ?>"
+                        class="ezrwp-setting ezrwp_layout"
+                        data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>"
+                        name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]">
+                    <option value="list" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'list', false ) ) : ( '' ); ?>>
+                    <?php esc_html_e( 'List', 'ezrwp' ); ?>
+                    </option>
+                    <option value="grid" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'grid', false ) ) : ( '' ); ?>>
+                    <?php esc_html_e( 'Grid', 'ezrwp' ); ?>
+                    </option>
+                </select>
 
-			<label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Grid Columns</label>
-			<input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="2" max="6" required />
+                <?php
+            }
 
-			<?php
-		}
+            // Zillow Reviews Grid Columns callback
+            function ezrwp_cols_number_field_cb( $args ) {
+                
+                $options = get_option('ezrwp_general_options');
+                
+                $setting = 3;
+                if( isset( $options[$args['label_for']] ) ){
+                    $setting = $options[$args['label_for']];
+                };
+                ?>
 
-		// Zillow Mandatory Disclaimer callback
-		function ezrwp_disclaimer_pill_field_cb( $args ) {
-			
-			$options = get_option('ezrwp_general_options');
-			
-			$setting = '';
-			if( isset( $options[$args['label_for']] ) ){
-				$setting = $options[$args['label_for']];
-			};
-			?>
-				
-			<select id="<?php echo esc_attr( $args['label_for'] ); ?>"
-					class="ezrwp-setting"
-					data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>"
-					name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]">
-				<option value="0" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], '0', false ) ) : ( '' ); ?>>
-				<?php esc_html_e( 'On', 'ezrwp' ); ?>
-				</option>
-				<option value="1" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], '1', false ) ) : ( '' ); ?>>
-				<?php esc_html_e( 'Off', 'ezrwp' ); ?>
-				</option>
-			</select>
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Grid Columns</label>
+                <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="2" max="6" required />
 
-			<div id="disclaimer-warning">
-				<p><strong>Notice</strong>: Please add the disclaimer below somewhere on your website if you turn off the Disclaimer Setting on this page. According to Zillow's <a href="https://www.zillow.com/howto/api/BrandingRequirements.htm" target="_blank">Branding Requirements</a> <span class="dashicons dashicons-external" style="font-size: 14px;"></span>, <em>All pages that contain Zillow Data or tools must include the following text, typically at the bottom of the page</em>:<p>
+                <?php
+            }
 
-				<blockquote>
-					© Zillow, Inc., 2006-2016. Use is subject to <a href="https://www.zillow.com/corp/Terms.htm">Terms of Use</a><br />
-					<a href="https://www.zillow.com/wikipages/What-is-a-Zestimate/">What's a Zestimate?</a>
-				</blockquote>
-			</div>
-		<?php
-		}
+            // Zillow Mandatory Disclaimer callback
+            function ezrwp_disclaimer_pill_field_cb( $args ) {
+                
+                $options = get_option('ezrwp_general_options');
+                
+                $setting = '';
+                if( isset( $options[$args['label_for']] ) ){
+                    $setting = $options[$args['label_for']];
+                };
+                ?>
+                    
+                <select id="<?php echo esc_attr( $args['label_for'] ); ?>"
+                        class="ezrwp-setting"
+                        data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>"
+                        name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]">
+                    <option value="0" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], '0', false ) ) : ( '' ); ?>>
+                    <?php esc_html_e( 'On', 'ezrwp' ); ?>
+                    </option>
+                    <option value="1" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], '1', false ) ) : ( '' ); ?>>
+                    <?php esc_html_e( 'Off', 'ezrwp' ); ?>
+                    </option>
+                </select>
 
-		// Zillow Hide Date callback
-		function ezrwp_hide_date_field_cb( $args ) {
-			
-			$options = get_option('ezrwp_general_options');
-			
-			$setting = '';
-			if( isset( $options[$args['label_for']] ) ){
-				$setting = $options[$args['label_for']];
-			};
-			?>
+                <div id="disclaimer-warning">
+                    <p><strong>Notice</strong>: Please add the disclaimer below somewhere on your website if you turn off the Disclaimer Setting on this page. According to Zillow's <a href="https://www.zillow.com/howto/api/BrandingRequirements.htm" target="_blank">Branding Requirements</a> <span class="dashicons dashicons-external" style="font-size: 14px;"></span>, <em>All pages that contain Zillow Data or tools must include the following text, typically at the bottom of the page</em>:<p>
 
-			<label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Date</label>
-			<input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The time elapsed since the review was written. Example: 6 days ago.
-		<?php
-		}
+                    <blockquote>
+                        © Zillow, Inc., 2006-2016. Use is subject to <a href="https://www.zillow.com/corp/Terms.htm">Terms of Use</a><br />
+                        <a href="https://www.zillow.com/wikipages/What-is-a-Zestimate/">What's a Zestimate?</a>
+                    </blockquote>
+                </div>
+            <?php
+            }
 
-		// Zillow Hide Stars callback
-		function ezrwp_hide_stars_field_cb( $args ) {
-			
-			$options = get_option('ezrwp_general_options');
-			
-			$setting = '';
-			if( isset( $options[$args['label_for']] ) ){
-				$setting = $options[$args['label_for']];
-			};
-			?>
+            // Zillow Hide Date callback
+            function ezrwp_hide_date_field_cb( $args ) {
+                
+                $options = get_option('ezrwp_general_options');
+                
+                $setting = '';
+                if( isset( $options[$args['label_for']] ) ){
+                    $setting = $options[$args['label_for']];
+                };
+                ?>
 
-			<label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Stars</label>
-			<input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The overall star rating for the review.
-		<?php
-		}
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Date</label>
+                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The time elapsed since the review was written. Example: 6 days ago.
+            <?php
+            }
 
-		// Zillow Hide Reviewer Summary callback
-		function ezrwp_hide_reviewer_summary_field_cb( $args ) {
-			
-			$options = get_option('ezrwp_general_options');
-			
-			$setting = '';
-			if( isset( $options[$args['label_for']] ) ){
-				$setting = $options[$args['label_for']];
-			};
-			?>
+            // Zillow Hide Stars callback
+            function ezrwp_hide_stars_field_cb( $args ) {
+                
+                $options = get_option('ezrwp_general_options');
+                
+                $setting = '';
+                if( isset( $options[$args['label_for']] ) ){
+                    $setting = $options[$args['label_for']];
+                };
+                ?>
 
-			<label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Reviewer Summary</label>
-			<input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> A short description of the reviewer. Example: "Sold a Single Family home in 2013 for approximately $500K in Roswell, GA."
-		<?php
-		}
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Stars</label>
+                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The overall star rating for the review.
+            <?php
+            }
 
-		// Zillow Hide View All Link callback
-		function ezrwp_hide_view_all_link_field_cb( $args ) {
-			
-			$options = get_option('ezrwp_general_options');
-			
-			$setting = '';
-			if( isset( $options[$args['label_for']] ) ){
-				$setting = $options[$args['label_for']];
-			};
-			?>
+            // Zillow Hide Reviewer Summary callback
+            function ezrwp_hide_reviewer_summary_field_cb( $args ) {
+                
+                $options = get_option('ezrwp_general_options');
+                
+                $setting = '';
+                if( isset( $options[$args['label_for']] ) ){
+                    $setting = $options[$args['label_for']];
+                };
+                ?>
 
-			<label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide View All Link</label>
-			<input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The link to your Zillow profile labeled "View All Reviews".
-		<?php
-		}
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Reviewer Summary</label>
+                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> A short description of the reviewer. Example: "Sold a Single Family home in 2013 for approximately $500K in Roswell, GA."
+            <?php
+            }
 
-		// Zillow Hide View All Reviews Link callback
-		function ezrwp_hide_zillow_logo_field_cb( $args ) {
-			
-			$options = get_option('ezrwp_general_options');
-			
-			$setting = '';
-			if( isset( $options[$args['label_for']] ) ){
-				$setting = $options[$args['label_for']];
-			};
-			?>
+            // Zillow Hide View All Link callback
+            function ezrwp_hide_view_all_link_field_cb( $args ) {
+                
+                $options = get_option('ezrwp_general_options');
+                
+                $setting = '';
+                if( isset( $options[$args['label_for']] ) ){
+                    $setting = $options[$args['label_for']];
+                };
+                ?>
 
-			<label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Zillow Logo</label>
-			<input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> Important: Consult the <a href="https://www.zillow.com/howto/api/BrandingRequirements.htm" target="_blank">Zillow Branding Requirements</a> <span class="dashicons dashicons-external" style="font-size: 14px;"></span> before you hide the Zillow logo.
-		<?php
-		}
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide View All Link</label>
+                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The link to your Zillow profile labeled "View All Reviews".
+            <?php
+            }
 
-		// Zillow Review Quote Font Size callback
-		function ezrwp_quote_font_size_field_cb( $args ) {
-			
-			$options = get_option('ezrwp_general_options');
-			
-			$setting = '';
-			if( isset( $options[$args['label_for']] ) ){
-				$setting = $options[$args['label_for']];
-			};
-			?>
+            // Zillow Hide View All Reviews Link callback
+            function ezrwp_hide_zillow_logo_field_cb( $args ) {
+                
+                $options = get_option('ezrwp_general_options');
+                
+                $setting = '';
+                if( isset( $options[$args['label_for']] ) ){
+                    $setting = $options[$args['label_for']];
+                };
+                ?>
 
-			<label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Review Text Font Size</label>
-			<input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="1" />
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Zillow Logo</label>
+                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> Important: Consult the <a href="https://www.zillow.com/howto/api/BrandingRequirements.htm" target="_blank">Zillow Branding Requirements</a> <span class="dashicons dashicons-external" style="font-size: 14px;"></span> before you hide the Zillow logo.
+            <?php
+            }
 
-			<p>The font size for the review quote text in pixels. Default is 18px.</p>
+            // Zillow Review Quote Font Size callback
+            function ezrwp_quote_font_size_field_cb( $args ) {
+                
+                $options = get_option('ezrwp_general_options');
+                
+                $setting = '';
+                if( isset( $options[$args['label_for']] ) ){
+                    $setting = $options[$args['label_for']];
+                };
+                ?>
 
-			<?php
-		}
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Review Text Font Size</label>
+                <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="1" />
 
-		// Zillow Reviewer Description Font Size callback
-		function ezrwp_reviewer_description_font_size_field_cb( $args ) {
-			
-			$options = get_option('ezrwp_general_options');
-			
-			$setting = '';
-			if( isset( $options[$args['label_for']] ) ){
-				$setting = $options[$args['label_for']];
-			};
-			?>
+                <p>The font size for the review quote text in pixels. Default is 18px.</p>
 
-			<label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Review Text Font Size</label>
-			<input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="1" />
+                <?php
+            }
 
-			<p>The font size for the reviewer description text in pixels. Default is 16px.</p>
+            // Zillow Reviewer Description Font Size callback
+            function ezrwp_reviewer_description_font_size_field_cb( $args ) {
+                
+                $options = get_option('ezrwp_general_options');
+                
+                $setting = '';
+                if( isset( $options[$args['label_for']] ) ){
+                    $setting = $options[$args['label_for']];
+                };
+                ?>
 
-			<?php
-		}
-		function ezrwp_section_for_premium_callout_cb( $args ) {
-			?>
-			<p id="<?php echo esc_attr( $args['id'] ); ?>-0">The Premium License unlocks the following features:</p>
-			<ul id="<?php echo esc_attr( $args['id'] ); ?>-1">
-				<li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Team Reviews</li>
-				<li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Lender Reviews</li>
-				<li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Individual Loan Officer Reviews</li>
-				<li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Company Profile Reviews</li>
-			</ul>
-			<p id="<?php echo esc_attr( $args['id'] ); ?>-2">
-				<a href="<?php echo ezrwp_fs()->get_upgrade_url(); ?>" class="button">Upgrade to Premium</a>
-			</p>
-			<?php
-		}
-	}
-	
-	/**
-	 * Include the HTML code to display the settings page tabs and more.
-	 *
-	 * @since    1.1.0
-	 */
-	public function render_settings_page() {
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/easy-zillow-reviews-admin-display.php';
-	}
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Review Text Font Size</label>
+                <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="1" />
 
-	/**
-	 * Register the stylesheets for the admin area.
-	 *
-	 * @since    1.1.0
-	 */
-	public function enqueue_styles() {
+                <p>The font size for the reviewer description text in pixels. Default is 16px.</p>
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Easy_Zillow_Reviews_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Easy_Zillow_Reviews_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+                <?php
+            }
+            function ezrwp_section_for_premium_callout_cb( $args ) {
+                ?>
+                <p id="<?php echo esc_attr( $args['id'] ); ?>-0">The Premium License unlocks the following features:</p>
+                <ul id="<?php echo esc_attr( $args['id'] ); ?>-1">
+                    <li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Team Reviews</li>
+                    <li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Lender Reviews</li>
+                    <li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Individual Loan Officer Reviews</li>
+                    <li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Company Profile Reviews</li>
+                </ul>
+                <p id="<?php echo esc_attr( $args['id'] ); ?>-2">
+                    <a href="<?php echo ezrwp_fs()->get_upgrade_url(); ?>" class="button">Upgrade to Premium</a>
+                </p>
+                <?php
+            }
+        }
+        
+        /**
+         * Include the HTML code to display the settings page tabs and more.
+         *
+         * @since    1.1.0
+         */
+        public function render_settings_page() {
+            require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/easy-zillow-reviews-admin-display.php';
+        }
 
-		wp_enqueue_style( $this->plugin_slug, plugin_dir_url( __FILE__ ) . 'css/easy-zillow-reviews-admin.css', array(), $this->version, 'all' );
+        /**
+         * Register the stylesheets for the admin area.
+         *
+         * @since    1.1.0
+         */
+        public function enqueue_styles() {
 
-	}
+            /**
+             * This function is provided for demonstration purposes only.
+             *
+             * An instance of this class should be passed to the run() function
+             * defined in Easy_Zillow_Reviews_Loader as all of the hooks are defined
+             * in that particular class.
+             *
+             * The Easy_Zillow_Reviews_Loader will then create the relationship
+             * between the defined hooks and the functions defined in this
+             * class.
+             */
 
-	/**
-	 * Register the JavaScript for the admin area.
-	 *
-	 * @since    1.1.0
-	 */
-	public function enqueue_scripts() {
+            wp_enqueue_style( $this->plugin_slug, plugin_dir_url( __FILE__ ) . 'css/easy-zillow-reviews-admin.css', array(), $this->version, 'all' );
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Easy_Zillow_Reviews_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Easy_Zillow_Reviews_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+        }
 
-		wp_enqueue_script( $this->plugin_slug, plugin_dir_url( __FILE__ ) . 'js/easy-zillow-reviews-admin.js', array( 'jquery' ), $this->version, false );
+        /**
+         * Register the JavaScript for the admin area.
+         *
+         * @since    1.1.0
+         */
+        public function enqueue_scripts() {
 
-	}
+            /**
+             * This function is provided for demonstration purposes only.
+             *
+             * An instance of this class should be passed to the run() function
+             * defined in Easy_Zillow_Reviews_Loader as all of the hooks are defined
+             * in that particular class.
+             *
+             * The Easy_Zillow_Reviews_Loader will then create the relationship
+             * between the defined hooks and the functions defined in this
+             * class.
+             */
+
+            wp_enqueue_script( $this->plugin_slug, plugin_dir_url( __FILE__ ) . 'js/easy-zillow-reviews-admin.js', array( 'jquery' ), $this->version, false );
+
+        }
+    }
 }

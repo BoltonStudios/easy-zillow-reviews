@@ -13,44 +13,45 @@ Display reviews from Zillow on your website.
 
 == Description ==
 
-*Easy Zillow Reviews* allows lenders and other real estate professionals to easily integrate Zillow Reviews into their own sites.
+*Easy Zillow Reviews* allows lenders and other real estate professionals to integrate Zillow reviews into their WordPress sites easily.
 
 = Free Edition Features =
-* Display up to 10 Zillow Professional reviews (individuals and teams)
-* Compliant with Zillow's [Terms of Use](https://www.zillow.com/corp/Terms.htm) and [Branding Requirements](https://www.zillow.com/howto/api/BrandingRequirements.htm). See important details in the Requirements section below.
+* Free for Real Estate Agents (individuals and teams)
+* Display your reviews using the official Zillow API Network 
+* Compliant with Zillow's [Terms of Use](https://www.zillow.com/corp/Terms.htm) and [Branding Requirements](https://www.zillow.com/howto/api/BrandingRequirements.htm)
 * Grid and List layout options
 * Widget and Shortcode options
 * Mobile responsive
 
-= Mortages Partner Edition Features =
+= Mortgages Partner Edition Features =
 * Lender Reviews
 * Individual Loan Officer Reviews
 * Company Profile Reviews 
 
 = Requirements =
 
-The Free Edition requires...
+The Free Edition requires:
 
 1. Zillow Web Services ID (ZWSID)\*
-1. Zillow Screenname
+2. Zillow Screenname
 
-The Mortgages Partner Edition requires...
+The Mortgages Partner Edition requires:
 
-1. Zillow Mortagages Partner ID (ZPID)\*\*
-1. NMLS#
-1. Company Name (for companies only)
+1. Zillow Mortgages Partner ID (ZPID)\*\*
+2. NMLS#
+3. Company Name (for companies only)
 
 \*Sign-up for a ZWSID at [https://www.zillow.com/howto/api/APIOverview.htm](https://www.zillow.com/howto/api/APIOverview.htm).
 \*\*Sign-up for a ZPID at [https://www.zillow.com/mortgage/api/](https://www.zillow.com/mortgage/api/).
 
 = Limitations =
 
-**Important**: See [Zillow's Review API FAQ](https://www.zillow.com/howto/api/faq.htm). *Easy Zillow Reviews* is compliant out-of-the-box but please note the following limitations before you adjust settings or request support:
+**Important**: While *Easy Zillow Reviews* is compliant out-of-the-box, knowledge of the following limitations from [Zillow's Review API FAQ](https://www.zillow.com/howto/api/faq.htm) will help you avoid any unexpected errors.
 
+* Include the approved Zillow logo on your website wherever reviews appear. *Easy Zillow Reviews* includes this logo, but you can disable it in Settings > Easy Zillow Reviews if you wish to add it elsewhere adjacent to the Reviews per the [Branding Guidelines](https://www.zillow.com/howto/api/BrandingRequirements.htm).
+* Include the Mandatory Disclaimer wherever reviews appear. *Easy Zillow Reviews* includes this disclaimer, but you can disable it in Settings > Easy Zillow Reviews if you wish to add it elsewhere (such as in the footer).
 * No local storage of reviews. *Easy Zillow Reviews* will always fetch the latest reviews directly from Zillow's Reviews API using your ZWSID or ZPID.
-* No more more than 1,000 calls to the Reviews API in a day, and no more than 20 on one page at one time. *Easy Zillow Reviews* will display a simple text error message to help identify the problem if your ZWSID or ZPID is blocked for any reason. Zillow may permit more calls for your account upon request. Per the FAQ, you may reach out to <huann@zillow.com> or <reviewsapi@zillow.com> for more info.
-* Include the approved Zillow logo on your website wherever reviews appear. *Easy Zillow Reviews* includes this logo but you can disable it in Settings > Easy Zillow Reviews if you wish to add it elsewhere adjacent to the Reviews per the [Branding Guidelines](https://www.zillow.com/howto/api/BrandingRequirements.htm).
-* Include the Mandatory Disclaimer wherever reviews appear. *Easy Zillow Reviews* includes this disclaimer but you can disable it in Settings > Easy Zillow Reviews if you wish to add it elsewhere (such as in the footer).
+* No more than 1,000 calls to the Reviews API in a day, and no more than 20 on one page at one time. *Easy Zillow Reviews* will display a simple text error message to help identify the problem if Zillow blocks your ZWSID or ZPID for any reason. Zillow may permit more calls for your account upon request. Per the FAQ, you may reach out to <huann@zillow.com> or <reviewsapi@zillow.com> for more info.
 
 = Shortcode =
 
@@ -81,6 +82,9 @@ The Mortgages Partner Edition requires...
 3. Settings.
 
 == Changelog ==
+
+= 1.1.6 =
+* Bug Fix: Fixed error that prevented Mortgages Partner Edition from activating while Free Edition was active.
 
 = 1.1.5 =
 * Bug Fix: Resolved PHP notices when certain elements are set to hidden and WP_DEBUG is true.

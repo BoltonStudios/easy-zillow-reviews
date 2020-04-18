@@ -91,7 +91,7 @@ class Easy_Zillow_Reviews_Professional extends Easy_Zillow_Reviews_Data{
          *  LOCAL DEVELOPMENT ONLY. Comment out for Production
          * 
          *
-         */
+         *
         $arrContextOptions = array(
             "ssl" => array(
                 "verify_peer" => false,
@@ -111,7 +111,7 @@ class Easy_Zillow_Reviews_Professional extends Easy_Zillow_Reviews_Data{
          * 
          */
         // Fetch data from Zillow.
-        //$xml = simplexml_load_file($url) or die("Error: Cannot create object");
+        $xml = simplexml_load_file($url) or die("Error: Cannot create object");
         /*
         *
         *  END PRODUCTION ONLY.
@@ -165,12 +165,9 @@ class Easy_Zillow_Reviews_Professional extends Easy_Zillow_Reviews_Data{
             $description = $review->description;
             $summary = lcfirst($review->reviewSummary);
             $url = $review->reviewURL;
-            if( !$hide_date ){
-                $date = 
-                    '<div class="ezrwp-date">
-                        '. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime($review->reviewDate))) .'
-                    </div>';
-            }
+            $date = ( !$hide_date ) ? '<div class="ezrwp-date">'. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime($review->reviewDate))) .'</div>' : '';
+            $reviewer_summary = ( !$hide_reviewer_summary ) ? '<span class="review-summary">who '. $summary .'</span>' : '';
+            $stars = '';
             if( !$hide_stars ){
                 $stars = $review->rating;
                 $star_count = floor($stars); // count whole stars
@@ -183,9 +180,6 @@ class Easy_Zillow_Reviews_Professional extends Easy_Zillow_Reviews_Data{
                 $stars = '
                     <div class="ezrwp-stars ezrwp-stars-'. $star_count .' '. $half_star_toggle .'"></div>
                 ';
-            }
-            if( !$hide_reviewer_summary ){
-                $reviewer_summary = '<span class="review-summary">who '. $summary .'</span>';
             }
             $reviewer = '
                 <div class="ezrwp-reviewer">

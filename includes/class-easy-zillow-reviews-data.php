@@ -14,6 +14,16 @@
  */
 
 class Easy_Zillow_Reviews_Data{
+
+	/**
+	 * The unique identifier of this plugin.
+	 *
+	 * @since    1.1.5
+	 * @access   protected
+	 * @var      string    $plugin_slug    The string used to uniquely identify this plugin.
+	 */
+    protected $plugin_slug;
+    
     /**
 	 * The layout for reviews.
         * The user may select "grid" or "list" from the shortcode, widget, or admin settings.
@@ -224,6 +234,30 @@ class Easy_Zillow_Reviews_Data{
         $this->set_reviewer_description_font_size($reviewer_description_font_size);
     }
     
+	/**
+	 * The name of the plugin used to uniquely identify it within the context of
+	 * WordPress and to define internationalization functionality.
+	 *
+	 * @since     1.1.5
+	 * @return    string    The name of the plugin.
+	 */
+	public function get_plugin_slug() {
+		return $this->plugin_slug;
+    }
+    
+	/**
+	 * 
+	 *
+	 * @since     1.1.5
+	 * @return    string    The name of the plugin.
+	 */
+	public function set_plugin_slug($plugin_slug){
+        
+        $this->plugin_slug = $plugin_slug;
+
+        return $this;
+    }
+
     /**
      * Get the value of layout
      *
@@ -485,7 +519,7 @@ class Easy_Zillow_Reviews_Data{
      */ 
     public function set_hide_reviewer_summary($hide_reviewer_summary)
     {
-            $this->hide_hide_reviewer_summary = $hide_reviewer_summary;
+            $this->hide_reviewer_summary = $hide_reviewer_summary;
 
             return $this;
     }

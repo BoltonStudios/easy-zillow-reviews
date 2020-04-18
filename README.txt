@@ -5,7 +5,7 @@ Tags: zillow, reviews
 Requires at least: 4.0.0
 Tested up to: 5.4.0
 Requires PHP: 5.4
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,26 +13,35 @@ Display reviews from Zillow on your website.
 
 == Description ==
 
-*Easy Zillow Reviews* is a bridge between your WordPress website and your Zillow Profile. This plugin provides widgets and shortcodes that allow you to embed reviews from Zillow on your website.
+*Easy Zillow Reviews* allows lenders and other real estate professionals to easily integrate Zillow Reviews into their own sites.
 
-= Free Version =
+= Free Edition Features =
 * Display up to 10 Zillow Professional reviews (individuals and teams)
 * Compliant with Zillow's [Terms of Use](https://www.zillow.com/corp/Terms.htm) and [Branding Requirements](https://www.zillow.com/howto/api/BrandingRequirements.htm). See important details in the Requirements section below.
 * Grid and List layout options
 * Widget and Shortcode options
 * Mobile responsive
 
-= Premium Version =
-* All Free Versin Features
+= Mortages Partner Edition Features =
 * Lender Reviews
 * Individual Loan Officer Reviews
 * Company Profile Reviews 
 
 = Requirements =
 
-The free version of this plugin requires a **Zillow Web Services ID (ZWSID)** and **Zillow Screenname**. Sign-up for a Zillow Web Services ID at [Zillow.com](https://www.zillow.com/howto/api/APIOverview.htm). Your Zillow Screenname appears at the end of your profile link. For example: https://www.zillow.com/profile/**my-screenname**/
+The Free Edition requires...
 
-The premium version of this plugin requires a **Zillow Mortgages Partner ID (ZPID)** and **NMLS#** or **Company Name**. Sign-up for a Zillow Mortgages Partner ID at [Zillow.com](https://www.zillow.com/mortgage/api/#/).
+1. Zillow Web Services ID (ZWSID)\*
+1. Zillow Screenname
+
+The Mortgages Partner Edition requires...
+
+1. Zillow Mortagages Partner ID (ZPID)\*\*
+1. NMLS#
+1. Company Name (for companies only)
+
+\*Sign-up for a ZWSID at [https://www.zillow.com/howto/api/APIOverview.htm](https://www.zillow.com/howto/api/APIOverview.htm).
+\*\*Sign-up for a ZPID at [https://www.zillow.com/mortgage/api/](https://www.zillow.com/mortgage/api/).
 
 = Limitations =
 
@@ -46,6 +55,7 @@ The premium version of this plugin requires a **Zillow Mortgages Partner ID (ZPI
 = Shortcode =
 
     [ez-zillow-reviews]
+    [ez-zillow-lender-reviews]
 
 = Optional Shortcode Parameters =
 
@@ -72,8 +82,13 @@ The premium version of this plugin requires a **Zillow Mortgages Partner ID (ZPI
 
 == Changelog ==
 
+= 1.1.5 =
+* Bug Fix: Resolved PHP notices when certain elements are set to hidden and WP_DEBUG is true.
+* Bug Fix: Restored feature to hide Reviewer Summary.
+
 = 1.1.4 =
-* Bug Fix: Please check your widgets to confirm that Easy Zillow Reviews is still active. Changed plugin widget name back to 'ezrwp_widget' (free version) 
+* *NOTE* Due to changes in v1.1.x, please check your widgets to confirm that Easy Zillow Reviews is still active.
+* Bug Fix: Changed plugin widget name back to 'ezrwp_widget' (free version) 
 * Bug Fix: Restored options to style and hide reviews output.
 * Bug Fix: Resolved miscellaneous notices when WP_DEBUG is true.
 

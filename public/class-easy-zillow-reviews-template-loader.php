@@ -123,49 +123,6 @@ class Easy_Zillow_Reviews_Template_Loader{
     }
 
     /**
-     * 
-     *
-     * @since    1.1.4
-     */
-    public function generate_inline_styles(){
-                
-        // User Options
-        $options = $GLOBALS['ezrwpOptions'];
-        $quote_font_size = $options['ezrwp_quote_font_size'];
-        $reviewer_description_font_size = $options['ezrwp_reviewer_description_font_size'];
-        $quote_styles = '';
-
-        // Styles
-        if( $quote_font_size != null && $quote_font_size != '' ){
-            $quote_styles = '
-            /* Review Quote Font Size */
-            body .ezrwp-wrapper .ezrwp-content blockquote,
-            body .entry-content .ezrwp-wrapper .ezrwp-content blockquote{
-                font-size: ' . $quote_font_size . 'px;
-            }
-            ';
-        }
-        if( $reviewer_description_font_size != null && $reviewer_description_font_size != '' ){
-            $reviewer_description_font_size = '
-            /* Reviewer Description Font Size */
-            body .ezrwp-wrapper .ezrwp-content .ezrwp-reviewer p,
-            body .ezrwp-wrapper .ezrwp-content .ezrwp-reviewer *{
-                font-size: '. $reviewer_description_font_size .'px;
-            }
-            ';
-        }
-        $before_inline_styles = '<!-- Easy Zillow Reviews Inline Styles --><style>';
-        $after_inline_styles = '</style>';
-        $inline_styles = $before_inline_styles;
-        $inline_styles .= $quote_styles;
-        $inline_styles .= $reviewer_description_font_size;
-        $inline_styles .= $after_inline_styles;
-
-        return $inline_styles;
-        
-    }
-
-    /**
      * Convert date to time elapsed
      *
      * @since    1.1.0

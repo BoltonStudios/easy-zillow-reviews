@@ -152,13 +152,9 @@ class Easy_Zillow_Reviews_Lender extends Easy_Zillow_Reviews_Data{
             $review_date = $review->created;
 
             $loan_summary = $loan_service_provided . " " . $loan_type . " " . $loan_program . " " . $loan_purpose;
-
-            if( $hide_date == false ){
-                $date = 
-                    '<div class="ezrwp-date">
-                        '. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime($review_date))) .'
-                    </div>';
-            }
+            $date = ( $hide_date == false ) ? '<div class="ezrwp-date">'. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime($review_date))) .'</div>' : '';
+            $reviewer_summary = ( $hide_reviewer_summary == false ) ? '<span class="review-summary">who '. $loan_summary .' loan.</span>' : '';
+            $stars = '';
             if( $hide_stars == false ){
                 $stars = $review->rating;
                 $star_count = floor($stars); // count whole stars
@@ -171,9 +167,6 @@ class Easy_Zillow_Reviews_Lender extends Easy_Zillow_Reviews_Data{
                 $stars = '
                     <div class="ezrwp-stars ezrwp-stars-'. $star_count .' '. $half_star_toggle .'"></div>
                 ';
-            }
-            if( $hide_reviewer_summary == false ){
-                $reviewer_summary = '<span class="review-summary">who '. $loan_summary .' loan.</span>';
             }
             $reviewer_info = '
                 <div class="ezrwp-reviewer">

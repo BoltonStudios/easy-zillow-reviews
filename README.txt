@@ -5,7 +5,7 @@ Tags: zillow, reviews
 Requires at least: 4.0.0
 Tested up to: 5.4.0
 Requires PHP: 5.4
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,7 @@ The Mortgages Partner Edition requires:
 
 = 1.1.6 =
 * Bug Fix: Fixed error that prevented Mortgages Partner Edition from activating while Free Edition was active.
+* Bug Fix: Fixed error that prevented reviews for Lending Companies from displaying.
 
 = 1.1.5 =
 * Bug Fix: Resolved PHP notices when certain elements are set to hidden and WP_DEBUG is true.

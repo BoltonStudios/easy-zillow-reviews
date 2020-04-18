@@ -28,9 +28,9 @@
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
     
-if ( ! class_exists( 'Easy_Zillow_Reviews' ) ) {
+if ( ! class_exists( 'Easy_Zillow_Reviews_Base' ) ) {
 
-    class Easy_Zillow_Reviews {
+    class Easy_Zillow_Reviews_Base {
 
         // Properties
         /**

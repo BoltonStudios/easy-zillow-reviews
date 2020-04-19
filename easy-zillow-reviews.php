@@ -114,7 +114,7 @@ if ( function_exists( 'ezrwp_fs' ) ) {
         do_action('ezrwp_fs_loaded');
 
         /**
-         * This class defines all code necessary to migrate old plugin options to the new format.
+         * Easy_Zillow_Reviews Class
          *
          * @since      1.1.6
          * @package    Easy_Zillow_Reviews
@@ -123,20 +123,25 @@ if ( function_exists( 'ezrwp_fs' ) ) {
          */
         class Easy_Zillow_Reviews {
 
-			private static $instance;
-
-			public static function get_instance() {
-				if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Easy_Zillow_Reviews ) ) {
-					self::$instance = new Easy_Zillow_Reviews();
-				}
-
-				return self::$instance;
-			}
-
-			/**
-			 * Initialize the plugin by setting localization, filters, and administration functions.
-			 */
-			private function __construct() {
+            /**
+             * Original Copyright Brad Vincent <bradvin@gmail.comm> and contributors.
+             * The following code is a derivative work of the code from FooGallery, which is licensed GPLv2.
+             * https://github.com/fooplugins/foogallery
+            */
+            private static $instance;
+            
+            public static function get_instance() {
+                if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Easy_Zillow_Reviews ) ) {
+                    self::$instance = new Easy_Zillow_Reviews();
+                }
+                
+                return self::$instance;
+            }
+            
+            /**
+             * Initialize the plugin by setting localization, filters, and administration functions.
+             */
+            private function __construct() {
                     
                 // Load the essential plugin features including settings and admin
                 $plugin = new Easy_Zillow_Reviews_Base();

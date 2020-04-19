@@ -15,6 +15,8 @@ Display reviews from Zillow on your website.
 
 *Easy Zillow Reviews* allows lenders and other real estate professionals to integrate Zillow reviews into their WordPress sites easily.
 
+View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
+
 = Free Edition Features =
 * Free for Real Estate Agents (individuals and teams)
 * Display your reviews using the official Zillow API Network 
@@ -41,8 +43,9 @@ The Mortgages Partner Edition requires:
 2. NMLS#
 3. Company Name (for companies only)
 
-\*Sign-up for a ZWSID at [https://www.zillow.com/howto/api/APIOverview.htm](https://www.zillow.com/howto/api/APIOverview.htm).
-\*\*Sign-up for a ZPID at [https://www.zillow.com/mortgage/api/](https://www.zillow.com/mortgage/api/).
+\* Get your ZWSID at [https://www.zillow.com/howto/api/APIOverview.htm](https://www.zillow.com/howto/api/APIOverview.htm).
+
+\*\* Get your ZPID at [https://www.zillow.com/mortgage/api/](https://www.zillow.com/mortgage/api/).
 
 = Limitations =
 
@@ -82,6 +85,10 @@ The Mortgages Partner Edition requires:
 3. Settings.
 
 == Changelog ==
+
+= 1.1.7 =
+* Bug Fix: Fixed error that prevented review count and profile link from displaying in Mortgages Partner Edition.
+* Added attribution for function copied from FooGallery by Brad Vincent and Contributors.
 
 = 1.1.6 =
 * Bug Fix: Fixed error that prevented Mortgages Partner Edition from activating while Free Edition was active.

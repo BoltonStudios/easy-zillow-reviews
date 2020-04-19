@@ -133,6 +133,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
             $hide_zillow_logo = $this->get_hide_zillow_logo();
             $layout = ($as_layout == '') ? $this->get_layout() : $as_layout;
             $number_cols = ($number_cols == '') ? $this->get_grid_columns() : $number_cols;
+            $profile_url = $this->get_url();
+            $review_count = $this->get_review_count();
 
             // Output
             $i = 0;
@@ -141,6 +143,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
             $template->set_hide_disclaimer( $hide_disclaimer );
             $template->set_hide_view_all_link( $hide_view_all_link );
             $template->set_hide_zillow_logo( $hide_zillow_logo );
+            $template->set_profile_url( $profile_url );
+            $template->set_review_count( $review_count );
 
             // Lender Reviews
             foreach($this->reviews as $review) :

@@ -5,7 +5,7 @@ Tags: zillow, reviews
 Requires at least: 4.0.0
 Tested up to: 5.4.0
 Requires PHP: 5.4
-Stable tag: 1.1.6
+Stable tag: 1.1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,6 +88,7 @@ The Mortgages Partner Edition requires:
 
 = 1.1.7 =
 * Bug Fix: Fixed error that prevented review count and profile link from displaying in Mortgages Partner Edition.
+* Bug Fix: Fixed error that caused "Settings" plugin action link to appear under other plugin names in the Plugin menu.
 * Added attribution for function copied from FooGallery by Brad Vincent and Contributors.
 
 = 1.1.6 =

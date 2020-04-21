@@ -105,8 +105,12 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
          * @since    1.1.0
          */
         public function admin_plugin_listing_actions( $links ) {
-
-            return array_merge(array('settings' => '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_slug ) . '">' . __( 'Settings', 'domain' ) . '</a>'), $links);
+            
+            $action_links = [];
+            $action_links = array(
+                'settings' => '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_slug ) . '">' . __( 'Settings', 'domain' ) . '</a>',
+            );
+            return array_merge( $action_links, $links );
         }
 
         /**
@@ -179,10 +183,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                     Please find the default plugin settings below. You may override the default settings using the widget and shortcode options.
                 </p>
                 <p id="<?php echo esc_attr( $args['id'] ); ?>-2">
-                    Example shortcode with default plugin settings: <code>[ez-zillow-reviews]</code>
+                    Shortcode:<br/>[ez-zillow-reviews]
                 </p>
                 <p id="<?php echo esc_attr( $args['id'] ); ?>-3">
-                    Example shortcode with overrides: <code>[ez-zillow-reviews layout="grid" columns="2" count="4"]</code>
+                    Example shortcode with overrides:<br />[ez-zillow-reviews layout="grid" columns="2" count="4"]
                 </p>
                 <?php
             }

@@ -7,6 +7,10 @@
  * admin area. This file also includes all of the dependencies used by the plugin,
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
+ * 
+ * Special thanks to Brad Vincent <bradvin@gmail.comm> and contributors. 
+ * Selections of the following code were derived from the code from FooGallery, which is licensed GPLv2.
+ * Used with permission.
  *
  * @link              https://www.boltonstudios.com
  * @since             1.1.0
@@ -16,7 +20,7 @@
  * Plugin Name:       Easy Zillow Reviews
  * Plugin URI:        https://wordpress.org/plugins/easy-zillow-reviews/
  * Description:       Display reviews from Zillow on your site.
- * Version:           1.1.6
+ * Version:           1.1.7
  * Author:            Aaron Bolton
  * Author URI:        https://www.boltonstudios.com
  * License:           GPL-2.0+
@@ -44,7 +48,8 @@ if ( function_exists( 'ezrwp_fs' ) ) {
          * Start at version 1.0.0 and use SemVer - https://semver.org
          * Rename this for your plugin and update it as you release new versions.
          */
-        define( 'EASY_ZILLOW_REVIEWS_VERSION', '1.1.6' );
+        define( 'EASY_ZILLOW_REVIEWS_VERSION', '1.1.7' );
+        define( 'EASY_ZILLOW_REVIEWS_BASENAME', plugin_basename( __FILE__ ) );
 
         /**
          * The code that runs during plugin activation.
@@ -121,31 +126,16 @@ if ( function_exists( 'ezrwp_fs' ) ) {
          * @subpackage Easy_Zillow_Reviews/includes
          * @author     Aaron Bolton <aaron@boltonstudios.com>
          */
-        class Easy_Zillow_Reviews {
-
-            /**
-             * Original Copyright Brad Vincent <bradvin@gmail.comm> and contributors.
-             * The following code is a derivative work of the code from FooGallery, which is licensed GPLv2.
-             * https://github.com/fooplugins/foogallery
-            */
-            private static $instance;
-            
-            public static function get_instance() {
-                if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Easy_Zillow_Reviews ) ) {
-                    self::$instance = new Easy_Zillow_Reviews();
-                }
-                
-                return self::$instance;
-            }
+        class Easy_Zillow_Reviews extends Easy_Zillow_Reviews_Base{
             
             /**
              * Initialize the plugin by setting localization, filters, and administration functions.
              */
-            private function __construct() {
+            public function __construct() {
                     
                 // Load the essential plugin features including settings and admin
-                $plugin = new Easy_Zillow_Reviews_Base();
-
+                $plugin = new Easy_Zillow_Reviews_Base( EASY_ZILLOW_REVIEWS_BASENAME );
+                
                 // Run the Upgrader.
                 new Easy_Zillow_Reviews_Upgrader();
 
@@ -185,5 +175,5 @@ if ( function_exists( 'ezrwp_fs' ) ) {
         }
     }
     // Run Plugin
-    Easy_Zillow_Reviews::get_instance();
+    new Easy_Zillow_Reviews();
 }

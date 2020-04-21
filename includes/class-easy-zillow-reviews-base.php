@@ -53,6 +53,15 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Base' ) ) {
         protected $plugin_name;
 
         /**
+         * The basename of this plugin.
+         *
+         * @since    1.1.7
+         * @access   protected
+         * @var      string    $plugin_basename    
+         */
+        protected $plugin_basename;
+
+        /**
          * The unique identifier of this plugin.
          *
          * @since    1.1.0
@@ -98,7 +107,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Base' ) ) {
          *
          * @since    1.1.0
          */
-        public function __construct() {
+        public function __construct( $plugin_basename ) {
             if ( defined( 'EASY_ZILLOW_REVIEWS_VERSION' ) ) {
                 $this->version = EASY_ZILLOW_REVIEWS_VERSION;
             } else {
@@ -106,6 +115,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Base' ) ) {
             }
             $this->plugin_name = 'Easy Zillow Reviews';
             $this->plugin_slug = 'easy-zillow-reviews';
+            $this->plugin_basename = $plugin_basename;
 
             $this->load_dependencies();
             $this->set_locale();
@@ -193,8 +203,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Base' ) ) {
             $this->loader->add_action( 'admin_enqueue_scripts', $this->plugin_admin, 'enqueue_styles' );
             $this->loader->add_action( 'admin_enqueue_scripts', $this->plugin_admin, 'enqueue_scripts' );
             $this->loader->add_action( 'admin_init', $this->plugin_admin, 'init_settings' );
-            $this->loader->add_action( 'admin_menu', $this->plugin_admin, 'add_options_page');
-            $this->loader->add_filter( 'plugin_action_links', $this->plugin_admin, 'admin_plugin_listing_actions');
+            $this->loader->add_action( 'admin_menu', $this->plugin_admin, 'add_options_page' );
+            $this->loader->add_filter( 'plugin_action_links_' . $this->plugin_basename, $this->plugin_admin, 'admin_plugin_listing_actions');
         }
 
         /**
@@ -231,6 +241,26 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Base' ) ) {
          */
         public function get_plugin_name() {
             return $this->plugin_name;
+        }
+
+        /**
+         * Retreive the basename of the plugin
+         *
+         * @since     1.1.7
+         * @return    string    The basename of the plugin.
+         */
+        public function get_plugin_basename() {
+            return $this->plugin_basename;
+        }
+
+        /**
+         * Set the basename of the plugin
+         *
+         * @since     1.1.7
+         * @return    string    The basename of the plugin.
+         */
+        public function set_plugin_basename( $plugin_basename ) {
+            $this->plugin_basename = $plugin_basename;
         }
 
         /**

@@ -1,7 +1,7 @@
 === Easy Zillow Reviews ===
 Contributors: boltonstudios
 Donate link: http://ko-fi.com/boltonstudios
-Tags: zillow, reviews
+Tags: zillow, reviews, gutenberg
 Requires at least: 4.0.0
 Tested up to: 5.4.0
 Requires PHP: 5.4
@@ -23,6 +23,7 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 * Compliant with Zillow's [Terms of Use](https://www.zillow.com/corp/Terms.htm) and [Branding Requirements](https://www.zillow.com/howto/api/BrandingRequirements.htm)
 * Grid and List layout options
 * Widget and Shortcode options
+* Gutenberg block (layout reviews in the new WordPress block editor!)
 * Mobile responsive
 
 = Mortgages Partner Edition Features =

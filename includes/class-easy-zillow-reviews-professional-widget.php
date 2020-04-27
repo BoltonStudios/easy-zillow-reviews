@@ -104,10 +104,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional_Widget' ) ) {
         public function widget( $args, $instance ) {
             
             // Default vars
-            $professional_reviews = $this->get_professional_reviews();
-            $layout = $professional_reviews->get_layout();
-            $cols = $professional_reviews->get_grid_columns();
-            $count = $professional_reviews->get_count();
+            $reviews = $this->get_professional_reviews();
+            $layout = $reviews->get_layout();
+            $cols = $reviews->get_grid_columns();
+            $count = $reviews->get_count();
             
             // Get widget instance settings 
             if( ! empty( $instance['count'] ) ){
@@ -126,19 +126,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional_Widget' ) ) {
                 echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
             }
 
-            // Fetch reviews from Zillow
-            $professional_reviews->fetch_reviews_from_zillow( $count );
+            $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count );
 
-            // Render output
-            if( $professional_reviews->get_has_reviews() ){
-
-                // Success
-                $output = $professional_reviews->layout_reviews( $layout, $cols );
-            } else {
-
-                // Error
-                $output = '<p>Unable to load reviews. Zillow says: <strong>'. $professional_reviews -> get_message() .'</strong>.</p>';
-            }
             // Output content
             echo $args['before_widget'];
             echo $output;

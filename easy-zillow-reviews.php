@@ -20,7 +20,7 @@
  * Plugin Name:       Easy Zillow Reviews
  * Plugin URI:        https://wordpress.org/plugins/easy-zillow-reviews/
  * Description:       Display reviews from Zillow on your site.
- * Version:           1.1.7
+ * Version:           1.2.0
  * Author:            Aaron Bolton
  * Author URI:        https://www.boltonstudios.com
  * License:           GPL-2.0+
@@ -48,7 +48,7 @@ if ( function_exists( 'ezrwp_fs' ) ) {
          * Start at version 1.0.0 and use SemVer - https://semver.org
          * Rename this for your plugin and update it as you release new versions.
          */
-        define( 'EASY_ZILLOW_REVIEWS_VERSION', '1.1.7' );
+        define( 'EASY_ZILLOW_REVIEWS_VERSION', '1.2.0' );
         define( 'EASY_ZILLOW_REVIEWS_BASENAME', plugin_basename( __FILE__ ) );
 
         /**
@@ -101,10 +101,7 @@ if ( function_exists( 'ezrwp_fs' ) ) {
                     'has_addons'          => false,
                     'has_paid_plans'      => true,
                     'menu'                => array(
-                        'slug'           => 'easy-zillow-reviews',
-                        'parent'         => array(
-                            'slug' => 'options-general.php',
-                        ),
+                        'slug'           => 'easy-zillow-reviews'
                     ),
                 ));
             }
@@ -148,6 +145,13 @@ if ( function_exists( 'ezrwp_fs' ) ) {
                 // Define plugin widget
                 new Easy_Zillow_Reviews_Professional_Widget_Init( $zillow_professional_reviews );
 
+                // Define Gutenberg block
+                $gutenberg = new Easy_Zillow_Reviews_Gutenberg();
+                $gutenberg->set_zillow_data( $zillow_professional_reviews );
+
+                // Add Zillow Professional reviews to Gutenberg block
+                $plugin->loader->add_filter( 'ezrwp_render_block', $zillow_professional_reviews, 'update_reviews_in_block', 10, 2 );
+                
                 // This IF block will be auto removed from the Free version.
                 if ( ezrwp_fs()->is__premium_only() ) {
 
@@ -168,6 +172,12 @@ if ( function_exists( 'ezrwp_fs' ) ) {
                         
                         // Define Premium widget
                         new Easy_Zillow_Reviews_Lender_Widget_Init( $zillow_lender_reviews );
+
+                        // Add Premium options to Gutenberg block
+                        $plugin->loader->add_filter( 'ezrwp_block_options', $zillow_lender_reviews, 'update_options_in_block', 10, 1 );
+                        
+                        // Add Zillow Lender reviews to Gutenberg block
+                        $plugin->loader->add_filter( 'ezrwp_render_block', $zillow_lender_reviews, 'update_reviews_in_block', 10, 2 );
                     }
                 }
                 $plugin->run();

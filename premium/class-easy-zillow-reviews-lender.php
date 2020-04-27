@@ -69,14 +69,15 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
          * Get lender reviews data from Zillow using the Zillow Mortgage API.
          *
          * @since    1.1.0
+         * @param    $count     The number of reviews to fetch.
          */
-        public function fetch_reviews_from_zillow($count){
+        public function fetch_reviews_from_zillow( $count ){
             
             $zmpid = $this->get_zmpid();
             $nmlsid = $this->get_nmlsid();
             $disallowed_characters = array("-", " ");
             $company_name = $this->get_company_name();
-            $company_name = str_replace($disallowed_characters, "%20", $company_name);
+            $company_name = str_replace( $disallowed_characters, "%20", $company_name );
 
             // Contstruct the Zillow URL for an Individual Loan Officer.
             $zillow_url = 'https://mortgageapi.zillow.com/zillowLenderReviews?partnerId='. $zmpid .'&nmlsId='.$nmlsid.'&reviewLimit='. $count;
@@ -122,7 +123,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
          * @since    1.1.0
          * @return   string
          */
-        public function layout_lender_reviews($as_layout, $number_cols){
+        public function layout_reviews( $as_layout, $number_cols ){
 
             // User Options
             $hide_date = $this->get_hide_date();
@@ -147,7 +148,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
             $template->set_review_count( $review_count );
 
             // Lender Reviews
-            foreach($this->reviews as $review) :
+            foreach( $this->reviews as $review ) :
                 $reviewer_name = $review->reviewerName->displayName;
                 $description = $review->content;
 
@@ -198,17 +199,18 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                 }
             endforeach;
 
-            return $template->generate_reviews_wrapper($reviews_output, $layout, $number_cols);
+            return $template->generate_reviews_wrapper( $reviews_output, $layout, $number_cols );
         }
 
         /**
          * Return a sentence fragment based on the value of the loanServiceProvided output parameter provided by Zillow.
          * 
+         * @param  string  $loan_service_provided
          * @return string
          */ 
-        private function format_loan_service_provided($loan_service_provided){
+        private function format_loan_service_provided( $loan_service_provided ){
             $output = '';
-            switch($loan_service_provided){
+            switch( $loan_service_provided ){
                 case 'LoanClosed' :
                     $output = 'closed on';
                     break;
@@ -228,6 +230,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
         /**
          * Return a sentence fragment based on the value of the loanProgram output parameter provided by Zillow.
          * 
+         * @param  string  $loan_program
          * @return string
          */ 
         private function format_loan_program( $loan_program ){
@@ -284,11 +287,12 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
         /**
          * Return a sentence fragment based on the value of the loanPurpose output parameter provided by Zillow.
          * 
+         * @param  string  $loan_purpose
          * @return string
          */ 
-        private function format_loan_purpose($loan_purpose){
+        private function format_loan_purpose( $loan_purpose ){
             $output = '';
-            switch($loan_purpose){
+            switch( $loan_purpose ){
                 case 'HomeEquity' :
                     $output = 'home equity';
                     break;
@@ -296,7 +300,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                     $output = $loan_purpose;
                     break;
                 default :
-                    $output = strToLower($loan_purpose);
+                    $output = strToLower( $loan_purpose );
                 break;
             }
             return $output;
@@ -305,16 +309,17 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
         /**
          * Return a sentence fragment based on the value of the loanType output parameter provided by Zillow.
          * 
+         * @param  string  $loan_type
          * @return string
          */ 
-        private function format_loan_type($loan_type){
+        private function format_loan_type( $loan_type ){
             $output = '';
-            switch($loan_type){
+            switch( $loan_type ){
                 case 'Conventional' :
-                    $output = 'a ' . strToLower($loan_type);
+                    $output = 'a ' . strToLower( $loan_type );
                     break;
                 case 'Jumbo' :
-                    $output = 'a ' . strToLower($loan_type);
+                    $output = 'a ' . strToLower( $loan_type );
                     break;
                 case 'FHA' :
                     $output = 'an ' . $loan_type;
@@ -329,6 +334,57 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
             return $output;
         }
         
+        /**
+         * Add premium options to Gutenberg block
+         * 
+         * @since    1.2.0
+         * @param    Easy_Zillow_Reviews_Data  $user_options        The data that will be modified.
+         * @return   Easy_Zillow_Reviews_Data  The modified data.
+         */
+        function update_options_in_block( $user_options ){
+
+            // Get the available API's
+            $available_apis = $user_options->get_available_apis();
+
+            // Add Lender & Loan Office option (enables reviews from Zillow Mortgage API)
+            array_push( $available_apis, array( 'lender', 'Lender & Loan Officer' ) );
+
+            // Update list of available API's with new option(s)
+            $user_options->set_available_apis( $available_apis );
+
+            // Return updated user options
+            return $user_options;
+        }
+
+        /**
+         * Return reviews output based on options provided in attributes
+         * 
+         * @since    1.2.0
+         * @param    string     $output        The data that will be modified.
+         * @param    array      $attributes    The arguments passed from the Gutenberg block options that the user selected.  
+         * @return   string                    The modified data.
+         */
+        function update_reviews_in_block( $output, $attributes ){
+            
+            // If the user selected the Lender & Loan Officer Reviews type option, update the reviews output.
+            if( $attributes[ 'reviewsType' ] == 'lender' ){
+
+                // Get this Eazy_Zillow_Reviews_Lender object instance.
+                $reviews = $this;
+
+                // Parse attributes selected by the user in the Gutenberg block.
+                $layout = isset( $attributes[ 'reviewsLayout' ] ) ? $attributes[ 'reviewsLayout' ] : $reviews->get_layout();
+                $cols = isset( $attributes[ 'gridColumns' ] ) ? $attributes[ 'gridColumns' ] : $reviews->get_grid_columns();
+                $count = isset( $attributes[ 'reviewsCount' ] ) ? $attributes[ 'reviewsCount' ] : $reviews->get_count();
+                
+                // Overwite the Gutenberg block output with lender reviews from this object instance.
+                $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count );
+            }
+
+            // Return the updated output.
+            return $output;
+        }
+
         /**
          * Get the value of lender_reviews_options
          *

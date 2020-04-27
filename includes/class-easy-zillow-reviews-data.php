@@ -80,10 +80,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
          * The user's saved plugin options.
          *
          * @since    1.1.0
-         * @access   private
+         * @access   public
          * @var      object   $general_options   The user's saved plugin options.
          */
-        private $general_options;
+        public $general_options;
         
         /**
          * The URL for the individual review returned by the Zillow API Network.
@@ -199,6 +199,24 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
          * @var      int   $reviewer_description_font_size  
          */
         protected $reviewer_description_font_size;
+        
+        /**
+         * 
+         *
+         * @since    1.2.0
+         * @access   public
+         * @var      array   $available_layouts
+         */
+        public $available_layouts;
+        
+        /**
+         * 
+         *
+         * @since    1.2.0
+         * @access   public
+         * @var      array   $available_apis
+         */
+        public $available_apis;
 
         // Constructor
         public function __construct(){
@@ -220,7 +238,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
             $hide_zillow_logo = isset($general_options['ezrwp_hide_zillow_logo']) ? $general_options['ezrwp_hide_zillow_logo'] : 0;
             $quote_font_size = isset($general_options['ezrwp_quote_font_size']) ? $general_options['ezrwp_quote_font_size'] : 18;
             $reviewer_description_font_size = isset($general_options['ezrwp_review_description_font_size']) ? $general_options['ezrwp_review_description_font_size'] : 16;
-            
+            $available_layouts = array( 'list', 'grid' );
+            $available_apis = array( ['professional', 'Professional'] );
+
             // Store options in this class instance
             $this->set_general_options($general_options);
             $this->set_layout($layout);
@@ -234,6 +254,37 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
             $this->set_hide_zillow_logo(($hide_zillow_logo == 1) ? true : false);
             $this->set_quote_font_size($quote_font_size);
             $this->set_reviewer_description_font_size($reviewer_description_font_size);
+            $this->set_available_layouts($available_layouts);
+            $this->set_available_apis($available_apis);
+        }
+        
+        /**
+         * 
+         * 
+         *
+         * @since     1.2.0
+         * @return    string    The name of the plugin.
+         */
+        public function get_reviews_output( $reviews, $layout, $cols, $count ) {
+            
+            // Review count cannot be more than 10 or less than 0.
+            $count = ($count > 10 ) ? 10 : $count;
+            $count = floor($count) > 0 ? floor($count) : 1;
+
+            // Fetch reviews from Zillow
+            $reviews->fetch_reviews_from_zillow($count);
+
+            // Render output
+            if( $reviews -> get_has_reviews() ){
+
+                // Success
+                $output = $reviews -> layout_reviews($layout, $cols);
+            } else {
+
+                // Error
+                $output = '<p>Unable to load reviews. Zillow says: <strong>'. $reviews -> get_message() .'</strong>.</p>';
+            }
+            return $output;
         }
         
         /**
@@ -441,7 +492,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
          */ 
         public function set_general_options($general_options)
         {
-                $this->options = $general_options;
+                $this->general_options = $general_options;
 
                 return $this;
         }
@@ -622,6 +673,46 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         public function set_reviewer_description_font_size($reviewer_description_font_size)
         {
                 $this->reviewer_description_font_size = $reviewer_description_font_size;
+
+                return $this;
+        }
+
+        /**
+         * Get the value of $available_layouts
+         */ 
+        public function get_available_layouts()
+        {
+                return $this->available_layouts;
+        }
+
+        /**
+         * Set the value of $available_layouts
+         *
+         * @return  self
+         */ 
+        public function set_available_layouts($available_layouts)
+        {
+                $this->available_layouts = $available_layouts;
+
+                return $this;
+        }
+
+        /**
+         * Get the value of $available_apis
+         */ 
+        public function get_available_apis()
+        {
+                return $this->available_apis;
+        }
+
+        /**
+         * Set the value of $available_apis
+         *
+         * @return  self
+         */ 
+        public function set_available_apis($available_apis)
+        {
+                $this->available_apis = $available_apis;
 
                 return $this;
         }

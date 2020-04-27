@@ -61,19 +61,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional_Shortcodes' ) ) {
             $count = ($count > 10 ) ? 10 : $count;
             $count = floor($count) > 0 ? floor( $count ) : 1;
 
-            // Fetch reviews from Zillow
-            $reviews->fetch_reviews_from_zillow( $count );
-
-            // Render output
-            if( $reviews->get_has_reviews() ){
-
-                // Success
-                $output = $reviews->layout_reviews( $layout, $cols );
-            } else {
-
-                // Error
-                $output = '<p>Unable to load reviews. Zillow says: <strong>'. $reviews -> get_message() .'</strong>.</p>';
-            }
+            $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count );
             return $output;
         }
         

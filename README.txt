@@ -86,6 +86,11 @@ The Mortgages Partner Edition requires:
 
 == Changelog ==
 
+= 1.2.0 =
+* New Feature: Gutenberg Block
+* Replaced image sprite with SVG images
+* Moved the Settings page menu item to the top-level of the Dashboard Menu
+
 = 1.1.7 =
 * Bug Fix: Fixed error that prevented review count and profile link from displaying in Mortgages Partner Edition.
 * Bug Fix: Fixed error that caused "Settings" plugin action link to appear under other plugin names in the Plugin menu.

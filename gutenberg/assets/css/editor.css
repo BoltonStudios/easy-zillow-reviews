@@ -1,0 +1,9 @@
+.wp-block-boltonstudios-easy-zillow-reviews {
+  padding: 20px;
+}
+.wp-block-boltonstudios-easy-zillow-reviews .components-base-control {
+  max-width: 400px;
+}
+.wp-block-boltonstudios-easy-zillow-reviews .components-base-control label {
+  display: block;
+}

@@ -56,3 +56,9 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-easy-zillow-
  *
  */
 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-easy-zillow-reviews-professional-widget.php';
+
+
+/**
+ *
+ */
+require_once plugin_dir_path( dirname( __FILE__ ) ) . 'gutenberg/class-easy-zillow-reviews-gutenberg.php';

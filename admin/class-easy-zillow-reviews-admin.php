@@ -89,13 +89,15 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
          * @since    1.1.0
          */
         public function add_options_page(){
-            add_submenu_page(
-                'options-general.php', //$parent_slug
-                $this->plugin_name, //$page_title
-                $this->plugin_name, //$menu_title
-                'manage_options', //$capability
-                $this->plugin_slug, //$menu_slug
-                array($this, 'render_settings_page') //$function
+            
+            add_menu_page(
+                
+                $this->plugin_name, // $page_title
+                'Zillow Reviews', // $menu_title
+                'manage_options', // $capability
+                $this->plugin_slug, // $menu_slug
+                array($this, 'render_settings_page'), // $function,
+                'dashicons-star-filled' // string $icon_url
             );
         }
 
@@ -108,7 +110,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
             
             $action_links = [];
             $action_links = array(
-                'settings' => '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_slug ) . '">' . __( 'Settings', 'domain' ) . '</a>',
+                'settings' => '<a href="' . admin_url( 'admin.php?page=' . $this->plugin_slug ) . '">' . __( 'Settings', 'domain' ) . '</a>',
             );
             return array_merge( $action_links, $links );
         }
@@ -122,13 +124,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
 
             // Register sections in the settings page
             register_setting(
-                'ezrwp_lender_reviews', //option group
+                'ezrwp_lender_reviews', // option group
                 'ezrwp_lender_reviews_options' // option name
             );
             // Tabs
             foreach($this->tabs as $tab){
                 register_setting(
-                    $tab[1], //option group
+                    $tab[1], // option group
                     $tab[2] // option name
                 );
             }
@@ -529,7 +531,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
              */
 
             wp_enqueue_script( $this->plugin_slug, plugin_dir_url( __FILE__ ) . 'js/easy-zillow-reviews-admin.js', array( 'jquery' ), $this->version, false );
-
+            wp_enqueue_script( $this->plugin_slug, plugins_url( $this->plugin_slug ) . '/gutenberg/build/index.js', null, $this->version, false );
         }
     }
 }

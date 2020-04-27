@@ -93,7 +93,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             *  LOCAL DEVELOPMENT ONLY. Comment out for Production
             * 
             *
-            *
+            */
             $arrContextOptions = array(
                 "ssl" => array(
                     "verify_peer" => false,
@@ -113,7 +113,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             * 
             */
             // Fetch data from Zillow.
-            $xml = simplexml_load_file($url) or die("Error: Cannot create object");
+            //$xml = simplexml_load_file($url) or die("Error: Cannot create object");
             /*
             *
             *  END PRODUCTION ONLY.
@@ -207,6 +207,31 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             endforeach;
 
             return $template->generate_reviews_wrapper($reviews_output, $layout, $number_cols);
+        }
+        
+        /**
+         * Return reviews output based on options provided in attributes
+         * 
+         * @since    1.2.0
+         * @param    string     $output        The data that will be modified.
+         * @param    array      $attributes    The arguments passed from the Gutenberg block options that the user selected.  
+         * @return   string                    The modified data.
+         */
+        function update_reviews_in_block( $output, $attributes ){
+            
+            // Get this Eazy_Zillow_Reviews_Professional object instance.
+            $reviews = $this;
+
+            // Parse attributes selected by the user in the Gutenberg block.
+            $layout = isset( $attributes[ 'reviewsLayout' ] ) ? $attributes[ 'reviewsLayout' ] : $reviews->get_layout();
+            $cols = isset( $attributes[ 'gridColumns' ] ) ? $attributes[ 'gridColumns' ] : $reviews->get_grid_columns();
+            $count = isset( $attributes[ 'reviewsCount' ] ) ? $attributes[ 'reviewsCount' ] : $reviews->get_count();
+            
+            // Overwite the Gutenberg block output with professional reviews from this object instance.
+            $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count );
+
+            // Return the updated output.
+            return $output;
         }
         
         /**

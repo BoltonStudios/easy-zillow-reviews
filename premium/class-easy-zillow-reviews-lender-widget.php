@@ -106,10 +106,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender_Widget' ) ) {
         public function widget( $args, $instance ) {
             
             // Defaults
-            $lender_reviews = $this->get_lender_reviews();
-            $layout = $lender_reviews->get_layout();
-            $cols = $lender_reviews->get_grid_columns();
-            $count = $lender_reviews->get_count();
+            $reviews = $this->get_lender_reviews();
+            $layout = $reviews->get_layout();
+            $cols = $reviews->get_grid_columns();
+            $count = $reviews->get_count();
             
             // Get widget instance settings 
             if( ! empty( $instance['count'] ) ){
@@ -128,19 +128,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender_Widget' ) ) {
                 echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
             }
 
-            // Fetch reviews from Zillow
-            $lender_reviews->fetch_reviews_from_zillow( $count );
-
-            // Render output
-            if( $lender_reviews->get_has_reviews() ){
-
-                // Success
-                $output = $lender_reviews->layout_lender_reviews( $layout, $cols );
-            } else {
-
-                // Error
-                $output = '<p>Unable to load reviews. Zillow says: <strong>'. $lender_reviews -> get_message() .'</strong>.</p>';
-            }
+            $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count );
+            
             // Output content
             echo $args['before_widget'];
             echo $output;

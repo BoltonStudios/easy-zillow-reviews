@@ -39,11 +39,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender_Shortcodes' ) ) {
             
             add_shortcode('ez-zillow-lender-reviews', array($this, 'display_lender_reviews'));
         }
-        function display_lender_reviews($atts){
-
-            // Get saved admin settings and defaults
+        function display_lender_reviews( $atts ){
+            
             $reviews = $this->get_zillow_lender_data();
-
+            
             // Get attributes from shortcode
             if( isset( $atts ) ){
                 $atts = shortcode_atts( array(
@@ -56,25 +55,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender_Shortcodes' ) ) {
                 $cols = $atts[ 'columns' ];
                 $count = $atts[ 'count' ];
             }
-
-            // Review count cannot be more than 10 or less than 0.
-            $count = ($count > 10 ) ? 10 : $count;
-            $count = floor($count) > 0 ? floor($count) : 1;
-
-            // Fetch reviews from Zillow
-            $reviews->fetch_reviews_from_zillow($count);
-
-            // Render output
-            if( $reviews -> get_has_reviews() ){
-
-                // Success
-                $output = $reviews -> layout_lender_reviews($layout, $cols);
-            } else {
-
-                // Error
-                $output = '<p>Unable to load reviews. Zillow says: <strong>'. $reviews -> get_message() .'</strong>.</p>';
-            }
-            return $output;
+            return $reviews->get_reviews_output( $reviews, $layout, $cols, $count );
         }
         
         /**

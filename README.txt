@@ -88,7 +88,6 @@ The Mortgages Partner Edition requires:
 
 = 1.2.0 =
 * New Feature: Gutenberg Block
-* Replaced image sprite with SVG images
 * Moved the Settings page menu item to the top-level of the Dashboard Menu
 
 = 1.1.7 =

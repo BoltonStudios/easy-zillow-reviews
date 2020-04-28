@@ -23,7 +23,7 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 * Compliant with Zillow's [Terms of Use](https://www.zillow.com/corp/Terms.htm) and [Branding Requirements](https://www.zillow.com/howto/api/BrandingRequirements.htm)
 * Grid and List layout options
 * Widget and Shortcode options
-* Gutenberg block (layout reviews in the new WordPress block editor!)
+* Gutenberg block (edit review layouts in the new WordPress editor!)
 * Mobile responsive
 
 = Mortgages Partner Edition Features =
@@ -45,7 +45,6 @@ The Mortgages Partner Edition requires:
 3. Company Name (for companies only)
 
 Get your ZWSID at [https://www.zillow.com/howto/api/APIOverview.htm](https://www.zillow.com/howto/api/APIOverview.htm).
-
 Get your ZPID at [https://www.zillow.com/mortgage/api/](https://www.zillow.com/mortgage/api/).
 
 = Limitations =
@@ -83,8 +82,8 @@ Get your ZPID at [https://www.zillow.com/mortgage/api/](https://www.zillow.com/m
 
 1. Zillow Reviews block editor
 2. Shortcode output for [ez-zillow-reviews layout="grid" columns="2" count="2"]
-3. Widget.
-4. Settings.
+3. Widget
+4. Settings
 
 == Changelog ==
 

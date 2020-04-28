@@ -210,6 +210,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional_Widget' ) ) {
             return $instance;
         }
         
+        // Getters & Setters
         /**
          * Get the value of professional_reviews
          *

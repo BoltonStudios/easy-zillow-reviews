@@ -28,12 +28,12 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         
         /**
          * The layout for reviews.
-            * The user may select "grid" or "list" from the shortcode, widget, or admin settings.
-        *
-        * @since    1.1.0
-        * @access   private
-        * @var      string   $layout  TThe layout for reviews.
-        */
+         * The user may select "grid" or "list" from the shortcode, widget, or admin settings.
+         *
+         * @since    1.1.0
+         * @access   private
+         * @var      string   $layout  TThe layout for reviews.
+         */
         private $layout;
 
         /**
@@ -97,6 +97,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         /**
          * The profile information for the Zillow account selected by the user.
          * This is determined by the results of the plugin's call to the Zillow API Network.
+         * 
          * @since    1.1.0
          * @access   private
          * @var      SimpleXMLElement   $info
@@ -104,9 +105,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         private $info;
         
         /**
+         * The option to hide the time elapsed since the review was written.
+         * Determined by options selected on Settings page.
          * 
-         * 
-         *
          * @since    1.1.0
          * @access   private
          * @var      bool   $hide_date   
@@ -114,9 +115,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         private $hide_date;
         
         /**
+         * The option to hide Zillow's Mandatory Disclaimer.
+         * Determined by options selected on Settings page.
          * 
-         * 
-         *
          * @since    1.1.4
          * @access   private
          * @var      bool   $hide_disclaimer  
@@ -124,9 +125,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         private $hide_disclaimer;
         
         /**
+         * The option to hide the star rating.
+         * Determined by options selected on Settings page.
          * 
-         * 
-         *
          * @since    1.1.4
          * @access   private
          * @var      bool   $hide_stars 
@@ -134,9 +135,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         private $hide_stars;
         
         /**
+         * The option to hide the short description of the reviewer.
+         * Determined by options selected on Settings page.
          * 
-         * 
-         *
          * @since    1.1.4
          * @access   private
          * @var      bool   $hide_reviewer_summary 
@@ -144,9 +145,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         private $hide_reviewer_summary;
         
         /**
+         * The option to hide the link to the real estate professional directory on Zillow.com.
+         * Determined by options selected on Settings page.
          * 
-         * 
-         *
          * @since    1.1.4
          * @access   private
          * @var      bool   $hide_view_all_link  
@@ -154,9 +155,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         private $hide_view_all_link;
         
         /**
+         * The option to hide the Zillow logo.
+         * Determined by options selected on Settings page.
          * 
-         * 
-         *
          * @since    1.1.4
          * @access   private
          * @var      bool   $hide_zillow_logo  
@@ -183,8 +184,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         protected $reviews;
         
         /**
+         * The font size for the review quote text in pixels.
+         * Determined by options selected on Settings page.
          * 
-         *
          * @since    1.1.4
          * @access   protected
          * @var      int   $quote_font_size  
@@ -192,8 +194,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         protected $quote_font_size;
         
         /**
+         * The font size for the reviewer description text in pixels.
+         * Determined by options selected on Settings page.
          * 
-         *
          * @since    1.1.4
          * @access   protected
          * @var      int   $reviewer_description_font_size  
@@ -201,7 +204,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         protected $reviewer_description_font_size;
         
         /**
-         * 
+         * The layouts available for the user to select.
+         * Determined by plugin edition installed (free or paid editions).
          *
          * @since    1.2.0
          * @access   public
@@ -210,8 +214,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         public $available_layouts;
         
         /**
+         * The APIs available for the user to select.
+         * Determined by plugin edition installed (free or paid editions).
          * 
-         *
          * @since    1.2.0
          * @access   public
          * @var      array   $available_apis

@@ -133,7 +133,10 @@ if ( function_exists( 'ezrwp_fs' ) ) {
                 // Load the essential plugin features including settings and admin
                 $plugin = new Easy_Zillow_Reviews_Base( EASY_ZILLOW_REVIEWS_BASENAME );
                 
-                // Run the Upgrader.
+                /*
+                 * Run the upgrader to migrate values from old option name
+                 * to new option name(s) introduced in v1.1.0
+                 */
                 new Easy_Zillow_Reviews_Upgrader();
 
                 // Get the Zillow Professional data

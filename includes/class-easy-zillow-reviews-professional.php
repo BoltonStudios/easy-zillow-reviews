@@ -27,34 +27,34 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
         private $professional_reviews_options;
 
         /**
-         * 
+         * The URL for the Reviews API Web Service.
          *
          * @since    1.1.0
          * @access   private
-         * @var      string   $zillow_api_url    The URL for the Reviews API Web Service.
+         * @var      string   $zillow_api_url
          */
         private $zillow_api_url;
 
         /**
-         * 
+         * The Zillow Web Service Identifier (ZWSID).
          *
          * @since    1.1.0
          * @access   private
-         * @var      string   $zwsid    The Zillow Web Service Identifier.
+         * @var      string   $zwsid
          */
         private $zwsid;
 
         /**
-         * 
+         * The screenname of the user whose reviews will be fetched.
          *
          * @since    1.1.0
          * @access   private
-         * @var      string   $screenname   The screenname of the user whose reviews will be fetched
+         * @var      string   $screenname
          */
         private $screenname;
 
         /**
-         * 
+         * The option to fetch reviews for individual team members in team profiles.
          *
          * @since    1.1.0
          * @access   private
@@ -234,6 +234,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             return $output;
         }
         
+        // Getters & Setters
         /**
          * Get the value of zwsid
          *

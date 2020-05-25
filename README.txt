@@ -13,7 +13,7 @@ Display reviews from Zillow on your website.
 
 == Description ==
 
-*Easy Zillow Reviews* allows lenders and other real estate professionals to integrate Zillow reviews into their WordPress sites easily.
+*Easy Zillow Reviews* makes it easy for realtors and lenders to fetch reviews from the Zillow API Network.
 
 View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
@@ -33,19 +33,9 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
 = Requirements =
 
-The Free Edition requires:
+The Free Edition requires a [Zillow Web Services ID (ZWSID)](https://www.zillow.com/howto/api/APIOverview.htm).
 
-1. Zillow Web Services ID (ZWSID)
-2. Zillow Screenname
-
-The Mortgages Partner Edition requires:
-
-1. Zillow Mortgages Partner ID (ZPID)
-2. NMLS#
-3. Company Name (for companies only)
-
-Get your ZWSID at [https://www.zillow.com/howto/api/APIOverview.htm](https://www.zillow.com/howto/api/APIOverview.htm).
-Get your ZPID at [https://www.zillow.com/mortgage/api/](https://www.zillow.com/mortgage/api/).
+The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](https://www.zillow.com/mortgage/api/).
 
 = Limitations =
 
@@ -86,6 +76,11 @@ Get your ZPID at [https://www.zillow.com/mortgage/api/](https://www.zillow.com/m
 4. Settings
 
 == Changelog ==
+
+= 1.2.1 =
+* New Feature: Display a Zillow profile card after reviews.
+* Bug Fix: Removed erroneous reference to a second Gutenberg block.
+* Upgraded the Freemius SDK to version 2.3.2.
 
 = 1.2.0 =
 * New Feature: Gutenberg Block

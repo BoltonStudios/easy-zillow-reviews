@@ -151,6 +151,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $number_cols = ($number_cols == '') ? $this->get_grid_columns() : $number_cols;
             $profile_url = $this->get_url();
             $review_count = $this->get_review_count();
+            $name = $this->get_info()->name;
+            $photo = $this->get_info()->photo;
+            $average_rating = $this->get_info()->avgRating;
+            $recent_sale_count = $this->get_info()->recentSaleCount;
 
             // Output
             $i = 0;
@@ -161,6 +165,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $template->set_hide_zillow_logo( $hide_zillow_logo );
             $template->set_profile_url( $profile_url );
             $template->set_review_count( $review_count );
+            $template->set_name( $name );
+            $template->set_photo( $photo );
+            $template->set_average_rating( $average_rating );
+            $template->set_recent_sale_count( $recent_sale_count );
 
             // Professional Reviews
             foreach($this->reviews->review as $review) :

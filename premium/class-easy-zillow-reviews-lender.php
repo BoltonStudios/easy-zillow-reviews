@@ -22,34 +22,34 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
          *
          * @since    1.1.0
          * @access   private
-         * @var      array   $lender_reviews_options  The user's settings from the Lender Reviews admin tab.
+         * @var      array   $lender_reviews_options
          */
         private $lender_reviews_options;
 
         /**
-         * 
+         * The client's partner ID.
          *
          * @since    1.1.4
          * @access   private
-         * @var      string   $zwsid    The.
+         * @var      string   $zwsid
          */
         private $zmpid;
 
         /**
-         * 
+         * The lender's NMLS ID.
          *
          * @since    1.1.4
          * @access   private
-         * @var      string   $screenname   The
+         * @var      string   $nmlsid
          */
         private $nmlsid;
 
         /**
-         * 
+         * The company name of the lender. This must be provided for institutional lenders.
          *
          * @since    1.1.4
          * @access   private
-         * @var      string   $company_name   The
+         * @var      string   $company_name
          */
         private $company_name;
 
@@ -108,6 +108,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
 
                 // Success
                 $this->set_url($json->profileURL);
+                $this->set_rating($json->rating);
                 $this->set_review_count($json->totalReviews);
                 $this->set_reviews($json->reviews);
             } else{
@@ -136,6 +137,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
             $number_cols = ($number_cols == '') ? $this->get_grid_columns() : $number_cols;
             $profile_url = $this->get_url();
             $review_count = $this->get_review_count();
+            $rating = $this->get_rating();
+            $profile_card = $this->get_profile_card( $rating, $review_count );
 
             // Output
             $i = 0;
@@ -146,6 +149,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
             $template->set_hide_zillow_logo( $hide_zillow_logo );
             $template->set_profile_url( $profile_url );
             $template->set_review_count( $review_count );
+            $template->set_profile_card( $profile_card );
 
             // Lender Reviews
             foreach( $this->reviews as $review ) :
@@ -332,6 +336,37 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                 break;
             }
             return $output;
+        }
+        
+        /**
+         * Return a string of HTML for the profile card.
+         * 
+         * @since    1.2.1
+         * @param    int        $rating             The average rating for all of the professional's ratings.
+         * @param    int        $review_count       The number of reviews for the professional.
+         * @return   string                         The modified data.
+         */
+        function get_profile_card( $rating, $review_count ){
+            
+            $whole_stars = round($rating); // count whole stars
+            $half_star_toggle = '';
+            if( $rating - $whole_stars > 0 ){
+                // add half star if required
+                $half_star_toggle = "ezrwp-plus-half-star";
+            }
+            $stars = '
+                <div class="ezrwp-lender-star-average ezrwp-stars ezrwp-stars-'. $whole_stars .' '. $half_star_toggle .'"></div>
+            ';
+
+            $profile_card = '
+                <div class="ezrwp-lender-profile-card">
+                    '. $stars .'
+                    <div class="ezrwp-lender-activity">
+                        '. round( $rating, 2 ) .' Stars • '. $review_count .' Reviews
+                    </div>
+                </div>
+            ';
+            return $profile_card;
         }
         
         /**

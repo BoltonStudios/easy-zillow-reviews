@@ -163,6 +163,16 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
          * @var      bool   $hide_zillow_logo  
          */
         private $hide_zillow_logo;
+
+        /**
+         * The average rating of all the published reviews. 
+         * This value will not be present if the lender has no reviews.
+         *
+         * @since    1.2.1
+         * @access   private
+         * @var      int   $rating
+         */
+        private $rating;
         
         /**
          * The total number of reviews that this profile has on Zillow.
@@ -440,6 +450,27 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
                 $this->url = $url;
 
                 return $this;
+        }
+        
+        /**
+         * Get the value of rating
+         *
+         * @since    1.2.1
+         */
+        public function get_rating(){
+
+            return $this->rating;
+        }
+
+        /**
+         * Set the value of rating
+         *
+         * @return  self
+         */ 
+        public function set_rating($rating){
+
+            $this->rating = $rating;
+            return $this;
         }
 
         /**

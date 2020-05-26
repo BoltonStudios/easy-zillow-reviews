@@ -100,6 +100,15 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
          * @var      int   $recent_sale_count
          */
         private $recent_sale_count;
+        
+        /**
+         *
+         * 
+         * @since    1.2.1
+         * @access   private
+         * @var      string   $profile_card
+         */
+        private $profile_card;
 
 
         // Constructor
@@ -121,27 +130,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
             $hide_zillow_logo = $this->get_hide_zillow_logo();
             $profile_url = $this->get_profile_url();
             $review_count = $this->get_review_count();
-            $name = $this->get_name();
-            $photo = $this->get_photo();
-            $average_rating = $this->get_average_rating();
-            $recent_sale_count = $this->get_recent_sale_count();
-
-            // Star Average
-            $star_average = '';
-            if( ( $average_rating * 20 ) == 0 ){
-                $star_average = 'star-0';
-            } elseif( ( $average_rating * 20 ) <= 30 ){
-                $star_average = 'star-25';
-            } elseif( ( $average_rating * 20 ) <= 60 ){
-                $star_average = 'star-50';
-            } elseif( ( $average_rating * 20 ) <= 99 ){
-                $star_average = 'star-75';
-            } else{
-                $star_average = 'star-100';
-            }
-            if( $star_average !== '' ){
-                $star_average = '<span class="ezrwp-star-average ezrwp-'. $star_average .'"></span>';
-            }
+            $profile_card = $this->get_profile_card();
 
             // Layout Options
             $grid_columns_class = ($layout == "grid" && $grid_columns > 0) 
@@ -158,30 +147,6 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
                         </a>
                     </p>';
             }
-
-            $profile_badge = '
-                <div class="ezrwp-profile-card">
-                    <div class="ezrwp-profile-card-left">
-                        <div class="ezrwp-profile-image-container">
-                            <img class="ezrwp-photo" src="'. $photo .'" alt="" width="94" height="94" />
-                        </div>
-                    </div>
-                    <div class="ezrwp-profile-card-right">
-                        <p class="ezrwp-profile-name"><strong>'. $name .'</strong></p>
-                        <div class="ezrwp-activity">
-                            <div class="ezrwp-activity-reviews">
-                                <div class="ezrwp-rating-reviews">
-                                    <span class="ezrwp-avg-rating">'. $star_average . $average_rating .'</span>/<span class="ezrwp-max-rating">5</span>
-                                    <a href="'. $profile_url . '#reviews" class="ezrwp-reviews-count">'. $review_count .' Reviews</a>
-                                </div>
-                            </div>
-                            <div class="ezrwp-activity-sales">
-                                '. $recent_sale_count .' sales in the last 12 months
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            ';
 
             $zillow_logo = '';
             if( $hide_zillow_logo == false ){
@@ -212,7 +177,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
                 $layout,
                 $grid_columns_class,
                 $reviews_output,
-                $profile_badge,
+                $profile_card,
                 $view_all_link,
                 $zillow_logo,
                 $mandatory_disclaimer
@@ -432,6 +397,26 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
         public function set_recent_sale_count($recent_sale_count)
         {
                 $this->recent_sale_count = $recent_sale_count;
+
+                return $this;
+        }
+
+        /**
+         * Get the value of $profile_card
+         */ 
+        public function get_profile_card()
+        {
+                return $this->profile_card;
+        }
+
+        /**
+         * Set the value of $profile_card
+         *
+         * @return  self
+         */ 
+        public function set_profile_card($profile_card)
+        {
+                $this->profile_card = $profile_card;
 
                 return $this;
         }

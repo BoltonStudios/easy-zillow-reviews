@@ -127,6 +127,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 // Success
                 $this->set_info($xml->response->result->proInfo);
                 $this->set_url($xml->response->result->proInfo->profileURL);
+                $this->set_rating($xml->response->result->proInfo->avgRating);
                 $this->set_review_count($xml->response->result->proInfo->reviewCount);
                 $this->set_reviews($xml->response->result->proReviews);
             }
@@ -153,8 +154,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $review_count = $this->get_review_count();
             $name = $this->get_info()->name;
             $photo = $this->get_info()->photo;
-            $average_rating = $this->get_info()->avgRating;
-            $recent_sale_count = $this->get_info()->recentSaleCount;
+            $rating = $this->get_rating();
+            $sale_count = $this->get_info()->recentSaleCount;
+            $profile_card = $this->get_profile_card( $name, $photo, $profile_url, $rating, $review_count, $sale_count );
 
             // Output
             $i = 0;
@@ -165,10 +167,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $template->set_hide_zillow_logo( $hide_zillow_logo );
             $template->set_profile_url( $profile_url );
             $template->set_review_count( $review_count );
-            $template->set_name( $name );
-            $template->set_photo( $photo );
-            $template->set_average_rating( $average_rating );
-            $template->set_recent_sale_count( $recent_sale_count );
+            $template->set_profile_card( $profile_card );
 
             // Professional Reviews
             foreach($this->reviews->review as $review) :
@@ -214,7 +213,63 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 }
             endforeach;
 
-            return $template->generate_reviews_wrapper($reviews_output, $layout, $number_cols);
+            return $template->generate_reviews_wrapper( $reviews_output, $layout, $number_cols );
+        }
+        
+        /**
+         * Return a string of HTML for the profile card.
+         * 
+         * @since    1.2.1
+         * @param    string     $name               The name of the professional.
+         * @param    string     $photo              A link to the profile photo of the professional.
+         * @param    string     $url                URL link to the professional's profile on Zillow.
+         * @param    int        $rating             The average rating for all of the professional's ratings.
+         * @param    int        $review_count       The number of reviews for the professional.
+         * @param    int        $sale_count         The number of recent sales for the professional
+         * @return   string                         The modified data.
+         */
+        function get_profile_card( $name, $photo, $url, $rating, $review_count, $sale_count ){
+
+            $star_average = '';
+            if( $rating == 0 ){
+                $star_average = 'star-0';
+            } elseif( $rating <= 2.0 ){
+                $star_average = 'star-25';
+            } elseif( $rating <= 3.5 ){
+                $star_average = 'star-50';
+            } elseif( $rating <= 4.9 ){
+                $star_average = 'star-75';
+            } else{
+                $star_average = 'star-100';
+            }
+            if( $star_average !== '' ){
+                $star_average = '<span class="ezrwp-star-average ezrwp-icon-'. $star_average .'"></span>';
+            }
+
+            $profile_card = '
+                <div class="ezrwp-profile-card">
+                    <div class="ezrwp-profile-card-left">
+                        <div class="ezrwp-profile-image-container">
+                            <img class="ezrwp-photo" src="'. $photo .'" alt="" width="94" height="94" />
+                        </div>
+                    </div>
+                    <div class="ezrwp-profile-card-right">
+                        <p class="ezrwp-profile-name"><strong>'. $name .'</strong></p>
+                        <div class="ezrwp-activity">
+                            <div class="ezrwp-activity-reviews">
+                                <div class="ezrwp-rating-reviews">
+                                    <span class="ezrwp-avg-rating">'. $star_average . $rating .'</span>/<span class="ezrwp-max-rating">5</span>
+                                    <a href="'. $url . '#reviews" class="ezrwp-reviews-count">'. $review_count .' Reviews</a>
+                                </div>
+                            </div>
+                            <div class="ezrwp-activity-sales">
+                                '. $sale_count .' sales in the last 12 months
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ';
+            return $profile_card;
         }
         
         /**

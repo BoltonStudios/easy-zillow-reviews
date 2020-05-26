@@ -5,7 +5,7 @@ Tags: zillow, reviews, gutenberg, block, real estate, lender
 Requires at least: 4.0.0
 Tested up to: 5.4.0
 Requires PHP: 5.4
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,9 +78,9 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 == Changelog ==
 
 = 1.2.1 =
-* New Feature: Display a Zillow profile card after reviews.
+* New Feature: Display a Zillow profile card with overall star rating.
 * Bug Fix: Removed erroneous reference to a second Gutenberg block.
-* Upgraded the Freemius SDK to version 2.3.2.
+* Updated the Freemius SDK to version 2.3.2.
 
 = 1.2.0 =
 * New Feature: Gutenberg Block

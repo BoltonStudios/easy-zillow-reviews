@@ -10,29 +10,74 @@
 @lg:     ~"only screen and (min-width: 1200px) ";
 @black: #000000;
 @white: #ffffff;
+@brand-accent: #3DCA5A;
+@font-face {
+    font-family: 'ezrwp-icon-font';
+    src:  url('../fonts/ezrwp-icon-font.eot?j4uvx3');
+    src:  url('../fonts/ezrwp-icon-font.eot?j4uvx3#iefix') format('embedded-opentype'),
+    url('../fonts/ezrwp-icon-font.ttf?j4uvx3') format('truetype'),
+    url('../fonts/ezrwp-icon-font.woff?j4uvx3') format('woff'),
+    url('../fonts/ezrwp-icon-font.svg?j4uvx3#ezrwp-icon-font') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+.ezrwp-icon,
+[class^="ezrwp-icon-"], 
+[class*=" ezrwp-icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'ezrwp-icon-font' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.ezrwp-icon-quote-marks:before {
+    content: "\e900";
+}
+.ezrwp-icon-star-0:before {
+    content: "\e901";
+}
+.ezrwp-icon-star-25:before {
+    content: "\e902";
+}
+.ezrwp-icon-star-50:before {
+    content: "\e903";
+}
+.ezrwp-icon-star-75:before {
+    content: "\e904";
+}
+.ezrwp-icon-star-100:before {
+    content: "\e905";
+}
 body{
     .ezrwp-wrapper{
         padding: 15px 0;
         .ezrwp-content{
             blockquote{
                 quotes: "" "";
-                color: #666666;
-                font-size: 18px;
-                font-style: italic;
+                color: @black;
+                font-size: 17px;
                 font-weight: 400;
                 line-height: inherit;
                 margin: 0;
                 overflow: hidden;
-                padding: 0 0 6px 30px;
+                padding: 0 0 14px 30px;
                 position: relative;
                 border: none;
                 &:before {
-                    background-image: url("../images/ezrwp-sprite.png");
-                    background-repeat: no-repeat;
-                    background-size: 125px;
-                    content: "";
+                    &:extend(.ezrwp-icon all);
+                    content: "\e900";
                     width: 20px;
                     height: 18px;
+                    color: #ddd;
+                    font-size: 14px;
                     position: absolute;
                     top: 6px;
                     left: 0;
@@ -61,60 +106,65 @@ body{
         }
         .ezrwp-mandatory-disclaimer{
             font-size: 11px;
+            line-height: 16px;
             text-align: center;
         }
         .ezrwp-date{
             font-size: 12px;
             color: #666666;
-            padding: 0 0 6px 30px;
+            padding: 0 0 4px 30px;
         }
         .ezrwp-stars{
-            background-image: url("../images/ezrwp-sprite.png");
-            background-repeat: no-repeat;
-            background-size: 125px;
             height: 18px;
             margin: 0 0 6px 30px;
-            &.ezrwp-stars-5{
-                background-position: 0 -18px;
+            &::before{
+                &:extend(.ezrwp-icon all);
+                color: @brand-accent;
+                font-size: 1.4em;
             }
-            &.ezrwp-stars-4{
-                background-position: 0 -54px;
-                &.ezrwp-plus-half-star {
-                    background-position: 0 -36px;
+            &.ezrwp-stars-5::before{
+                content: "\e905 \e905 \e905 \e905 \e905";
+            }
+            &.ezrwp-stars-4::before{
+                content: "\e905 \e905 \e905 \e905 \e901";
+                &.ezrwp-plus-half-star::before{
+                    content: "\e905 \e905 \e905 \e905 \e903";
                 }
             }
-            &.ezrwp-stars-3{
-                background-position: 0 -90px;
-                &.ezrwp-plus-half-star {
-                    background-position: 0 -72px;
+            &.ezrwp-stars-3::before{
+                content: "\e905 \e905 \e905 \e901 \e901";
+                &.ezrwp-plus-half-star::before{
+                    content: "\e905 \e905 \e905 \e903 \e901";
                 }
             }
-            &.ezrwp-stars-2{
-                background-position: 0 -126px;
-                &.ezrwp-plus-half-star {
-                    background-position: 0 -108px;
+            &.ezrwp-stars-2::before{
+                content: "\e905 \e905 \e901 \e901 \e901";
+                &.ezrwp-plus-half-star::before{
+                    content: "\e905 \e905 \e903 \e901 \e901";
                 }
             }
-            &.ezrwp-stars-1{
-                background-position: 0 -162px;
-                &.ezrwp-plus-half-star {
-                    background-position: 0 -144px;
+            &.ezrwp-stars-1::before{
+                content: "\e905 \e901 \e901 \e901 \e901";
+                &.ezrwp-plus-half-star::before{
+                    content: "\e905 \e903 \e901 \e901 \e901";
                 }
             }
-            &.ezrwp-stars-0{
-                background-position: 0 -198px;
-                &.ezrwp-plus-half-star {
-                    background-position: 0 -180px;
+            &.ezrwp-stars-0::before{
+                content: "\e901 \e901 \e901 \e901 \e901";
+                &.ezrwp-plus-half-star::before{
+                    content: "\e903 \e901 \e901 \e901 \e901";
                 }
             }
         }
         .ezrwp-reviewer{
             padding: 0 0 0 30px;
             p,*{
-                font-size: 16px;
+                font-size: 15px;
+                line-height: 24px;
             }
             p{
-                margin-bottom: 26px;
+                margin-bottom: 30px;
+                color: @black;
             }
         }
         &.ezrwp-grid{
@@ -194,12 +244,13 @@ body{
             width: auto;
             height: auto;
             overflow: hidden;
-            margin: 0 auto 20px auto;
+            margin: 10px auto 20px auto;
             text-align: center;
             .ezrwp-profile-card-left,
             .ezrwp-profile-card-right{
                 display: inline-block;
                 text-align: left;
+                vertical-align: top;
             }
             .ezrwp-profile-card-left{
                 margin-right: 12px;
@@ -217,36 +268,22 @@ body{
                 }
                 .ezrwp-activity{
                     background-color: #F1F1F4;
-                    margin: 8px 0 0 0;
-                    padding: 12px 10px 10px 15px;
+                    margin: 9px 0 0 0;
+                    padding: 11px 10px 10px 12px;
                     border-left: 5px solid #A7A6AB;
                     .ezrwp-avg-rating{
                         font-size: 20px;
                         font-weight: bold;
                         padding: 0 2px 0 0;
                         .ezrwp-star-average{
-                            background-image: url("../images/ezrwp-sprite.png");
-                            background-repeat: no-repeat;
-                            background-size: 125px;
-                            content: "";
                             width: 25px;
                             height: 24px;
                             display: inline-block;
-                            margin-right: 5px;
+                            margin-right: 6px;
                             position: relative;
-                            top: 3px;
-                            &.ezrwp-star-average.ezrwp-star-25{
-                                background-position: 0 -216px;
-                            }
-                            &.ezrwp-star-average.ezrwp-star-50{
-                                background-position: -50px -216px;
-                            }
-                            &.ezrwp-star-average.ezrwp-star-75{
-                                background-position: -75px -216px;
-                            }
-                            &.ezrwp-star-average.ezrwp-star-100{
-                                background-position: -100px -216px;
-                            }
+                            top: 2px;
+                            color: @brand-accent;
+                            font-size: 1.25em;
                         }
                     }
                     .ezrwp-max-rating{
@@ -255,14 +292,34 @@ body{
                     .ezrwp-reviews-count{
                         margin: 0 0 0 6px;
                     }
+                    .ezrwp-activity-sales{
+                        line-height: 18px;
+                        margin-top: 4px;
+                    }
                 }
             }
             .ezrwp-profile-image-container{
                 width: 94px;
                 height: 94px;
+                margin-bottom: 8px;
                 overflow: hidden;
                 border-radius: 50%;
             }
+        }
+    }
+    .ezrwp-lender-profile-card{
+        margin: 10px auto 20px auto;
+        padding: 18px 0 13px 0;
+        text-align: center;
+        border-top: 1px solid #cccccc;
+        border-bottom: 1px solid #cccccc;
+        .ezrwp-lender-star-average{
+            height: auto;
+            font-size: 1.5em;
+            margin-left: 0;
+        }
+        .ezrwp-lender-activity{
+            color: @black;
         }
     }
     .entry-content{

@@ -93,9 +93,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             *  LOCAL DEVELOPMENT ONLY. Comment out for Production
             * 
             *
-            */
+            *
             $arrContextOptions = array(
-                "ssl" => array(
+               "ssl" => array(
                     "verify_peer" => false,
                     "verify_peer_name" => false,
                 ),
@@ -113,7 +113,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             * 
             */
             // Fetch data from Zillow.
-            //$xml = simplexml_load_file($url) or die("Error: Cannot create object");
+            $xml = simplexml_load_file($url) or die("Error: SimpleXML Cannot create object");
             /*
             *
             *  END PRODUCTION ONLY.

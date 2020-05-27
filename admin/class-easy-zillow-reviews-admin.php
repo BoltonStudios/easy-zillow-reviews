@@ -173,8 +173,11 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
             function ezrwp_section_for_zillow_professional_parameters_cb( $args ) {
                 ?>
                 <hr />
-                <p id="<?php echo esc_attr( $args['id'] ); ?>">
-                    For Professional Reviews, sign-up for a <strong>Zillow Web Services ID (ZWSID)</strong> at <a href="https://www.zillow.com/howto/api/APIOverview.htm" target="_blank">https://www.zillow.com/howto/api/APIOverview.htm</a>. <span class="dashicons dashicons-external" style="font-size: 14px;"></span>
+                <p id="<?php echo esc_attr( $args['id'] ); ?>-2">
+                    <strong style="font-size: 14px">Shortcode</strong><br/>[ez-zillow-reviews]
+                </p>
+                <p id="<?php echo esc_attr( $args['id'] ); ?>-3">
+                    Example shortcode with overrides:<br />[ez-zillow-reviews layout="grid" columns="2" count="4"]
                 </p>
                 <?php
             }
@@ -182,13 +185,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 ?>
                 <hr />
                 <p id="<?php echo esc_attr( $args['id'] ); ?>">
-                    Please find the default plugin settings below. You may override the default settings using the widget and shortcode options.
-                </p>
-                <p id="<?php echo esc_attr( $args['id'] ); ?>-2">
-                    Shortcode:<br/>[ez-zillow-reviews]
-                </p>
-                <p id="<?php echo esc_attr( $args['id'] ); ?>-3">
-                    Example shortcode with overrides:<br />[ez-zillow-reviews layout="grid" columns="2" count="4"]
+                    Please find the default plugin settings below. You may override the default settings using the widget, block, and shortcode options.
                 </p>
                 <?php
             }
@@ -198,9 +195,15 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 <?php
             }
             function ezrwp_section_for_support_cb( $args ) {
+                
+                $simpleXMLIsLoaded = extension_loaded ("SimpleXML") 
+                    ? 'SimpleXML is loaded.'
+                    : 'SimpleXML is not loaded.'
                 ?>
                 <hr />
-                <p>Your PHP version is <?php echo PHP_VERSION;?></p>
+                <p>
+                    Your PHP version is <?php echo PHP_VERSION;?>. <?php echo $simpleXMLIsLoaded ;?>
+                </p>
                 <hr />
                 <?php
             }
@@ -227,7 +230,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Zillow Web Services ID</label>
                 <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
 
-                <p>For Professional Reviews.</p>
+                <p>Sign-up for a <strong>Zillow Web Services ID (ZWSID)</strong> at <a href="https://www.zillow.com/howto/api/APIOverview.htm" target="_blank">https://www.zillow.com/howto/api/APIOverview.htm</a>. <span class="dashicons dashicons-external" style="font-size: 14px;"></span></p>
 
                 <?php
             }

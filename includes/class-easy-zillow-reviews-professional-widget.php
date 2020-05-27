@@ -157,7 +157,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional_Widget' ) ) {
                 <label for="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>">
                     <?php esc_attr_e( 'Number of reviews to show:', 'text_domain' ); ?>
                 </label> 
-                <input id="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>" style="width:45px;" name="<?php echo esc_attr( $this->get_field_name( 'count' ) ); ?>" type="number" value="<?php echo esc_attr( $count ); ?>" min="1" max="<?php echo $GLOBALS['ezrwpReviewLimit'] ?>">
+                <input id="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>" style="width:45px;" name="<?php echo esc_attr( $this->get_field_name( 'count' ) ); ?>" type="number" value="<?php echo esc_attr( $count ); ?>" min="1" max="10">
             </p>
             <p>
                 <label for="<?php echo esc_attr( $this->get_field_id( 'layout' ) ); ?>">

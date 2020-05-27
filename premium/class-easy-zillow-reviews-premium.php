@@ -91,8 +91,12 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Premium' ) ) {
                 
                 $output = '
                 <hr />
+
                 <p id="'. $id['id'] .'-2">
-                    For Lender Reviews, sign-up for a <strong>Zillow Mortgages Partner ID</strong> at <a href="https://www.zillow.com/mortgage/api/#/" target="_blank">https://www.zillow.com/mortgage/api/#/</a>. <span class="dashicons dashicons-external" style="font-size: 14px;"></span> Select <strong>Zillow Lender Reviews</strong> when asked to select your API.
+                    <strong style="font-size: 14px">Shortcode</strong><br/>[ez-zillow-lender-reviews]
+                </p>
+                <p id="'. $id['id'] .'-3">
+                    Example shortcode with overrides:<br />[ez-zillow-lender-reviews layout="grid" columns="2" count="4"]
                 </p>
                 ';
                 echo $output;
@@ -113,7 +117,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Premium' ) ) {
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Zillow Mortgages Partner ID</label>
                 <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_lender_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
 
-                <p>For Lender Reviews.</p>
+                <p>Sign-up for a <strong>Zillow Mortgages Partner ID</strong> at <a href="https://www.zillow.com/mortgage/api/#/" target="_blank">https://www.zillow.com/mortgage/api/#/</a>. <span class="dashicons dashicons-external" style="font-size: 14px;"></span> Select <strong>Zillow Lender Reviews</strong> when asked to select your API.</p>
 
                 <?php
             }

@@ -106,18 +106,51 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             *
             *  END LOCAL DEVELOPMENT ONLY.
             */
+            
+            /*
+            *
+            *  XML READER
+            * 
+            *
+            */
+            $xml = new XMLReader();
+
+            if (!$xml->open($url)) {
+                die("Failed to open XML data.");
+            }
+
+            while($xml->read()) {
+
+                $this->set_message($xml->message->text);
+                $this->set_has_reviews(( $xml->message->code > 0 ) ? false : true);
+
+                if ($xml->nodeType == XMLReader::ELEMENT && $xml->message->code > 0) {
+
+                    // Success
+                    $this->set_info($xml->response->result->proInfo);
+                    $this->set_url($xml->response->result->proInfo->profileURL);
+                    $this->set_rating($xml->response->result->proInfo->avgRating);
+                    $this->set_review_count($xml->response->result->proInfo->reviewCount);
+                    $this->set_reviews($xml->response->result->proReviews);
+                }
+            }
+            $xml->close();
+            /*
+            *
+            *  END XML READER.
+            */
 
             /*
             *
             *  PRODUCTION ONLY. Uncomment for Production
             * 
-            */
+            *
             // Fetch data from Zillow.
-            $xml = simplexml_load_file($url) or die("Error: SimpleXML Cannot create object");
+            //$xml = simplexml_load_file($url) or die("Error: SimpleXML Cannot create object");
             /*
             *
             *  END PRODUCTION ONLY.
-            */
+            *
             
             // Pass data from Zillow to this class instance.
             $this->set_message($xml->message->text);
@@ -131,6 +164,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 $this->set_review_count($xml->response->result->proInfo->reviewCount);
                 $this->set_reviews($xml->response->result->proReviews);
             }
+            /**
+             * 
+             */
         }
         
         /**

@@ -157,21 +157,21 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                 $description = $review->content;
 
                 // Check if these properties exist in the Zillow Reviews API response and store their values
-                $loan_service_provided = property_exists($review, 'serviceProvided') ? $this->format_loan_service_provided($review->serviceProvided) : '';
-                $loan_program = property_exists($review, 'loanProgram') ? $this->format_loan_program( $review->loanProgram ) : '';
-                $loan_purpose = property_exists($review, 'loanPurpose') ? $this->format_loan_purpose($review->loanPurpose) : '';
-                $loan_type = property_exists($review, 'loanType') ? $this->format_loan_type($review->loanType) : '';
+                $loan_service_provided = property_exists( $review, 'serviceProvided' ) ? $this->format_loan_service_provided( $review->serviceProvided ) : '';
+                $loan_type = property_exists( $review, 'loanType' ) ? $this->format_loan_type( $review->loanType ) : '';
+                $loan_program = property_exists( $review, 'loanProgram' ) ? $this->format_loan_program( $loan_type, $review->loanProgram ) : '';
+                $loan_purpose = property_exists( $review, 'loanPurpose' ) ? $this->format_loan_purpose( $loan_type, $loan_program, $review->loanPurpose ) : '';
                 $review_date = $review->created;
 
                 $loan_summary = $loan_service_provided . " " . $loan_type . " " . $loan_program . " " . $loan_purpose;
-                $date = ( $hide_date == false ) ? '<div class="ezrwp-date">'. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime($review_date))) .'</div>' : '';
+                $date = ( $hide_date == false ) ? '<div class="ezrwp-date">'. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime( $review_date ))) .'</div>' : '';
                 $reviewer_summary = ( $hide_reviewer_summary == false ) ? '<span class="review-summary">who '. $loan_summary .' loan.</span>' : '';
                 $stars = '';
                 if( $hide_stars == false ){
                     $stars = $review->rating;
-                    $star_count = floor($stars); // count whole stars
+                    $star_count = floor( $stars ); // count whole stars
                     $half_star_toggle = '';
-                    if( $stars - floor($stars) > 0 ){
+                    if( $stars - floor( $stars ) > 0 ){
                         // add half star if required
                         $half_star_toggle = "ezrwp-plus-half-star";
                     } 
@@ -237,7 +237,15 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
          * @param  string  $loan_program
          * @return string
          */ 
-        private function format_loan_program( $loan_program ){
+        private function format_loan_program( $loan_type, $loan_program ){
+
+            /**
+             * The Loan Type normally comes before the Loan Program. Add the
+             * sentence article before the Loan Program if the Loan Type is blank.
+             */
+            $article = ( $loan_type === '' ) ? "a " : '';
+
+            // Format loan purpose.
             $output = '';
             switch( $loan_program ){
                 case 'Fixed30Year' :
@@ -280,11 +288,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                     $output = 'low or no down payment';
                     break;
                 case 'InterestOnly' :
+                    $article = ( $loan_type === '' ) ? "an " : '';
                     $output = 'interest-only';
                     break;
                 default :
                     break;
             }
+            $output = $article . $output;
             return $output;
         }
 
@@ -294,7 +304,15 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
          * @param  string  $loan_purpose
          * @return string
          */ 
-        private function format_loan_purpose( $loan_purpose ){
+        private function format_loan_purpose( $loan_type, $loan_program, $loan_purpose ){
+
+            /**
+             * The Loan Type and Loan Program normally come before the Loan Purpose. Add the
+             * sentence article before the Loan Purpose if the Loan Type and Program are blank.
+             */
+            $article = ( $loan_type === '' && $loan_program === '' ) ? "a " : '';
+
+            // Format loan purpose.
             $output = '';
             switch( $loan_purpose ){
                 case 'HomeEquity' :
@@ -307,6 +325,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                     $output = strToLower( $loan_purpose );
                 break;
             }
+            $output = $article . $output;
             return $output;
         }
 
@@ -329,6 +348,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                     $output = 'an ' . $loan_type;
                     break;
                 case 'VA' :
+                    $output = 'a ' . $loan_type;
+                    break;
+                case 'USDA' :
                     $output = 'a ' . $loan_type;
                     break;
                 case 'Other' :

@@ -22,34 +22,34 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
          *
          * @since    1.1.0
          * @access   private
-         * @var      array   $lender_reviews_options  The user's settings from the Lender Reviews admin tab.
+         * @var      array   $lender_reviews_options
          */
         private $lender_reviews_options;
 
         /**
-         * 
+         * The client's partner ID.
          *
          * @since    1.1.4
          * @access   private
-         * @var      string   $zwsid    The.
+         * @var      string   $zwsid
          */
         private $zmpid;
 
         /**
-         * 
+         * The lender's NMLS ID.
          *
          * @since    1.1.4
          * @access   private
-         * @var      string   $screenname   The
+         * @var      string   $nmlsid
          */
         private $nmlsid;
 
         /**
-         * 
+         * The company name of the lender. This must be provided for institutional lenders.
          *
          * @since    1.1.4
          * @access   private
-         * @var      string   $company_name   The
+         * @var      string   $company_name
          */
         private $company_name;
 
@@ -108,6 +108,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
 
                 // Success
                 $this->set_url($json->profileURL);
+                $this->set_rating($json->rating);
                 $this->set_review_count($json->totalReviews);
                 $this->set_reviews($json->reviews);
             } else{
@@ -130,22 +131,27 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
             $hide_stars = $this->get_hide_stars();
             $hide_reviewer_summary = $this->get_hide_reviewer_summary();
             $hide_disclaimer = $this->get_hide_disclaimer();
+            $hide_profile_card = $this->get_hide_profile_card();
             $hide_view_all_link = $this->get_hide_view_all_link();
             $hide_zillow_logo = $this->get_hide_zillow_logo();
             $layout = ($as_layout == '') ? $this->get_layout() : $as_layout;
             $number_cols = ($number_cols == '') ? $this->get_grid_columns() : $number_cols;
             $profile_url = $this->get_url();
             $review_count = $this->get_review_count();
+            $rating = $this->get_rating();
+            $profile_card = $this->get_profile_card( $rating, $review_count );
 
             // Output
             $i = 0;
             $reviews_output = '';
             $template = new Easy_Zillow_Reviews_Template_Loader();
             $template->set_hide_disclaimer( $hide_disclaimer );
+            $template->set_hide_profile_card( $hide_profile_card );
             $template->set_hide_view_all_link( $hide_view_all_link );
             $template->set_hide_zillow_logo( $hide_zillow_logo );
             $template->set_profile_url( $profile_url );
             $template->set_review_count( $review_count );
+            $template->set_profile_card( $profile_card );
 
             // Lender Reviews
             foreach( $this->reviews as $review ) :
@@ -153,21 +159,21 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                 $description = $review->content;
 
                 // Check if these properties exist in the Zillow Reviews API response and store their values
-                $loan_service_provided = property_exists($review, 'serviceProvided') ? $this->format_loan_service_provided($review->serviceProvided) : '';
-                $loan_program = property_exists($review, 'loanProgram') ? $this->format_loan_program( $review->loanProgram ) : '';
-                $loan_purpose = property_exists($review, 'loanPurpose') ? $this->format_loan_purpose($review->loanPurpose) : '';
-                $loan_type = property_exists($review, 'loanType') ? $this->format_loan_type($review->loanType) : '';
+                $loan_service_provided = property_exists( $review, 'serviceProvided' ) ? $this->format_loan_service_provided( $review->serviceProvided ) : '';
+                $loan_type = property_exists( $review, 'loanType' ) ? $this->format_loan_type( $review->loanType ) : '';
+                $loan_program = property_exists( $review, 'loanProgram' ) ? $this->format_loan_program( $loan_type, $review->loanProgram ) : '';
+                $loan_purpose = property_exists( $review, 'loanPurpose' ) ? $this->format_loan_purpose( $loan_type, $loan_program, $review->loanPurpose ) : '';
                 $review_date = $review->created;
 
                 $loan_summary = $loan_service_provided . " " . $loan_type . " " . $loan_program . " " . $loan_purpose;
-                $date = ( $hide_date == false ) ? '<div class="ezrwp-date">'. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime($review_date))) .'</div>' : '';
+                $date = ( $hide_date == false ) ? '<div class="ezrwp-date">'. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime( $review_date ))) .'</div>' : '';
                 $reviewer_summary = ( $hide_reviewer_summary == false ) ? '<span class="review-summary">who '. $loan_summary .' loan.</span>' : '';
                 $stars = '';
                 if( $hide_stars == false ){
                     $stars = $review->rating;
-                    $star_count = floor($stars); // count whole stars
+                    $star_count = floor( $stars ); // count whole stars
                     $half_star_toggle = '';
-                    if( $stars - floor($stars) > 0 ){
+                    if( $stars - floor( $stars ) > 0 ){
                         // add half star if required
                         $half_star_toggle = "ezrwp-plus-half-star";
                     } 
@@ -233,7 +239,15 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
          * @param  string  $loan_program
          * @return string
          */ 
-        private function format_loan_program( $loan_program ){
+        private function format_loan_program( $loan_type, $loan_program ){
+
+            /**
+             * The Loan Type normally comes before the Loan Program. Add the
+             * sentence article before the Loan Program if the Loan Type is blank.
+             */
+            $article = ( $loan_type === '' ) ? "a " : '';
+
+            // Format loan purpose.
             $output = '';
             switch( $loan_program ){
                 case 'Fixed30Year' :
@@ -276,11 +290,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                     $output = 'low or no down payment';
                     break;
                 case 'InterestOnly' :
+                    $article = ( $loan_type === '' ) ? "an " : '';
                     $output = 'interest-only';
                     break;
                 default :
                     break;
             }
+            $output = $article . $output;
             return $output;
         }
 
@@ -290,7 +306,15 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
          * @param  string  $loan_purpose
          * @return string
          */ 
-        private function format_loan_purpose( $loan_purpose ){
+        private function format_loan_purpose( $loan_type, $loan_program, $loan_purpose ){
+
+            /**
+             * The Loan Type and Loan Program normally come before the Loan Purpose. Add the
+             * sentence article before the Loan Purpose if the Loan Type and Program are blank.
+             */
+            $article = ( $loan_type === '' && $loan_program === '' ) ? "a " : '';
+
+            // Format loan purpose.
             $output = '';
             switch( $loan_purpose ){
                 case 'HomeEquity' :
@@ -303,6 +327,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                     $output = strToLower( $loan_purpose );
                 break;
             }
+            $output = $article . $output;
             return $output;
         }
 
@@ -324,6 +349,12 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                 case 'FHA' :
                     $output = 'an ' . $loan_type;
                     break;
+                case 'VA' :
+                    $output = 'a ' . $loan_type;
+                    break;
+                case 'USDA' :
+                    $output = 'a ' . $loan_type;
+                    break;
                 case 'Other' :
                     $output = 'a';
                     break;
@@ -332,6 +363,37 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                 break;
             }
             return $output;
+        }
+        
+        /**
+         * Return a string of HTML for the profile card.
+         * 
+         * @since    1.2.1
+         * @param    int        $rating             The average rating for all of the professional's ratings.
+         * @param    int        $review_count       The number of reviews for the professional.
+         * @return   string                         The modified data.
+         */
+        function get_profile_card( $rating, $review_count ){
+            
+            $whole_stars = round($rating); // count whole stars
+            $half_star_toggle = '';
+            if( $rating - $whole_stars > 0 ){
+                // add half star if required
+                $half_star_toggle = "ezrwp-plus-half-star";
+            }
+            $stars = '
+                <div class="ezrwp-lender-star-average ezrwp-stars ezrwp-stars-'. $whole_stars .' '. $half_star_toggle .'"></div>
+            ';
+
+            $profile_card = '
+                <div class="ezrwp-lender-profile-card">
+                    '. $stars .'
+                    <div class="ezrwp-lender-activity">
+                        '. round( $rating, 2 ) .' Stars • '. $review_count .' Reviews
+                    </div>
+                </div>
+            ';
+            return $profile_card;
         }
         
         /**
@@ -367,18 +429,20 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
         function update_reviews_in_block( $output, $attributes ){
             
             // If the user selected the Lender & Loan Officer Reviews type option, update the reviews output.
-            if( $attributes[ 'reviewsType' ] == 'lender' ){
+            if( isset( $attributes[ 'reviewsType' ] ) ){
+                if( $attributes[ 'reviewsType' ] == 'lender' ){
 
-                // Get this Eazy_Zillow_Reviews_Lender object instance.
-                $reviews = $this;
+                    // Get this Eazy_Zillow_Reviews_Lender object instance.
+                    $reviews = $this;
 
-                // Parse attributes selected by the user in the Gutenberg block.
-                $layout = isset( $attributes[ 'reviewsLayout' ] ) ? $attributes[ 'reviewsLayout' ] : $reviews->get_layout();
-                $cols = isset( $attributes[ 'gridColumns' ] ) ? $attributes[ 'gridColumns' ] : $reviews->get_grid_columns();
-                $count = isset( $attributes[ 'reviewsCount' ] ) ? $attributes[ 'reviewsCount' ] : $reviews->get_count();
-                
-                // Overwite the Gutenberg block output with lender reviews from this object instance.
-                $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count );
+                    // Parse attributes selected by the user in the Gutenberg block.
+                    $layout = isset( $attributes[ 'reviewsLayout' ] ) ? $attributes[ 'reviewsLayout' ] : $reviews->get_layout();
+                    $cols = isset( $attributes[ 'gridColumns' ] ) ? $attributes[ 'gridColumns' ] : $reviews->get_grid_columns();
+                    $count = isset( $attributes[ 'reviewsCount' ] ) ? $attributes[ 'reviewsCount' ] : $reviews->get_count();
+                    
+                    // Overwite the Gutenberg block output with lender reviews from this object instance.
+                    $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count );
+                }
             }
 
             // Return the updated output.

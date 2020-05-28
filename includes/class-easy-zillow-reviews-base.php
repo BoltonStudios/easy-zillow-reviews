@@ -108,6 +108,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Base' ) ) {
          * @since    1.1.0
          */
         public function __construct( $plugin_basename ) {
+            
             if ( defined( 'EASY_ZILLOW_REVIEWS_VERSION' ) ) {
                 $this->version = EASY_ZILLOW_REVIEWS_VERSION;
             } else {

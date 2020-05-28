@@ -28,12 +28,12 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         
         /**
          * The layout for reviews.
-            * The user may select "grid" or "list" from the shortcode, widget, or admin settings.
-        *
-        * @since    1.1.0
-        * @access   private
-        * @var      string   $layout  TThe layout for reviews.
-        */
+         * The user may select "grid" or "list" from the shortcode, widget, or admin settings.
+         *
+         * @since    1.1.0
+         * @access   private
+         * @var      string   $layout  TThe layout for reviews.
+         */
         private $layout;
 
         /**
@@ -97,6 +97,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         /**
          * The profile information for the Zillow account selected by the user.
          * This is determined by the results of the plugin's call to the Zillow API Network.
+         * 
          * @since    1.1.0
          * @access   private
          * @var      SimpleXMLElement   $info
@@ -104,9 +105,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         private $info;
         
         /**
+         * The option to hide the time elapsed since the review was written.
+         * Determined by options selected on Settings page.
          * 
-         * 
-         *
          * @since    1.1.0
          * @access   private
          * @var      bool   $hide_date   
@@ -114,9 +115,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         private $hide_date;
         
         /**
+         * The option to hide Zillow's Mandatory Disclaimer.
+         * Determined by options selected on Settings page.
          * 
-         * 
-         *
          * @since    1.1.4
          * @access   private
          * @var      bool   $hide_disclaimer  
@@ -124,9 +125,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         private $hide_disclaimer;
         
         /**
+         * The option to hide the star rating.
+         * Determined by options selected on Settings page.
          * 
-         * 
-         *
          * @since    1.1.4
          * @access   private
          * @var      bool   $hide_stars 
@@ -134,9 +135,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         private $hide_stars;
         
         /**
+         * The option to hide the short description of the reviewer.
+         * Determined by options selected on Settings page.
          * 
-         * 
-         *
          * @since    1.1.4
          * @access   private
          * @var      bool   $hide_reviewer_summary 
@@ -144,9 +145,19 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         private $hide_reviewer_summary;
         
         /**
+         * The option to hide the average star rating for the Zillow profile.
+         * Determined by options selected on Settings page.
          * 
+         * @since    1.2.1
+         * @access   private
+         * @var      bool   $hide_profile_card
+         */
+        private $hide_profile_card;
+        
+        /**
+         * The option to hide the link to the real estate professional directory on Zillow.com.
+         * Determined by options selected on Settings page.
          * 
-         *
          * @since    1.1.4
          * @access   private
          * @var      bool   $hide_view_all_link  
@@ -154,14 +165,24 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         private $hide_view_all_link;
         
         /**
+         * The option to hide the Zillow logo.
+         * Determined by options selected on Settings page.
          * 
-         * 
-         *
          * @since    1.1.4
          * @access   private
          * @var      bool   $hide_zillow_logo  
          */
         private $hide_zillow_logo;
+
+        /**
+         * The average rating of all the published reviews. 
+         * This value will not be present if the lender has no reviews.
+         *
+         * @since    1.2.1
+         * @access   private
+         * @var      int   $rating
+         */
+        private $rating;
         
         /**
          * The total number of reviews that this profile has on Zillow.
@@ -183,8 +204,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         protected $reviews;
         
         /**
+         * The font size for the review quote text in pixels.
+         * Determined by options selected on Settings page.
          * 
-         *
          * @since    1.1.4
          * @access   protected
          * @var      int   $quote_font_size  
@@ -192,8 +214,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         protected $quote_font_size;
         
         /**
+         * The font size for the reviewer description text in pixels.
+         * Determined by options selected on Settings page.
          * 
-         *
          * @since    1.1.4
          * @access   protected
          * @var      int   $reviewer_description_font_size  
@@ -201,7 +224,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         protected $reviewer_description_font_size;
         
         /**
-         * 
+         * The layouts available for the user to select.
+         * Determined by plugin edition installed (free or paid editions).
          *
          * @since    1.2.0
          * @access   public
@@ -210,8 +234,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         public $available_layouts;
         
         /**
+         * The APIs available for the user to select.
+         * Determined by plugin edition installed (free or paid editions).
          * 
-         *
          * @since    1.2.0
          * @access   public
          * @var      array   $available_apis
@@ -234,6 +259,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
             $hide_disclaimer = isset($general_options['ezrwp_disclaimer']) ? $general_options['ezrwp_disclaimer'] : 0;
             $hide_stars = isset($general_options['ezrwp_hide_stars']) ? $general_options['ezrwp_hide_stars'] : 0;
             $hide_reviewer_summary = isset($general_options['ezrwp_hide_reviewer_summary']) ? $general_options['ezrwp_hide_reviewer_summary'] : 0;
+            $hide_profile_card = isset($general_options['ezrwp_hide_profile_card']) ? $general_options['ezrwp_hide_profile_card'] : 0;
             $hide_view_all_link = isset($general_options['ezrwp_hide_view_all_link']) ? $general_options['ezrwp_hide_view_all_link'] : 0;
             $hide_zillow_logo = isset($general_options['ezrwp_hide_zillow_logo']) ? $general_options['ezrwp_hide_zillow_logo'] : 0;
             $quote_font_size = isset($general_options['ezrwp_quote_font_size']) ? $general_options['ezrwp_quote_font_size'] : 18;
@@ -250,6 +276,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
             $this->set_hide_disclaimer(($hide_disclaimer == 1) ? true : false);
             $this->set_hide_stars(($hide_stars == 1) ? true : false);
             $this->set_hide_reviewer_summary(($hide_reviewer_summary == 1) ? true : false);
+            $this->set_hide_profile_card(($hide_profile_card == 1) ? true : false);
             $this->set_hide_view_all_link(($hide_view_all_link == 1) ? true : false);
             $this->set_hide_zillow_logo(($hide_zillow_logo == 1) ? true : false);
             $this->set_quote_font_size($quote_font_size);
@@ -436,6 +463,27 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
 
                 return $this;
         }
+        
+        /**
+         * Get the value of rating
+         *
+         * @since    1.2.1
+         */
+        public function get_rating(){
+
+            return $this->rating;
+        }
+
+        /**
+         * Set the value of rating
+         *
+         * @return  self
+         */ 
+        public function set_rating($rating){
+
+            $this->rating = $rating;
+            return $this;
+        }
 
         /**
          * Get the value of review_count
@@ -593,6 +641,26 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         public function set_hide_disclaimer($hide_disclaimer)
         {
                 $this->hide_disclaimer = $hide_disclaimer;
+
+                return $this;
+        }
+
+        /**
+         * Get the value of $hide_profile_card
+         */ 
+        public function get_hide_profile_card()
+        {
+                return $this->hide_profile_card;
+        }
+
+        /**
+         * Set the value of $hide_profile_card
+         *
+         * @return  self
+         */ 
+        public function set_hide_profile_card($hide_profile_card)
+        {
+                $this->hide_profile_card = $hide_profile_card;
 
                 return $this;
         }

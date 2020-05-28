@@ -20,7 +20,7 @@
  * Plugin Name:       Easy Zillow Reviews
  * Plugin URI:        https://wordpress.org/plugins/easy-zillow-reviews/
  * Description:       Display reviews from Zillow on your site.
- * Version:           1.2.0
+ * Version:           1.2.1
  * Author:            Aaron Bolton
  * Author URI:        https://www.boltonstudios.com
  * License:           GPL-2.0+
@@ -48,7 +48,7 @@ if ( function_exists( 'ezrwp_fs' ) ) {
          * Start at version 1.0.0 and use SemVer - https://semver.org
          * Rename this for your plugin and update it as you release new versions.
          */
-        define( 'EASY_ZILLOW_REVIEWS_VERSION', '1.2.0' );
+        define( 'EASY_ZILLOW_REVIEWS_VERSION', '1.2.1' );
         define( 'EASY_ZILLOW_REVIEWS_BASENAME', plugin_basename( __FILE__ ) );
 
         /**
@@ -96,7 +96,6 @@ if ( function_exists( 'ezrwp_fs' ) ) {
                     'public_key'          => 'pk_5fa54ca20b9465c9db23a010b43f5',
                     'is_premium'          => true,
                     'premium_suffix'      => 'Premium',
-                    // If your plugin is a serviceware, set this option to false.
                     'has_premium_version' => true,
                     'has_addons'          => false,
                     'has_paid_plans'      => true,
@@ -133,7 +132,10 @@ if ( function_exists( 'ezrwp_fs' ) ) {
                 // Load the essential plugin features including settings and admin
                 $plugin = new Easy_Zillow_Reviews_Base( EASY_ZILLOW_REVIEWS_BASENAME );
                 
-                // Run the Upgrader.
+                /*
+                 * Run the upgrader to migrate values from old option name
+                 * to new option name(s) introduced in v1.1.0
+                 */
                 new Easy_Zillow_Reviews_Upgrader();
 
                 // Get the Zillow Professional data

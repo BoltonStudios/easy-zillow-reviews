@@ -27,34 +27,34 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
         private $professional_reviews_options;
 
         /**
-         * 
+         * The URL for the Reviews API Web Service.
          *
          * @since    1.1.0
          * @access   private
-         * @var      string   $zillow_api_url    The URL for the Reviews API Web Service.
+         * @var      string   $zillow_api_url
          */
         private $zillow_api_url;
 
         /**
-         * 
+         * The Zillow Web Service Identifier (ZWSID).
          *
          * @since    1.1.0
          * @access   private
-         * @var      string   $zwsid    The Zillow Web Service Identifier.
+         * @var      string   $zwsid
          */
         private $zwsid;
 
         /**
-         * 
+         * The screenname of the user whose reviews will be fetched.
          *
          * @since    1.1.0
          * @access   private
-         * @var      string   $screenname   The screenname of the user whose reviews will be fetched
+         * @var      string   $screenname
          */
         private $screenname;
 
         /**
-         * 
+         * The option to fetch reviews for individual team members in team profiles.
          *
          * @since    1.1.0
          * @access   private
@@ -73,7 +73,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
         // Methods
         /**
-         * Get lender reviews data from Zillow using the Zillow ProReviews API.
+         * Get reviews data from Zillow using the Zillow ProReviews API.
          *
          * @since    1.1.0
          */
@@ -86,49 +86,63 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $toggle_team_members = $this->get_show_team_members() ? '&returnTeamMemberReviews=true' : '';
             
             // Contstruct the URL for a Zillow Professional.
-            $url = 'https://www.zillow.com/webservice/ProReviews.htm?zws-id='. $zwsid .'&screenname='. $screenname .'&count='. $count . $toggle_team_members;
+            $zillow_url = 'http://www.zillow.com/webservice/ProReviews.htm?zws-id='. $zwsid .'&screenname='. $screenname .'&count='. $count . $toggle_team_members;
 
-            /*
-            *
-            *  LOCAL DEVELOPMENT ONLY. Comment out for Production
-            * 
-            *
-            *
-            $arrContextOptions = array(
-                "ssl" => array(
-                    "verify_peer" => false,
-                    "verify_peer_name" => false,
-                ),
-            );
-            $assertion = file_get_contents($url, false, stream_context_create($arrContextOptions));
-            $xml = simplexml_load_string($assertion);
-            /*
-            *
-            *  END LOCAL DEVELOPMENT ONLY.
-            */
-
-            /*
-            *
-            *  PRODUCTION ONLY. Uncomment for Production
-            * 
-            */
             // Fetch data from Zillow.
-            $xml = simplexml_load_file($url) or die("Error: Cannot create object");
-            /*
-            *
-            *  END PRODUCTION ONLY.
-            */
+
+            // Enable user error handling. Use for debugging.
+            // libxml_use_internal_errors(true);
+            
+            /**
+             * allow_url_fopen must be enabled to use simplexml_load_file().
+             * Some hosts disable allow_url_fopen for security reasons.
+             * Fall back to cURL if allow_url_fopen is disabled in the PHP configuration.
+             * 
+             * */
+            $allow_url = ini_get( 'allow_url_fopen' );
+            if( $allow_url ){
+
+                // Fetch data from the Zillow API Network.
+                $zillow_data = simplexml_load_file( $zillow_url );
+                
+            } else{
+
+                // Fetch data from the Zillow API Network.
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_URL, $zillow_url);
+                $curl_result = curl_exec($ch);
+                curl_close($ch);
+
+                // Interpret XML Data into an object.
+                $zillow_data = simplexml_load_string( $curl_result );
+            }
+
+            // Handle XML errors.  
+            if( $zillow_data === false ){
+
+                echo "Failed loading XML.";
+
+                // Handle errors in debugging.
+                /*
+                foreach(libxml_get_errors() as $error) {
+                    echo "\n\t", $error->message;
+                }
+                */
+            }
             
             // Pass data from Zillow to this class instance.
-            $this->set_message($xml->message->text);
-            $this->set_has_reviews(( $xml->message->code > 0 ) ? false : true);
+            $this->set_message($zillow_data->message->text);
+            $this->set_has_reviews(( $zillow_data->message->code > 0 ) ? false : true);
             if($this->get_has_reviews()){
 
                 // Success
-                $this->set_info($xml->response->result->proInfo);
-                $this->set_url($xml->response->result->proInfo->profileURL);
-                $this->set_review_count($xml->response->result->proInfo->reviewCount);
-                $this->set_reviews($xml->response->result->proReviews);
+                $this->set_info($zillow_data->response->result->proInfo);
+                $this->set_url($zillow_data->response->result->proInfo->profileURL);
+                $this->set_rating($zillow_data->response->result->proInfo->avgRating);
+                $this->set_review_count($zillow_data->response->result->proInfo->reviewCount);
+                $this->set_reviews($zillow_data->response->result->proReviews);
             }
         }
         
@@ -145,22 +159,30 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $hide_stars = $this->get_hide_stars();
             $hide_reviewer_summary = $this->get_hide_reviewer_summary();
             $hide_disclaimer = $this->get_hide_disclaimer();
+            $hide_profile_card = $this->get_hide_profile_card();
             $hide_view_all_link = $this->get_hide_view_all_link();
             $hide_zillow_logo = $this->get_hide_zillow_logo();
             $layout = ($as_layout == '') ? $this->get_layout() : $as_layout;
             $number_cols = ($number_cols == '') ? $this->get_grid_columns() : $number_cols;
             $profile_url = $this->get_url();
             $review_count = $this->get_review_count();
+            $name = $this->get_info()->name;
+            $photo = $this->get_info()->photo;
+            $rating = $this->get_rating();
+            $sale_count = $this->get_info()->recentSaleCount;
+            $profile_card = $this->get_profile_card( $name, $photo, $profile_url, $rating, $review_count, $sale_count );
 
             // Output
             $i = 0;
             $reviews_output = '';
             $template = new Easy_Zillow_Reviews_Template_Loader();
             $template->set_hide_disclaimer( $hide_disclaimer );
+            $template->set_hide_profile_card( $hide_profile_card );
             $template->set_hide_view_all_link( $hide_view_all_link );
             $template->set_hide_zillow_logo( $hide_zillow_logo );
             $template->set_profile_url( $profile_url );
             $template->set_review_count( $review_count );
+            $template->set_profile_card( $profile_card );
 
             // Professional Reviews
             foreach($this->reviews->review as $review) :
@@ -206,7 +228,63 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 }
             endforeach;
 
-            return $template->generate_reviews_wrapper($reviews_output, $layout, $number_cols);
+            return $template->generate_reviews_wrapper( $reviews_output, $layout, $number_cols );
+        }
+        
+        /**
+         * Return a string of HTML for the profile card.
+         * 
+         * @since    1.2.1
+         * @param    string     $name               The name of the professional.
+         * @param    string     $photo              A link to the profile photo of the professional.
+         * @param    string     $url                URL link to the professional's profile on Zillow.
+         * @param    int        $rating             The average rating for all of the professional's ratings.
+         * @param    int        $review_count       The number of reviews for the professional.
+         * @param    int        $sale_count         The number of recent sales for the professional
+         * @return   string                         The modified data.
+         */
+        function get_profile_card( $name, $photo, $url, $rating, $review_count, $sale_count ){
+
+            $star_average = '';
+            if( $rating == 0 ){
+                $star_average = 'star-0';
+            } elseif( $rating <= 2.0 ){
+                $star_average = 'star-25';
+            } elseif( $rating <= 3.5 ){
+                $star_average = 'star-50';
+            } elseif( $rating <= 4.9 ){
+                $star_average = 'star-75';
+            } else{
+                $star_average = 'star-100';
+            }
+            if( $star_average !== '' ){
+                $star_average = '<span class="ezrwp-star-average ezrwp-icon-'. $star_average .'"></span>';
+            }
+
+            $profile_card = '
+                <div class="ezrwp-profile-card">
+                    <div class="ezrwp-profile-card-left">
+                        <div class="ezrwp-profile-image-container">
+                            <img class="ezrwp-photo" src="'. $photo .'" alt="" width="94" height="94" />
+                        </div>
+                    </div>
+                    <div class="ezrwp-profile-card-right">
+                        <p class="ezrwp-profile-name"><strong>'. $name .'</strong></p>
+                        <div class="ezrwp-activity">
+                            <div class="ezrwp-activity-reviews">
+                                <div class="ezrwp-rating-reviews">
+                                    <span class="ezrwp-avg-rating">'. $star_average . $rating .'</span>/<span class="ezrwp-max-rating">5</span>
+                                    <a href="'. $url . '#reviews" class="ezrwp-reviews-count">'. $review_count .' Reviews</a>
+                                </div>
+                            </div>
+                            <div class="ezrwp-activity-sales">
+                                '. $sale_count .' sales in the last 12 months
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ';
+            return $profile_card;
         }
         
         /**
@@ -234,6 +312,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             return $output;
         }
         
+        // Getters & Setters
         /**
          * Get the value of zwsid
          *

@@ -1,11 +1,11 @@
 === Easy Zillow Reviews ===
 Contributors: boltonstudios
 Donate link: http://ko-fi.com/boltonstudios
-Tags: zillow, reviews, gutenberg
+Tags: zillow, reviews, gutenberg, block, real estate, lender
 Requires at least: 4.0.0
-Tested up to: 5.4.0
+Tested up to: 5.4.1
 Requires PHP: 5.4
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +13,7 @@ Display reviews from Zillow on your website.
 
 == Description ==
 
-*Easy Zillow Reviews* allows lenders and other real estate professionals to integrate Zillow reviews into their WordPress sites easily.
+*Easy Zillow Reviews* makes it easy for realtors and lenders to fetch reviews from the Zillow API Network.
 
 View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
@@ -23,7 +23,7 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 * Compliant with Zillow's [Terms of Use](https://www.zillow.com/corp/Terms.htm) and [Branding Requirements](https://www.zillow.com/howto/api/BrandingRequirements.htm)
 * Grid and List layout options
 * Widget and Shortcode options
-* Gutenberg block (layout reviews in the new WordPress block editor!)
+* Gutenberg block (edit review layouts in the new WordPress editor!)
 * Mobile responsive
 
 = Mortgages Partner Edition Features =
@@ -33,24 +33,13 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
 = Requirements =
 
-The Free Edition requires:
+The Free Edition requires a [Zillow Web Services ID (ZWSID)](https://www.zillow.com/howto/api/APIOverview.htm).
 
-1. Zillow Web Services ID (ZWSID)\*
-2. Zillow Screenname
-
-The Mortgages Partner Edition requires:
-
-1. Zillow Mortgages Partner ID (ZPID)\*\*
-2. NMLS#
-3. Company Name (for companies only)
-
-\* Get your ZWSID at [https://www.zillow.com/howto/api/APIOverview.htm](https://www.zillow.com/howto/api/APIOverview.htm).
-
-\*\* Get your ZPID at [https://www.zillow.com/mortgage/api/](https://www.zillow.com/mortgage/api/).
+The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](https://www.zillow.com/mortgage/api/).
 
 = Limitations =
 
-**Important**: While *Easy Zillow Reviews* is compliant out-of-the-box, knowledge of the following limitations from [Zillow's Review API FAQ](https://www.zillow.com/howto/api/faq.htm) will help you avoid any unexpected errors.
+**Important**: Review the following limitations from [Zillow's Review API FAQ](https://www.zillow.com/howto/api/faq.htm) to avoid unexpected errors.
 
 * Include the approved Zillow logo on your website wherever reviews appear. *Easy Zillow Reviews* includes this logo, but you can disable it in Settings > Easy Zillow Reviews if you wish to add it elsewhere adjacent to the Reviews per the [Branding Guidelines](https://www.zillow.com/howto/api/BrandingRequirements.htm).
 * Include the Mandatory Disclaimer wherever reviews appear. *Easy Zillow Reviews* includes this disclaimer, but you can disable it in Settings > Easy Zillow Reviews if you wish to add it elsewhere (such as in the footer).
@@ -81,11 +70,20 @@ The Mortgages Partner Edition requires:
 
 == Screenshots ==
 
-1. Shortcode output for [ez-zillow-reviews layout="grid" columns="2" count="2"]
-2. Widget.
-3. Settings.
+1. Zillow Reviews block editor
+2. Shortcode output for [ez-zillow-reviews layout="grid" columns="2" count="2"]
+3. Widget
+4. Settings
 
 == Changelog ==
+
+= 1.2.1 =
+* New Feature: Display a Zillow profile card with average star rating.
+* Bug Fix: Added fallback to cURL for PHP configurations that have allow_url_fopen disabled.
+* Bug Fix: Removed erroneous reference to a second Gutenberg block.
+* Bug Fix: Removed two instances of Undefined Index errors in widgets and lender functions.
+* Bug Fix: Improved sentence construction for loan descriptions in Premium version.
+* Updated Freemius SDK to version 2.3.2.
 
 = 1.2.0 =
 * New Feature: Gutenberg Block

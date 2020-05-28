@@ -173,8 +173,11 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
             function ezrwp_section_for_zillow_professional_parameters_cb( $args ) {
                 ?>
                 <hr />
-                <p id="<?php echo esc_attr( $args['id'] ); ?>">
-                    For Professional Reviews, sign-up for a <strong>Zillow Web Services ID (ZWSID)</strong> at <a href="https://www.zillow.com/howto/api/APIOverview.htm" target="_blank">https://www.zillow.com/howto/api/APIOverview.htm</a>. <span class="dashicons dashicons-external" style="font-size: 14px;"></span>
+                <p id="<?php echo esc_attr( $args['id'] ); ?>-2">
+                    <strong style="font-size: 14px">Shortcode</strong><br/>[ez-zillow-reviews]
+                </p>
+                <p id="<?php echo esc_attr( $args['id'] ); ?>-3">
+                    Example shortcode with overrides:<br />[ez-zillow-reviews layout="grid" columns="2" count="4"]
                 </p>
                 <?php
             }
@@ -182,13 +185,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 ?>
                 <hr />
                 <p id="<?php echo esc_attr( $args['id'] ); ?>">
-                    Please find the default plugin settings below. You may override the default settings using the widget and shortcode options.
-                </p>
-                <p id="<?php echo esc_attr( $args['id'] ); ?>-2">
-                    Shortcode:<br/>[ez-zillow-reviews]
-                </p>
-                <p id="<?php echo esc_attr( $args['id'] ); ?>-3">
-                    Example shortcode with overrides:<br />[ez-zillow-reviews layout="grid" columns="2" count="4"]
+                    Please find the default plugin settings below. You may override the default settings using the widget, block, and shortcode options.
                 </p>
                 <?php
             }
@@ -198,9 +195,20 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 <?php
             }
             function ezrwp_section_for_support_cb( $args ) {
+                
+                $simpleXML_is_loaded = extension_loaded ("SimpleXML") 
+                    ? 'SimpleXML is loaded.'
+                    : 'SimpleXML is not loaded.';
+                $allow_url = ini_get( 'allow_url_fopen' )
+                    ? 'allow_url_fopen is enabled.'
+                    : 'allow_url_fopen is disabled.';
                 ?>
                 <hr />
-                <p>Your PHP version is <?php echo PHP_VERSION;?></p>
+                <p>
+                    Your PHP version is <?php echo PHP_VERSION; ?>. 
+                    <?php echo $simpleXML_is_loaded; ?> 
+                    <?php echo $allow_url; ?>
+                </p>
                 <hr />
                 <?php
             }
@@ -227,7 +235,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Zillow Web Services ID</label>
                 <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
 
-                <p>For Professional Reviews.</p>
+                <p>Sign-up for a <strong>Zillow Web Services ID (ZWSID)</strong> at <a href="https://www.zillow.com/howto/api/APIOverview.htm" target="_blank">https://www.zillow.com/howto/api/APIOverview.htm</a>. <span class="dashicons dashicons-external" style="font-size: 14px;"></span></p>
 
                 <?php
             }
@@ -374,7 +382,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 ?>
 
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Stars</label>
-                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The overall star rating for the review.
+                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The star rating for each review.
             <?php
             }
 
@@ -391,6 +399,22 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
 
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Reviewer Summary</label>
                 <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> A short description of the reviewer. Example: "Sold a Single Family home in 2013 for approximately $500K in Roswell, GA."
+            <?php
+            }
+
+            // Zillow Hide Profile Card callback
+            function ezrwp_hide_profile_card_field_cb( $args ) {
+                
+                $options = get_option('ezrwp_general_options');
+                
+                $setting = '';
+                if( isset( $options[$args['label_for']] ) ){
+                    $setting = $options[$args['label_for']];
+                };
+                ?>
+
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Profile Reviews Average.</label>
+                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The overall star rating for the profile.
             <?php
             }
 

@@ -17,7 +17,7 @@
   position: relative;
 }
 .wp-block-boltonstudios-easy-zillow-reviews .ezrwp-wrapper .ezrwp-placeholder-text.blockquote-placeholder:before {
-  background-image: url('../images/quote-left-duotone.svg');
+  background-image: url('../images/quote-left.svg');
   background-repeat: no-repeat;
   background-size: contain;
   content: "";
@@ -73,7 +73,7 @@
   border: none;
 }
 .wp-block-boltonstudios-easy-zillow-reviews .ezrwp-wrapper .ezrwp-content blockquote:before {
-  background-image: url('../images/quote-left-duotone.svg');
+  background-image: url('../images/quote-left.svg');
   background-repeat: no-repeat;
   background-size: contain;
   content: "";

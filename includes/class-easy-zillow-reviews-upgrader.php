@@ -1,7 +1,8 @@
 <?php
 
 /**
- * This class defines all code necessary to migrate old plugin options to the new format.
+ * This class defines all code necessary to migrate values from
+ * the old plugin option name to the new option names.
  *
  * @since      1.1.2
  * @package    Easy_Zillow_Reviews
@@ -21,12 +22,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Upgrader' ) ) {
          * @since    1.1.2
          */
         public function __construct() {
+
             $this->init();
         }
         public static function init() {
             
             /**
-             * Migrate old plugin options to new format.
+             * Migrate values from old plugin option name to new option names.
              *
              * @since    1.1.1
              */

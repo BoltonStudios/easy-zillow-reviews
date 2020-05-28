@@ -86,7 +86,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $toggle_team_members = $this->get_show_team_members() ? '&returnTeamMemberReviews=true' : '';
             
             // Contstruct the URL for a Zillow Professional.
-            $zillow_url = 'http://www.zillow.com/webservice/ProReviews.htm?zws-id='. $zwsid .'&screenname='. $screenname .'&count='. $count . $toggle_team_members;
+            $zillow_url = 'https://www.zillow.com/webservice/ProReviews.htm?zws-id='. $zwsid .'&screenname='. $screenname .'&count='. $count . $toggle_team_members;
 
             // Fetch data from Zillow.
 

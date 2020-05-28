@@ -290,6 +290,9 @@ body .ezrwp-wrapper .ezrwp-profile-card .ezrwp-profile-card-right p {
 }
 body .ezrwp-wrapper .ezrwp-profile-card .ezrwp-profile-card-right .ezrwp-profile-name {
   line-height: 18px;
+  margin-top: 0;
+  margin-bottom: 5px;
+  padding-top: 0;
 }
 body .ezrwp-wrapper .ezrwp-profile-card .ezrwp-profile-card-right .ezrwp-activity {
   background-color: #F1F1F4;

@@ -131,6 +131,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
             $hide_stars = $this->get_hide_stars();
             $hide_reviewer_summary = $this->get_hide_reviewer_summary();
             $hide_disclaimer = $this->get_hide_disclaimer();
+            $hide_profile_card = $this->get_hide_profile_card();
             $hide_view_all_link = $this->get_hide_view_all_link();
             $hide_zillow_logo = $this->get_hide_zillow_logo();
             $layout = ($as_layout == '') ? $this->get_layout() : $as_layout;
@@ -145,6 +146,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
             $reviews_output = '';
             $template = new Easy_Zillow_Reviews_Template_Loader();
             $template->set_hide_disclaimer( $hide_disclaimer );
+            $template->set_hide_profile_card( $hide_profile_card );
             $template->set_hide_view_all_link( $hide_view_all_link );
             $template->set_hide_zillow_logo( $hide_zillow_logo );
             $template->set_profile_url( $profile_url );

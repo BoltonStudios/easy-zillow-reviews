@@ -145,6 +145,16 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         private $hide_reviewer_summary;
         
         /**
+         * The option to hide the average star rating for the Zillow profile.
+         * Determined by options selected on Settings page.
+         * 
+         * @since    1.2.1
+         * @access   private
+         * @var      bool   $hide_profile_card
+         */
+        private $hide_profile_card;
+        
+        /**
          * The option to hide the link to the real estate professional directory on Zillow.com.
          * Determined by options selected on Settings page.
          * 
@@ -249,6 +259,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
             $hide_disclaimer = isset($general_options['ezrwp_disclaimer']) ? $general_options['ezrwp_disclaimer'] : 0;
             $hide_stars = isset($general_options['ezrwp_hide_stars']) ? $general_options['ezrwp_hide_stars'] : 0;
             $hide_reviewer_summary = isset($general_options['ezrwp_hide_reviewer_summary']) ? $general_options['ezrwp_hide_reviewer_summary'] : 0;
+            $hide_profile_card = isset($general_options['ezrwp_hide_profile_card']) ? $general_options['ezrwp_hide_profile_card'] : 0;
             $hide_view_all_link = isset($general_options['ezrwp_hide_view_all_link']) ? $general_options['ezrwp_hide_view_all_link'] : 0;
             $hide_zillow_logo = isset($general_options['ezrwp_hide_zillow_logo']) ? $general_options['ezrwp_hide_zillow_logo'] : 0;
             $quote_font_size = isset($general_options['ezrwp_quote_font_size']) ? $general_options['ezrwp_quote_font_size'] : 18;
@@ -265,6 +276,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
             $this->set_hide_disclaimer(($hide_disclaimer == 1) ? true : false);
             $this->set_hide_stars(($hide_stars == 1) ? true : false);
             $this->set_hide_reviewer_summary(($hide_reviewer_summary == 1) ? true : false);
+            $this->set_hide_profile_card(($hide_profile_card == 1) ? true : false);
             $this->set_hide_view_all_link(($hide_view_all_link == 1) ? true : false);
             $this->set_hide_zillow_logo(($hide_zillow_logo == 1) ? true : false);
             $this->set_quote_font_size($quote_font_size);
@@ -629,6 +641,26 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         public function set_hide_disclaimer($hide_disclaimer)
         {
                 $this->hide_disclaimer = $hide_disclaimer;
+
+                return $this;
+        }
+
+        /**
+         * Get the value of $hide_profile_card
+         */ 
+        public function get_hide_profile_card()
+        {
+                return $this->hide_profile_card;
+        }
+
+        /**
+         * Set the value of $hide_profile_card
+         *
+         * @return  self
+         */ 
+        public function set_hide_profile_card($hide_profile_card)
+        {
+                $this->hide_profile_card = $hide_profile_card;
 
                 return $this;
         }

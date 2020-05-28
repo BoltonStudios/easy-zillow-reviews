@@ -28,6 +28,16 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
         private $hide_disclaimer;
         
         /**
+         * The option to show or hide the average star rating for the Zillow profile.
+         * If true, the rating will be hidden.
+         *
+         * @since    1.2.1
+         * @access   private
+         * @var      bool   $hide_profile_card
+         */
+        private $hide_profile_card;
+        
+        /**
          * The option to show or hide the link to the reviews page on Zillow.com.
          * If true, the link will be hidden.
          *
@@ -126,6 +136,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
 
             // User Options
             $hide_disclaimer = $this->get_hide_disclaimer();
+            $hide_profile_card = $this->get_hide_profile_card();
             $hide_view_all_link = $this->get_hide_view_all_link();
             $hide_zillow_logo = $this->get_hide_zillow_logo();
             $profile_url = $this->get_profile_url();
@@ -138,6 +149,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
                                 : '';
 
             // Other options
+            if( $hide_profile_card == true ){
+                $profile_card = '';
+            }
             $view_all_link = '';
             if( $hide_view_all_link == false ){
                 $view_all_link = '
@@ -237,6 +251,26 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
         public function set_hide_disclaimer($hide_disclaimer)
         {
                 $this->hide_disclaimer = $hide_disclaimer;
+
+                return $this;
+        }
+
+        /**
+         * Get the value of $hide_profile_card
+         */ 
+        public function get_hide_profile_card()
+        {
+                return $this->hide_profile_card;
+        }
+
+        /**
+         * Set the value of $hide_profile_card
+         *
+         * @return  self
+         */ 
+        public function set_hide_profile_card($hide_profile_card)
+        {
+                $this->hide_profile_card = $hide_profile_card;
 
                 return $this;
         }

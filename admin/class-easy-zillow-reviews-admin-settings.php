@@ -187,6 +187,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
                 'section'   => 'ezrwp_section_for_defaults'
             );
             $settings[] = array(
+                'id'        => 'ezrwp_hide_profile_card', // id. Used only internally
+                'title'     => __( 'Hide Reviews Average', 'ezrwp_general' ), // title
+                'callback'  => 'ezrwp_hide_profile_card_field_cb', // callback
+                'tab'       => 'ezrwp_general', // page
+                'section'   => 'ezrwp_section_for_defaults'
+            );
+            $settings[] = array(
                 'id'        => 'ezrwp_hide_view_all_link', // id. Used only internally
                 'title'     => __( 'Hide "View All" Link', 'ezrwp_general' ), // title
                 'callback'  => 'ezrwp_hide_view_all_link_field_cb', // callback

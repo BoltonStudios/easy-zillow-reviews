@@ -382,7 +382,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 ?>
 
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Stars</label>
-                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The overall star rating for the review.
+                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The star rating for each review.
             <?php
             }
 
@@ -399,6 +399,22 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
 
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Reviewer Summary</label>
                 <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> A short description of the reviewer. Example: "Sold a Single Family home in 2013 for approximately $500K in Roswell, GA."
+            <?php
+            }
+
+            // Zillow Hide Profile Card callback
+            function ezrwp_hide_profile_card_field_cb( $args ) {
+                
+                $options = get_option('ezrwp_general_options');
+                
+                $setting = '';
+                if( isset( $options[$args['label_for']] ) ){
+                    $setting = $options[$args['label_for']];
+                };
+                ?>
+
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Profile Reviews Average.</label>
+                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The overall star rating for the profile.
             <?php
             }
 

@@ -27,7 +27,6 @@
 [class*=" ezrwp-icon-"] {
     /* use !important to prevent issues with browser extensions that change fonts */
     font-family: 'ezrwp-icon-font' !important;
-    speak: none;
     font-style: normal;
     font-weight: normal;
     font-variant: normal;
@@ -123,7 +122,7 @@ body{
             &::before{
                 &:extend(.ezrwp-icon all);
                 color: @brand-accent;
-                font-size: 1.4em;
+                font-size: 20px;
             }
             &.ezrwp-stars-5::before{
                 content: "\e905 \e905 \e905 \e905 \e905";
@@ -289,7 +288,7 @@ body{
                             position: relative;
                             top: 2px;
                             color: @brand-accent;
-                            font-size: 1.25em;
+                            font-size: 25px;
                         }
                     }
                     .ezrwp-max-rating{
@@ -321,8 +320,11 @@ body{
         border-bottom: 1px solid #cccccc;
         .ezrwp-lender-star-average{
             height: auto;
-            font-size: 1.5em;
             margin-left: 0;
+            margin-bottom: 0;
+            &::before{
+                font-size: 26px;
+            }
         }
         .ezrwp-lender-activity{
             color: @black;

@@ -18,7 +18,6 @@ body .ezrwp-wrapper .ezrwp-content blockquote:before,
 body .ezrwp-wrapper .ezrwp-stars::before {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'ezrwp-icon-font' !important;
-  speak: none;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -110,7 +109,7 @@ body .ezrwp-wrapper .ezrwp-stars {
 }
 body .ezrwp-wrapper .ezrwp-stars::before {
   color: #3DCA5A;
-  font-size: 1.4em;
+  font-size: 20px;
 }
 body .ezrwp-wrapper .ezrwp-stars.ezrwp-stars-5::before {
   content: "\e905 \e905 \e905 \e905 \e905";
@@ -314,7 +313,7 @@ body .ezrwp-wrapper .ezrwp-profile-card .ezrwp-profile-card-right .ezrwp-activit
   position: relative;
   top: 2px;
   color: #3DCA5A;
-  font-size: 1.25em;
+  font-size: 25px;
 }
 body .ezrwp-wrapper .ezrwp-profile-card .ezrwp-profile-card-right .ezrwp-activity .ezrwp-max-rating {
   padding: 0 0 0 3px;
@@ -342,8 +341,11 @@ body .ezrwp-lender-profile-card {
 }
 body .ezrwp-lender-profile-card .ezrwp-lender-star-average {
   height: auto;
-  font-size: 1.5em;
   margin-left: 0;
+  margin-bottom: 0;
+}
+body .ezrwp-lender-profile-card .ezrwp-lender-star-average::before {
+  font-size: 26px;
 }
 body .ezrwp-lender-profile-card .ezrwp-lender-activity {
   color: #000000;

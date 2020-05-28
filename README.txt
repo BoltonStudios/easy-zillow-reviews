@@ -78,7 +78,7 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 == Changelog ==
 
 = 1.2.1 =
-* New Feature: Display a Zillow profile card with overall star rating.
+* New Feature: Display a Zillow profile card with average star rating.
 * Bug Fix: Added fallback to cURL for PHP configurations that have allow_url_fopen disabled.
 * Bug Fix: Removed erroneous reference to a second Gutenberg block.
 * Bug Fix: Removed two instances of Undefined Index errors in widgets and lender functions.

@@ -79,10 +79,11 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 
 = 1.2.1 =
 * New Feature: Display a Zillow profile card with overall star rating.
+* Bug Fix: Added fallback to cURL for PHP configurations that have allow_url_fopen disabled.
 * Bug Fix: Removed erroneous reference to a second Gutenberg block.
 * Bug Fix: Removed two instances of Undefined Index errors in widgets and lender functions.
-* Bug Fix: Improved sentence construction for references to loan types in Premium version.
-* Updated the Freemius SDK to version 2.3.2.
+* Bug Fix: Improved sentence construction for loan descriptions in Premium version.
+* Updated Freemius SDK to version 2.3.2.
 
 = 1.2.0 =
 * New Feature: Gutenberg Block

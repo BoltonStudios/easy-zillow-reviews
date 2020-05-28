@@ -117,7 +117,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
             );
             $sections[] = array(
                 'id'  => 'ezrwp_section_for_support', // id
-                'title'  => __( 'Support', 'ezrwp_general' ), // title
+                'title'  => __( 'Debugging Information', 'ezrwp_general' ), // title
                 'page'  => 'ezrwp_general' // page
             );
             // Professional Reviews

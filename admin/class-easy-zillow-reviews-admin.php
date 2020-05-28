@@ -196,13 +196,18 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
             }
             function ezrwp_section_for_support_cb( $args ) {
                 
-                $simpleXMLIsLoaded = extension_loaded ("SimpleXML") 
+                $simpleXML_is_loaded = extension_loaded ("SimpleXML") 
                     ? 'SimpleXML is loaded.'
-                    : 'SimpleXML is not loaded.'
+                    : 'SimpleXML is not loaded.';
+                $allow_url = ini_get( 'allow_url_fopen' )
+                    ? 'allow_url_fopen is enabled.'
+                    : 'allow_url_fopen is disabled.';
                 ?>
                 <hr />
                 <p>
-                    Your PHP version is <?php echo PHP_VERSION;?>. <?php echo $simpleXMLIsLoaded ;?>
+                    Your PHP version is <?php echo PHP_VERSION; ?>. 
+                    <?php echo $simpleXML_is_loaded; ?> 
+                    <?php echo $allow_url; ?>
                 </p>
                 <hr />
                 <?php

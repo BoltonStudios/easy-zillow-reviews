@@ -73,7 +73,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
         // Methods
         /**
-         * Get lender reviews data from Zillow using the Zillow ProReviews API.
+         * Get reviews data from Zillow using the Zillow ProReviews API.
          *
          * @since    1.1.0
          */
@@ -86,64 +86,64 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $toggle_team_members = $this->get_show_team_members() ? '&returnTeamMemberReviews=true' : '';
             
             // Contstruct the URL for a Zillow Professional.
-            $url = 'https://www.zillow.com/webservice/ProReviews.htm?zws-id='. $zwsid .'&screenname='. $screenname .'&count='. $count . $toggle_team_members;
+            $zillow_url = 'https://www.zillow.com/webservice/ProReviews.htm?zws-id='. $zwsid .'&screenname='. $screenname .'&count='. $count . $toggle_team_members;
 
-            /*
-            *
-            *  LOCAL DEVELOPMENT ONLY. Comment out for Production
-            * 
-            *
-            *
-            $arrContextOptions = array(
-               "ssl" => array(
-                    "verify_peer" => false,
-                    "verify_peer_name" => false,
-                ),
-            );
-            $assertion = file_get_contents($url, false, stream_context_create($arrContextOptions));
-            $xml = simplexml_load_string($assertion);
-            /*
-            *
-            *  END LOCAL DEVELOPMENT ONLY.
-            */
-
-            /*
-            *
-            *  PRODUCTION ONLY. Uncomment for Production
-            * 
-            */
             // Fetch data from Zillow.
 
-            libxml_use_internal_errors(true);
-
-            $xml = simplexml_load_file($url);
+            // Enable user error handling. Use for debugging.
+            // libxml_use_internal_errors(true);
             
-            if ($xml === false) {
-                echo "Failed loading XML\n";
-                foreach(libxml_get_errors() as $error) {
-                    echo "\t", $error->message;
-                }
+            /**
+             * allow_url_fopen must be enabled to use simplexml_load_file().
+             * Some hosts disable allow_url_fopen for security reasons.
+             * Fall back to cURL if allow_url_fopen is disabled in the PHP configuration.
+             * 
+             * */
+            $allow_url = ini_get( 'allow_url_fopen' );
+            if( $allow_url ){
+
+                // Fetch data from the Zillow API Network.
+                $zillow_data = simplexml_load_file( $zillow_url );
+                
+            } else{
+
+                // Fetch data from the Zillow API Network.
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_URL, $zillow_url);
+                $curl_result = curl_exec($ch);
+                curl_close($ch);
+
+                // Interpret XML Data into an object.
+                $zillow_data = simplexml_load_string( $curl_result );
             }
-            /*
-            *
-            *  END PRODUCTION ONLY.
-            */
+
+            // Handle XML errors.  
+            if( $zillow_data === false ){
+
+                echo "Failed loading XML.";
+
+                // Handle errors in debugging.
+                /*
+                foreach(libxml_get_errors() as $error) {
+                    echo "\n\t", $error->message;
+                }
+                */
+            }
             
             // Pass data from Zillow to this class instance.
-            $this->set_message($xml->message->text);
-            $this->set_has_reviews(( $xml->message->code > 0 ) ? false : true);
+            $this->set_message($zillow_data->message->text);
+            $this->set_has_reviews(( $zillow_data->message->code > 0 ) ? false : true);
             if($this->get_has_reviews()){
 
                 // Success
-                $this->set_info($xml->response->result->proInfo);
-                $this->set_url($xml->response->result->proInfo->profileURL);
-                $this->set_rating($xml->response->result->proInfo->avgRating);
-                $this->set_review_count($xml->response->result->proInfo->reviewCount);
-                $this->set_reviews($xml->response->result->proReviews);
+                $this->set_info($zillow_data->response->result->proInfo);
+                $this->set_url($zillow_data->response->result->proInfo->profileURL);
+                $this->set_rating($zillow_data->response->result->proInfo->avgRating);
+                $this->set_review_count($zillow_data->response->result->proInfo->reviewCount);
+                $this->set_reviews($zillow_data->response->result->proReviews);
             }
-            /**
-             * End XML functions.
-             */
         }
         
         /**

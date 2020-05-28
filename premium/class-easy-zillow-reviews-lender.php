@@ -402,18 +402,20 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
         function update_reviews_in_block( $output, $attributes ){
             
             // If the user selected the Lender & Loan Officer Reviews type option, update the reviews output.
-            if( $attributes[ 'reviewsType' ] == 'lender' ){
+            if( isset( $attributes[ 'reviewsType' ] ) ){
+                if( $attributes[ 'reviewsType' ] == 'lender' ){
 
-                // Get this Eazy_Zillow_Reviews_Lender object instance.
-                $reviews = $this;
+                    // Get this Eazy_Zillow_Reviews_Lender object instance.
+                    $reviews = $this;
 
-                // Parse attributes selected by the user in the Gutenberg block.
-                $layout = isset( $attributes[ 'reviewsLayout' ] ) ? $attributes[ 'reviewsLayout' ] : $reviews->get_layout();
-                $cols = isset( $attributes[ 'gridColumns' ] ) ? $attributes[ 'gridColumns' ] : $reviews->get_grid_columns();
-                $count = isset( $attributes[ 'reviewsCount' ] ) ? $attributes[ 'reviewsCount' ] : $reviews->get_count();
-                
-                // Overwite the Gutenberg block output with lender reviews from this object instance.
-                $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count );
+                    // Parse attributes selected by the user in the Gutenberg block.
+                    $layout = isset( $attributes[ 'reviewsLayout' ] ) ? $attributes[ 'reviewsLayout' ] : $reviews->get_layout();
+                    $cols = isset( $attributes[ 'gridColumns' ] ) ? $attributes[ 'gridColumns' ] : $reviews->get_grid_columns();
+                    $count = isset( $attributes[ 'reviewsCount' ] ) ? $attributes[ 'reviewsCount' ] : $reviews->get_count();
+                    
+                    // Overwite the Gutenberg block output with lender reviews from this object instance.
+                    $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count );
+                }
             }
 
             // Return the updated output.

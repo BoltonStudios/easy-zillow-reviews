@@ -132,7 +132,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 $this->set_reviews($xml->response->result->proReviews);
             }
             /**
-             * 
+             * End XML functions.
              */
         }
         

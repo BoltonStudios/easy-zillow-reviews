@@ -328,6 +328,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                 case 'FHA' :
                     $output = 'an ' . $loan_type;
                     break;
+                case 'VA' :
+                    $output = 'a ' . $loan_type;
+                    break;
                 case 'Other' :
                     $output = 'a';
                     break;

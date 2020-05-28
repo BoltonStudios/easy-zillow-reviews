@@ -93,7 +93,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             *  LOCAL DEVELOPMENT ONLY. Comment out for Production
             * 
             *
-            *
+            */
             $arrContextOptions = array(
                "ssl" => array(
                     "verify_peer" => false,
@@ -112,7 +112,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             *  XML READER
             * 
             *
-            */
+            *
             $xml = new XMLReader();
 
             if (!$xml->open($url)) {
@@ -150,7 +150,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             /*
             *
             *  END PRODUCTION ONLY.
-            *
+            */
             
             // Pass data from Zillow to this class instance.
             $this->set_message($xml->message->text);

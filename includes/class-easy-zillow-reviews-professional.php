@@ -86,7 +86,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $toggle_team_members = $this->get_show_team_members() ? '&returnTeamMemberReviews=true' : '';
             
             // Contstruct the URL for a Zillow Professional.
-            $url = 'http://www.zillow.com/webservice/ProReviews.htm?zws-id='. $zwsid .'&screenname='. $screenname .'&count='. $count . $toggle_team_members;
+            $url = 'https://www.zillow.com/webservice/ProReviews.htm?zws-id='. $zwsid .'&screenname='. $screenname .'&count='. $count . $toggle_team_members;
 
             /*
             *
@@ -113,7 +113,17 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             * 
             */
             // Fetch data from Zillow.
-            $xml = simplexml_load_file($url) or die("Error: SimpleXML Cannot create object");
+
+            libxml_use_internal_errors(true);
+
+            $xml = simplexml_load_file($url);
+            
+            if ($xml === false) {
+                echo "Failed loading XML\n";
+                foreach(libxml_get_errors() as $error) {
+                    echo "\t", $error->message;
+                }
+            }
             /*
             *
             *  END PRODUCTION ONLY.

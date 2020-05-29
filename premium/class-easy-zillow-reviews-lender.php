@@ -386,6 +386,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
             ';
 
             $profile_card = '
+                <div style="clear: both"></div>
                 <div class="ezrwp-lender-profile-card">
                     '. $stars .'
                     <div class="ezrwp-lender-activity">

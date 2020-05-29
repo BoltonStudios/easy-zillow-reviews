@@ -181,14 +181,14 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
             );
             $settings[] = array(
                 'id'        => 'ezrwp_hide_reviewer_summary', // id. Used only internally
-                'title'     => __( 'Hide Reviewer Summary', 'ezrwp_general' ), // title
+                'title'     => __( 'Hide Reviewer Description', 'ezrwp_general' ), // title
                 'callback'  => 'ezrwp_hide_reviewer_summary_field_cb', // callback
                 'tab'       => 'ezrwp_general', // page
                 'section'   => 'ezrwp_section_for_defaults'
             );
             $settings[] = array(
                 'id'        => 'ezrwp_hide_profile_card', // id. Used only internally
-                'title'     => __( 'Hide Reviews Average', 'ezrwp_general' ), // title
+                'title'     => __( 'Hide Reviews Summary', 'ezrwp_general' ), // title
                 'callback'  => 'ezrwp_hide_profile_card_field_cb', // callback
                 'tab'       => 'ezrwp_general', // page
                 'section'   => 'ezrwp_section_for_defaults'

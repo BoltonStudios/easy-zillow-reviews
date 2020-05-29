@@ -5,7 +5,7 @@ Tags: zillow, reviews, gutenberg, block, real estate, lender
 Requires at least: 4.0.0
 Tested up to: 5.4.1
 Requires PHP: 5.4
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,8 +77,12 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 
 == Changelog ==
 
+= 1.2.3 =
+* Bug Fix: Fixed bug that caused Reviews Summary badge to appear in-line with reviews instead of below them in certain grid layouts.
+* Hardcoded blockquote line-height in public css file.
+
 = 1.2.2 =
-Minor style changes to plugin css file.
+* Minor style changes to plugin css file.
 
 = 1.2.1 =
 * New Feature: Display a Zillow profile card with average star rating.

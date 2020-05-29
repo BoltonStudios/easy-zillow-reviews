@@ -386,7 +386,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
             <?php
             }
 
-            // Zillow Hide Reviewer Summary callback
+            // Zillow Hide Reviewer Description callback
             function ezrwp_hide_reviewer_summary_field_cb( $args ) {
                 
                 $options = get_option('ezrwp_general_options');
@@ -397,7 +397,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 };
                 ?>
 
-                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Reviewer Summary</label>
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Reviewer Description</label>
                 <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> A short description of the reviewer. Example: "Sold a Single Family home in 2013 for approximately $500K in Roswell, GA."
             <?php
             }
@@ -413,8 +413,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 };
                 ?>
 
-                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Profile Reviews Average.</label>
-                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The overall star rating for the profile.
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Reviews Summary</label>
+                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The reviews summary badge with overall star rating for the profile.
             <?php
             }
 

@@ -5,4 +5,8 @@ node_modules/
 *.log
 *.sql
 *.sqlite
-*.DS_Store
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?

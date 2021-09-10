@@ -83,13 +83,9 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 
 = 1.2.3 =
 * Date Updated: 2020-29-05
-* Bug Fix: Fixed bug that caused Reviews Summary badge to appear in-line with reviews instead of below them in certain grid layouts.
-<<<<<<< HEAD
-* Hardcoded blockquote line-height in public css file.
-* Modified labels for a few Dashboard settings.
-=======
+* Bug Fix: Fixed bug that caused Reviews Summary bgiadge to appear in-line with reviews instead of below them in certain grid layouts.
 * Hardcoded blockquote line-height in public CSS file.
->>>>>>> develop
+* Modified labels for a few Dashboard settings.
 
 = 1.2.2 =
 * Date Updated: 2020-28-05

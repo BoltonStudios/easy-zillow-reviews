@@ -199,7 +199,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
          *
          * @since    1.1.0
          * @access   protected
-         * @var      array   $reviews   
+         * @var      object   $reviews   
          */
         protected $reviews;
         

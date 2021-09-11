@@ -77,6 +77,13 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 
 == Changelog ==
 
+= 1.3.1 =
+* Date Updated: 2021-11-09
+* Removed unused .po language files from Freemius SDK.
+* Minor style changes to plugin CSS file.
+* Changed the Profile Card text "sales in the last 12 months" to "recent home sales".
+* Change the expected type of the Easy_Zillow_Reviews_Data object $reviews property from "array" to "object".
+
 = 1.3.0 =
 * Date Updated: 2021-09-09
 * Updated Freemius SDK to version 2.4.2.

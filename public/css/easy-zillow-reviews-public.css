@@ -97,6 +97,7 @@ body .ezrwp-wrapper .ezrwp-mandatory-disclaimer {
   font-size: 11px;
   line-height: 16px;
   text-align: center;
+  clear: both;
 }
 body .ezrwp-wrapper .ezrwp-date {
   font-size: 12px;

@@ -85,7 +85,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $screenname = str_replace($disallowed_characters, "%20", $screenname);
             $toggle_team_members = $this->get_show_team_members() ? '&returnTeamMemberReviews=true' : '';
             
-            // Contstruct the URL for a Zillow Professional.
+            // Construct the URL for a Zillow Professional.
             $zillow_url = 'http://www.zillow.com/webservice/ProReviews.htm?zws-id='. $zwsid .'&screenname='. $screenname .'&count='. $count . $toggle_team_members;
 
             // Fetch data from Zillow.
@@ -245,6 +245,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
          */
         function get_profile_card( $name, $photo, $url, $rating, $review_count, $sale_count ){
 
+            // Initialize variables.
             $star_average = '';
             if( $rating == 0 ){
                 $star_average = 'star-0';
@@ -261,6 +262,22 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 $star_average = '<span class="ezrwp-star-average ezrwp-icon-'. $star_average .'"></span>';
             }
 
+            // Construct the Recent Sales output.
+            $recent_sales = '';
+            
+            // Check if the profile has any recent sales.
+            if( $sale_count > 0 ){
+
+                // If the $sale count is exactly 1, use the singular form of 'sales.
+                $sales_descriptor = $sale_count == 1 ? 'sale' : 'sales';
+
+                // If the profile has recent sales, update the output.
+                $recent_sales = '<div class="ezrwp-activity-sales">
+                                    '. $sale_count .' recent home '. $sales_descriptor .'
+                                </div>';
+            }
+
+            // Construct the Profile Card output.
             $profile_card = '
                 <div style="clear:both"></div>
                 <div class="ezrwp-profile-card">
@@ -278,13 +295,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                                     <a href="'. $url . '#reviews" class="ezrwp-reviews-count">'. $review_count .' Reviews</a>
                                 </div>
                             </div>
-                            <div class="ezrwp-activity-sales">
-                                '. $sale_count .' sales in the last 12 months
-                            </div>
+                            '. $recent_sales .'
                         </div>
                     </div>
                 </div>
             ';
+
+            // Return the Profile Card output.
             return $profile_card;
         }
         

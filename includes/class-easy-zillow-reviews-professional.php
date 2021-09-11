@@ -268,7 +268,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             // Check if the profile has any recent sales.
             if( $sale_count > 0 ){
 
-                // If the $sale count is exactly 1, use the singular form of 'sales.
+                // If the $sale count is exactly 1, use the singular form of 'sales'.
                 $sales_descriptor = $sale_count == 1 ? 'sale' : 'sales';
 
                 // If the profile has recent sales, update the output.

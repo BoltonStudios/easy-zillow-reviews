@@ -18,6 +18,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional_Shortcodes' ) ) {
     class Easy_Zillow_Reviews_Professional_Shortcodes{
 
         /**
+         * Initialize variables.
+         */
+
+        /**
          *
          *
          * @since    1.1.4
@@ -26,42 +30,62 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional_Shortcodes' ) ) {
          */
         private $zillow_professional_data;
 
-        // Constructor
+        // Define the constructor method.
         function __construct( $zillow_professional_data ){
 
+            // Update the local $zillow_professional_data property.
             $this->zillow_professional_data = $zillow_professional_data;
 
-            add_action('plugins_loaded', array($this, 'init'));
+            // Run the init() function once the activated plugins have loaded.
+            add_action( 'plugins_loaded', array( $this, 'init' ) );
         }
 
-        // Methods
+        /**
+         * Define additional methods.
+         */
+
+        // Define a helper function to initialize the class object.
         function init(){
             
-            add_shortcode('ez-zillow-reviews', array($this, 'display_professional_reviews'));
+            // Create a shortcode that calls the 'display_professional_reviews' function.
+            add_shortcode( 'ez-zillow-reviews', array( $this, 'display_professional_reviews' ) );
         }
-        function display_professional_reviews($atts){
-            
-            // Get saved admin settings and defaults
-            $reviews = $this->get_zillow_professional_data();
 
-            // Get attributes from shortcode
-            if( isset( $atts ) ){
-                $atts = shortcode_atts( array(
-                    // Defaults passed from admin settings above.
-                    'layout' => $reviews->get_layout(),
-                    'columns' => $reviews->get_grid_columns(),
-                    'count' => $reviews->get_count()
-                ), $atts );
-                $layout = $atts[ 'layout' ];
-                $cols = $atts[ 'columns' ];
-                $count = $atts[ 'count' ];
+        // Define a function that extracts the shortcode attributes and returns the HTML reviews output.
+        function display_professional_reviews( $shortcode_attributes ){
+
+            // Initialize variables.
+            $reviews = $this->get_zillow_professional_data();
+            $reviews_layout = $reviews->get_layout();
+            $number_of_columns = $reviews->get_grid_columns();
+            $number_of_reviews = $reviews->get_count();
+            $screenname = $reviews->get_screenname();
+
+            // Define the default shortcode attributes.
+            $default_attributes = array(
+                'layout' => $reviews_layout,
+                'columns' => $number_of_columns,
+                'count' => $number_of_reviews,
+                'screenname' => $screenname
+            );
+
+            // If the $shortcode_attributes argument is not null...
+            if( isset( $shortcode_attributes ) ){
+
+                // Get attributes from the $shortcode_attributes argument.
+                $shortcode_attributes = shortcode_atts( $default_attributes, $shortcode_attributes );
+
+                // Update the relevant local variables with the values from the $shortcode_attributes argument.
+                $reviews_layout = $shortcode_attributes[ 'layout' ];
+                $number_of_columns = $shortcode_attributes[ 'columns' ];
+                $number_of_reviews = $shortcode_attributes[ 'count' ];
+                $screenname = $shortcode_attributes[ 'screenname' ];
             }
 
-            // Review count cannot be more than 10 or less than 0.
-            $count = ($count > 10 ) ? 10 : $count;
-            $count = floor($count) > 0 ? floor( $count ) : 1;
+            // Pass the shortcode parameters and get the reviews from Zillow.
+            $output = $reviews->get_reviews_output( $reviews, $reviews_layout, $number_of_columns, $number_of_reviews, $screenname );
 
-            $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count );
+            // Return the output.
             return $output;
         }
         

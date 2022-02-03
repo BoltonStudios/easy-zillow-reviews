@@ -55,9 +55,9 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 
     [ez-zillow-reviews layout="grid" columns="2" count="4"]
 
-* layout..."list" or "grid"
-* columns...A number between 1 and 6
-* count...A number between 1 and 10
+* layout..."list" or "grid".
+* columns...A number between 1 and 6.
+* count...A number between 1 and 10.
 * screenname...The screenname that appears in your Zillow profile link.
 
 == Installation ==

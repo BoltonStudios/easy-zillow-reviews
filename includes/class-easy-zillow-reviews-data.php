@@ -292,25 +292,40 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
          * @since     1.2.0
          * @return    string    The name of the plugin.
          */
-        public function get_reviews_output( $reviews, $layout, $cols, $count ) {
-            
-            // Review count cannot be more than 10 or less than 0.
-            $count = ($count > 10 ) ? 10 : $count;
-            $count = floor($count) > 0 ? floor($count) : 1;
+        public function get_reviews_output( $reviews, $layout, $cols, $number_of_reviews, String $screenname = null ) {
+    
+            // If the number of reviews is more than 10...
+            if( $number_of_reviews > 10 ){
 
+                // Review count cannot be more than 10.
+                // Set the number of reviews to 10.
+                $number_of_reviews = 10;
+
+            } 
+            
+            // If the number of reviews is less than 1...
+            if( floor( $number_of_reviews ) < 1 ){
+
+                // Review count cannot be more than 1.
+                // Set the number of reviews to 1.
+                $number_of_reviews = 1;
+            }
+            
             // Fetch reviews from Zillow
-            $reviews->fetch_reviews_from_zillow($count);
+            $reviews->fetch_reviews_from_zillow( $number_of_reviews, $screenname );
 
             // Render output
             if( $reviews -> get_has_reviews() ){
 
                 // Success
-                $output = $reviews -> layout_reviews($layout, $cols);
+                $output = $reviews -> layout_reviews( $layout, $cols );
             } else {
 
                 // Error
                 $output = '<p>Unable to load reviews. Zillow says: <strong>'. $reviews -> get_message() .'</strong>.</p>';
             }
+
+            // Return the output.
             return $output;
         }
         

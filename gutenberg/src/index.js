@@ -11,12 +11,19 @@ import { __ } from '@wordpress/i18n';
 const generalOptions = zillow_data[0].general_options;
 const apis = zillow_data[0].available_apis;
 
+console.log( zillow_data[0] );
+
 registerBlockType( 'boltonstudios/easy-zillow-reviews', {
+
     title: __( 'Zillow Reviews', 'easy-zillow-reviews' ),
     description: __( 'Display reviews from Zillow on your site.', 'easy-zillow-reviews' ),
     icon: 'star-filled',
     category: 'widgets',
     attributes: {
+        screenname: {
+            type: 'string',
+            default: "test"
+        },
         reviewsType: {
             type: 'string',
             default: generalOptions.available_apis
@@ -45,34 +52,62 @@ registerBlockType( 'boltonstudios/easy-zillow-reviews', {
     edit: function( props ) {
 
         const { InspectorControls } = wp.editor;
+        const screenname = props.attributes.screenname;
         const layout = props.attributes.reviewsLayout;
         const columns = props.attributes.gridColumns;
         const count = props.attributes.reviewsCount;
-        const type = props.attributes.reviewsType;
+        const reviewsType = props.attributes.reviewsType;
 
-        const ReviewsControl = (apis) => {
+        //
+        const ScreennameControl = ( reviewsType ) => {
+
+            // Initialize variables.
+            var control = null
+
+            // Only display the Screenname TextControl if the 'professional' type is selected.
+            if( reviewsType == 'professional' ){
+
+                control = <TextControl
+                    label= 'Screenname'
+                    value={ screenname }
+                    onChange={ screenname => props.setAttributes( { screenname } ) }
+                />
+            }
+            return control;
+        }
+
+        //
+        const ReviewsControl = ( apis ) => {
 
             var apiOptions = []; // dictionary
-            apis.forEach(element => {
-                apiOptions.push({value: element[0], label: element[1]});
+
+            apis.forEach( element => { 
+                apiOptions.push({
+                    value: element[0], label: element[1] 
+                }); 
             });
+
             const control = <SelectControl
                 label='Select Review Type'
-                value={ type }
+                value={ reviewsType }
                 options={ apiOptions }
                 onChange={ reviewsType => props.setAttributes( { reviewsType } ) }
             />
             return control;
         }
-        const LayoutControl =   <SelectControl
+
+        //
+        const LayoutControl =  <SelectControl
                                     label='Select Layout'
                                     value={ layout }
-                                    options={ [
+                                    options={[
                                         { value: 'list', label: 'List' },
                                         { value: 'grid', label: 'Grid' },
                                     ]}
                                     onChange={ reviewsLayout => props.setAttributes( { reviewsLayout } ) }
                                 />
+
+        //
         const GridControl = ( reviewsLayout ) => {
 
             var control = null
@@ -91,6 +126,8 @@ registerBlockType( 'boltonstudios/easy-zillow-reviews', {
             }
             return control;
         }
+
+        //
         const ReviewsCountControl = <RangeControl
                                         beforeIcon="arrow-left-alt2"
                                         afterIcon="arrow-right-alt2"
@@ -105,9 +142,12 @@ registerBlockType( 'boltonstudios/easy-zillow-reviews', {
         function getWrapperLayoutClass( reviewsLayout, gridColumns ){
 
             var className = '';
+
             if( reviewsLayout == 'grid' ){
+
                 className ='ezrwp-grid ezrwp-grid-' + gridColumns;
             }
+
             return className;
         }
 
@@ -118,6 +158,7 @@ registerBlockType( 'boltonstudios/easy-zillow-reviews', {
             var layout = reviewsLayout;
             var columns = gridColumns;
             var count = reviewsCount;
+
             for( var i = 1; i <= count; i++){
                 
                 reviews.push(
@@ -143,30 +184,36 @@ registerBlockType( 'boltonstudios/easy-zillow-reviews', {
 
                 // Add spacer between rows of columns
                 if( (i % columns) == 0 ){
+
                     reviews.push(
+
                         <div class="clear"></div>
                     );
                 }
 
                 // Add spacer between rows in List layout
                 if( layout == 'list' ){
+
                     reviews.push(
+
                         <div class="clear"></div>
                     )
                 }
             }
             return reviews;
         }
-        return(
-            [
+        return([
+            
             <InspectorControls>
                 <PanelBody>
+                    { ScreennameControl( reviewsType ) }
                     { ReviewsControl( apis ) }
                     { LayoutControl }
                     { GridControl( layout ) }
                     { ReviewsCountControl }
                 </PanelBody>
             </InspectorControls>,
+
             <div className={ props.className }>
                 <div className={ "ezrwp-wrapper " + getWrapperLayoutClass( layout, columns ) }>
                     <div className="ezrwp-content">
@@ -174,7 +221,7 @@ registerBlockType( 'boltonstudios/easy-zillow-reviews', {
                     </div>
                 </div>
             </div>
-            ]
-        );
+            
+        ]);
     }
-} );
+});

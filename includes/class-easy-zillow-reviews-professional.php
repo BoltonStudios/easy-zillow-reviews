@@ -77,13 +77,28 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
          *
          * @since    1.1.0
          */
-        public function fetch_reviews_from_zillow($count){
+        public function fetch_reviews_from_zillow( $count, String $screenname = null ){
             
+            // Initialize variables.
             $zwsid = $this->get_zwsid();
-            $screenname = $this->get_screenname();
             $disallowed_characters = array("-", " ");
-            $screenname = str_replace($disallowed_characters, "%20", $screenname);
             $toggle_team_members = $this->get_show_team_members() ? '&returnTeamMemberReviews=true' : '';
+
+            // If the $screenname argument is not null...
+            if( isset( $screenname ) ){
+
+                // Assign the value of the $screenname argument to the local $screenname variable.
+                $screenname = $screenname ;
+
+            } else{
+
+                // Assign the value of the screenname from the Settings page to the local $screenname variable.
+                $screenname = $this->get_screenname();
+
+            }
+            
+            // Strip spaces from the screenname.
+            $screenname = str_replace( $disallowed_characters, "%20", $screenname );
             
             // Construct the URL for a Zillow Professional.
             $zillow_url = 'http://www.zillow.com/webservice/ProReviews.htm?zws-id='. $zwsid .'&screenname='. $screenname .'&count='. $count . $toggle_team_members;

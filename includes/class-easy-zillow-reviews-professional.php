@@ -198,17 +198,19 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $template->set_profile_url( $profile_url );
             $template->set_review_count( $review_count );
             $template->set_profile_card( $profile_card );
+            
+            // Iterate over reviews.
+            foreach( $this->reviews->review as $review ) :
 
-            // Professional Reviews
-            foreach($this->reviews->review as $review) :
+                // Update local variables.
                 $description = $review->description;
-                $summary = lcfirst($review->reviewSummary);
+                $summary = lcfirst( $review->reviewSummary );
                 $url = $review->reviewURL;
                 $date = ( !$hide_date ) ? '<div class="ezrwp-date">'. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime($review->reviewDate))) .'</div>' : '';
                 $reviewer_summary = ( !$hide_reviewer_summary ) ? '<span class="review-summary">who '. $summary .'</span>' : '';
-                $stars = '';
+                $stars = 0;
                 if( !$hide_stars ){
-                    $stars = $review->rating;
+                    $stars = floatval( $review->rating );
                     $star_count = floor($stars); // count whole stars
                     $half_star_toggle = '';
                     if( $stars - floor($stars) > 0 ){

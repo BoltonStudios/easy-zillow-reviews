@@ -36,6 +36,15 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
         private $zillow_api_url;
 
         /**
+         * The Bridge API Access Token.
+         *
+         * @since    1.5.0
+         * @access   private
+         * @var      string   $bridge_token
+         */
+        private $bridge_token;
+
+        /**
          * The Zillow Web Service Identifier (ZWSID).
          *
          * @since    1.1.0
@@ -69,6 +78,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $this->set_professional_reviews_options( get_option('ezrwp_professional_reviews_options') );
             $this->set_zwsid( $this->professional_reviews_options['ezrwp_zwsid'] );
             $this->set_screenname( $this->professional_reviews_options['ezrwp_screenname'] );
+            $this->set_bridge_token( $this->professional_reviews_options['ezrwp_bridge_token_1'] );
         }
 
         // Methods
@@ -80,9 +90,18 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
         public function fetch_reviews_from_zillow( $count, String $screenname = null ){
             
             // Initialize variables.
+            $bridge_token = $this->get_bridge_token();
             $zwsid = $this->get_zwsid();
             $disallowed_characters = array("-", " ");
             $toggle_team_members = $this->get_show_team_members() ? '&returnTeamMemberReviews=true' : '';
+
+            /**
+             * allow_url_fopen must be enabled to use simplexml_load_file().
+             * Some hosts disable allow_url_fopen for security reasons.
+             * Logic below falls back to cURL if allow_url_fopen is disabled in the PHP configuration.
+             * 
+             * */
+            $allow_url = ini_get( 'allow_url_fopen' );
 
             // If the $screenname argument is not null...
             if( isset( $screenname ) ){
@@ -99,6 +118,43 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             
             // Strip spaces from the screenname.
             $screenname = str_replace( $disallowed_characters, "%20", $screenname );
+
+            // If the $bridge_token argument is not null...
+            if( isset( $bridge_token ) ){
+
+                // Fetch data from Bridge.
+
+                // Construct the Bridge URL for a Zillow Professional.
+                $bridge_account_url = 'https://api.bridgedataoutput.com/api/v2/reviews/reviewee?access_token='. $bridge_token .'&RevieweeScreenName='. $screenname;
+
+                // Read the account data.
+                $bridge_account_data =  file_get_contents( $bridge_account_url );
+
+                // Decode the account data.
+                $bridge_account_data = json_decode( $bridge_account_data );
+
+                // Update the bridge account data variable.
+                $bridge_account_data = $bridge_account_data->bundle[0];
+
+                //
+                var_dump( $bridge_account_data );
+
+                // Get the reviewee ID.
+                $reviewee_id = $bridge_account_data->AccountIdReviewee;
+
+                //
+                $bridge_reviews_url = 'https://api.bridgedataoutput.com/api/v2/reviews/review?access_token='. $bridge_token .'&AccountIdReviewee=' . $reviewee_id;
+
+                // Read the account data.
+                $bridge_reviews_data =  file_get_contents( $bridge_reviews_url );
+
+                // Decode the account data.
+                $bridge_reviews_data = json_decode( $bridge_reviews_data );
+
+                //
+                var_dump( $bridge_reviews_data );
+
+            }
             
             // Construct the URL for a Zillow Professional.
             $zillow_url = 'http://www.zillow.com/webservice/ProReviews.htm?zws-id='. $zwsid .'&screenname='. $screenname .'&count='. $count . $toggle_team_members;
@@ -108,13 +164,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             // Enable user error handling. Use for debugging.
             // libxml_use_internal_errors(true);
             
-            /**
-             * allow_url_fopen must be enabled to use simplexml_load_file().
-             * Some hosts disable allow_url_fopen for security reasons.
-             * Fall back to cURL if allow_url_fopen is disabled in the PHP configuration.
-             * 
-             * */
-            $allow_url = ini_get( 'allow_url_fopen' );
+            // If allow_url_fopen is enabled...
             if( $allow_url ){
 
                 // Fetch data from the Zillow API Network.
@@ -348,6 +398,27 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
         }
         
         // Getters & Setters
+        /**
+         * Get the value of $bridge_token.
+         *
+         * @since    1.5.0
+         */
+        public function get_bridge_token(){
+
+            return $this->bridge_token;
+        }
+
+        /**
+         * Set the value of $bridge_token.
+         *
+         * @return  self
+         */ 
+        public function set_bridge_token($token){
+
+            $this->bridge_token = $token;
+            return $this;
+        }
+
         /**
          * Get the value of zwsid
          *

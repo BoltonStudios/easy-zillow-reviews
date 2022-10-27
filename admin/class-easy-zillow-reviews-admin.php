@@ -220,6 +220,25 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
             // the "class" key value is used for the "class" attribute of the <tr> containing the field.
             // you can add custom key value pairs to be used inside your callbacks.
 
+            // Bridge API Access Token callback
+            function ezrwp_bridge_token_text_field_cb( $args ) {
+                
+                // Get the value of the setting we've registered with register_setting()
+                $options = get_option('ezrwp_professional_reviews_options');
+                
+                $setting = ''; // Bridge API Access Token
+                if( isset( $options[$args['label_for']] ) ){
+                    $setting = $options[$args['label_for']];
+                };
+                ?>
+
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Bridge API Access Token</label>
+                <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
+
+                <p><a href="https://bridgedataoutput.com/login" target="_blank">Login to Bridge</a> or <a href="https://bridgedataoutput.com/zgdata" target="_blank">create a new account <span class="dashicons dashicons-external" style="font-size: 14px;"></span></a> and request access to the API to get a <strong>Bridge API Access Token</strong>.
+                <?php
+            }
+
             // ZWSID callback
             function ezrwp_zwsid_text_field_cb( $args ) {
                 

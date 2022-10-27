@@ -75,9 +75,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
             
             $zmpid = $this->get_zmpid();
             $nmlsid = $this->get_nmlsid();
-            $disallowed_characters = array("-", " ");
             $company_name = $this->get_company_name();
-            $company_name = str_replace( $disallowed_characters, "%20", $company_name );
+            $company_name = str_replace( array("-", " "), "%20", $company_name ); // Encode space characters.
+            $company_name = str_replace( "&", "%26", $company_name ); // Encode ampersand character.
 
             // Contstruct the Zillow URL for an Individual Loan Officer.
             $zillow_url = 'https://mortgageapi.zillow.com/zillowLenderReviews?partnerId='. $zmpid .'&nmlsId='.$nmlsid.'&reviewLimit='. $count;

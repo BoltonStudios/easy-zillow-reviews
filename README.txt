@@ -3,9 +3,9 @@ Contributors: boltonstudios
 Donate link: http://ko-fi.com/boltonstudios
 Tags: zillow, reviews, gutenberg, block, real estate, lender
 Requires at least: 4.0.0
-Tested up to: 5.9.0
+Tested up to: 6.0.3
 Requires PHP: 5.4
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +77,10 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 4. Settings
 
 == Changelog ==
+
+= 1.4.2 =
+* Date Updated: 2022-10-26
+* Bug Fix: Fixed bug that caused "invalidInput" error message for Mortgage Lender names containing ampersands.
 
 = 1.4.1 =
 * Date Updated: 2022-03-18

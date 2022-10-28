@@ -18,18 +18,17 @@ Display reviews from Zillow on your website.
 View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
 = Free Edition Features =
-* Free for Real Estate Agents (individuals and teams)
-* Display your reviews using the official Zillow API Network 
-* Compliant with Zillow's [Terms of Use](https://www.zillow.com/corp/Terms.htm) and [Branding Requirements](https://www.zillow.com/howto/api/BrandingRequirements.htm)
-* Grid and List layout options
-* Widget and Shortcode options
-* Gutenberg block (edit review layouts in the new WordPress editor!)
-* Mobile responsive
+* Compliant with Zillow's [Terms of Use](https://www.zillow.com/corp/Terms.htm) and [Branding Requirements](https://www.zillow.com/howto/api/BrandingRequirements.htm).
+* Display your reviews using the official Zillow API data.
+* Free for Real Estate Agents (individuals and teams).
+* List and grid layouts.
+* Widget and shortcode options.
+* Gutenberg block (edit review layouts in the new WordPress editor!).
 
 = Mortgages Partner Edition Features =
-* Lender Reviews
-* Individual Loan Officer Reviews
-* Company Profile Reviews 
+* Lender reviews.
+* Individual loan officer reviews.
+* Company profile reviews. 
 
 = Requirements =
 
@@ -43,7 +42,7 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 
 * Include the approved Zillow logo on your website wherever reviews appear. *Easy Zillow Reviews* includes this logo, but you can disable it in Settings > Easy Zillow Reviews if you wish to add it elsewhere adjacent to the Reviews per the [Branding Guidelines](https://www.zillow.com/howto/api/BrandingRequirements.htm).
 * Include the Mandatory Disclaimer wherever reviews appear. *Easy Zillow Reviews* includes this disclaimer, but you can disable it in Settings > Easy Zillow Reviews if you wish to add it elsewhere (such as in the footer).
-* No local storage of reviews. *Easy Zillow Reviews* will always fetch the latest reviews directly from Zillow's Reviews API using your ZWSID or ZPID.
+* No local storage of reviews. *Easy Zillow Reviews* will always fetch the latest reviews directly from Zillow using your ZWSID or ZPID.
 * No more than 1,000 calls to the Reviews API in a day, and no more than 20 on one page at one time. *Easy Zillow Reviews* will display a simple text error message to help identify the problem if Zillow blocks your ZWSID or ZPID for any reason. Zillow may permit more calls for your account upon request. Per the FAQ, you may reach out to <huann@zillow.com> or <reviewsapi@zillow.com> for more info.
 
 = Shortcode =

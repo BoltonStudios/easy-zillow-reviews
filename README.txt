@@ -79,6 +79,7 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 
 = 1.4.2 =
 * Date Updated: 2022-10-26
+* Updated Freemius SDK to version 2.5.0.
 * Bug Fix: Fixed bug that caused "invalidInput" error message for Mortgage Lender names containing ampersands.
 
 = 1.4.1 =

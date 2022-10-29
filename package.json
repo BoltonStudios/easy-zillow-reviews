@@ -23,6 +23,6 @@
   },
   "homepage": "https://github.com/BoltonStudios/easy-zillow-reviews#readme",
   "devDependencies": {
-    "@wordpress/scripts": "8.0.1"
+    "@wordpress/scripts": "^24.4.0"
   }
 }

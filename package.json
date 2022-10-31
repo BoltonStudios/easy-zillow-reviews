@@ -5,8 +5,8 @@
   "main": "build/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cd gutenberg && wp-scripts start",
-    "build": "cd gutenberg && wp-scripts build"
+    "start": "wp-scripts start gutenberg/src/index.js --output-path=gutenberg/build",
+    "build": "wp-scripts build gutenberg/src/index.js --output-path=gutenberg/build"
   },
   "repository": {
     "type": "git",

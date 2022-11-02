@@ -3,7 +3,7 @@ Contributors: boltonstudios
 Donate link: http://ko-fi.com/boltonstudios
 Tags: zillow, reviews, gutenberg, block, real estate, lender
 Requires at least: 4.0.0
-Tested up to: 6.0.3
+Tested up to: 6.1.0
 Requires PHP: 5.4
 Stable tag: 1.4.4
 License: GPLv2 or later

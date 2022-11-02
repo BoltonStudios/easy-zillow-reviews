@@ -13,7 +13,7 @@ Display reviews from Zillow on your website.
 
 == Description ==
 
-*Easy Zillow Reviews* makes it easy for realtors and lenders to display reviews from the Zillow API Network.
+*Easy Zillow Reviews* makes it easy for real estate agents and lenders to display reviews from the Zillow API Network.
 
 View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 

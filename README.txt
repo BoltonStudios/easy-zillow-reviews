@@ -19,11 +19,10 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
 = Features (Free) =
 * Compliant with Zillow's [Terms of Use](https://www.zillow.com/corp/Terms.htm) and [Branding Requirements](https://www.zillow.com/howto/api/BrandingRequirements.htm).
-* Display your reviews using the official Zillow API data.
-* Free for real estate agents (individuals and teams).
+* Display your latest reviews for real estate agents and teams.
 * List and grid layouts.
 * Widget and shortcode options.
-* Gutenberg block (edit review layouts in the new WordPress editor).
+* Gutenberg block (edit review layouts in the new WordPress editor!).
 
 = Lender Reviews Edition Features (Paid) =
 * Lender reviews.
@@ -43,7 +42,13 @@ The Lender Reviews Edition requires a [Zillow Mortgages Partner ID (ZPID)](https
 * Show the approved Zillow logo on your website where reviews appear. You can disable the logo in Settings > Easy Zillow Reviews and add it elsewhere adjacent to the Reviews per the [Branding Guidelines](https://www.zillow.com/howto/api/BrandingRequirements.htm).
 * Show the Mandatory Disclaimer where reviews appear. You can disable the disclaimer in Settings > Easy Zillow Reviews and add it elsewhere (such as in the footer).
 * No local storage of reviews. This plugin pulls reviews from Zillow using your ZWSID or ZPID.
-* No more than 1,000 calls to the Reviews API in a day. *Easy Zillow Reviews* shows an error message to help identify the problem if Zillow blocks your ZWSID or ZPID for any reason. Zillow may permit more calls upon your request at <reviewsapi@zillow.com> or <api@bridgeinteractive.com>.
+* No more than 1,000 calls to the Reviews API in a day. *Easy Zillow Reviews* shows an error message to help identify the problem if Zillow blocks your ZWSID or ZPID for any reason. Zillow may permit more calls upon request to <reviewsapi@zillow.com> or <api@bridgeinteractive.com>.
+
+= Supporting Easy Zillow Reviews =
+
+If you found this free plugin helpful, please support the developer with a small donation:
+
+* [Buy me a coffee](http://ko-fi.com/boltonstudios)
 
 = Shortcode =
 
@@ -58,12 +63,6 @@ The Lender Reviews Edition requires a [Zillow Mortgages Partner ID (ZPID)](https
 * columns...A number between 1 and 6.
 * count...A number between 1 and 10.
 * screenname...The screenname that appears in your Zillow profile link.
-
-= Supporting Easy Zillow Reviews =
-
-If you found this free plugin helpful, please support the developer with a small donation:
-
-* [Buy me a coffee](http://ko-fi.com/boltonstudios)
 
 == Installation ==
 

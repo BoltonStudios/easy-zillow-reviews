@@ -5,7 +5,7 @@ Tags: zillow, reviews, gutenberg, block, real estate, lender
 Requires at least: 4.0.0
 Tested up to: 6.0.3
 Requires PHP: 5.4
-Stable tag: 1.4.3
+Stable tag: 1.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,6 +76,11 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 4. Settings
 
 == Changelog ==
+
+= 1.4.4 =
+* Date Updated: 2022-11-02-2022
+* Bug Fix: Fixed CSS layout bug that caused some elements to improperly wrap to a new line in the Gutenberg blocks preview.
+* Updated @wordpress/scripts Gutenberg dependency package to v24.4.0 and recompiled blocks code.
 
 = 1.4.3 =
 * Date Updated: 2022-10-28

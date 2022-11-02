@@ -20,7 +20,7 @@
  * Plugin Name:       Easy Zillow Reviews
  * Plugin URI:        https://wordpress.org/plugins/easy-zillow-reviews/
  * Description:       Display reviews from Zillow on your site.
- * Version:           1.4.2
+ * Version:           1.4.4
  * Author:            Aaron Bolton
  * Author URI:        https://www.boltonstudios.com
  * License:           GPL-2.0+
@@ -36,9 +36,11 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+// The Freemius SDK comes with a special mechanism to auto deactivate the free version when activating the paid one.
 if ( function_exists( 'ezrwp_fs' ) ) {
 
     ezrwp_fs()->set_basename( true, __FILE__ );
+
 } else {
 
 	if ( ! class_exists( 'Easy_Zillow_Reviews' ) ) {
@@ -48,7 +50,7 @@ if ( function_exists( 'ezrwp_fs' ) ) {
          * Start at version 1.0.0 and use SemVer - https://semver.org
          * Rename this for your plugin and update it as you release new versions.
          */
-        define( 'EASY_ZILLOW_REVIEWS_VERSION', '1.4.2' );
+        define( 'EASY_ZILLOW_REVIEWS_VERSION', '1.4.4' );
         define( 'EASY_ZILLOW_REVIEWS_BASENAME', plugin_basename( __FILE__ ) );
 
         /**
@@ -79,12 +81,11 @@ if ( function_exists( 'ezrwp_fs' ) ) {
         require plugin_dir_path( __FILE__ ) . 'includes/class-easy-zillow-reviews-base.php';
 
         // Create a helper function for easy SDK access.
-        function ezrwp_fs()
-        {
+        function ezrwp_fs(){
 
             global $ezrwp_fs;
 
-            if (!isset($ezrwp_fs)) {
+            if( !isset( $ezrwp_fs ) ){
 
                 // Include Freemius SDK.
                 require_once dirname(__FILE__) . '/freemius/start.php';
@@ -112,7 +113,7 @@ if ( function_exists( 'ezrwp_fs' ) ) {
         ezrwp_fs();
 
         // Signal that SDK was initiated.
-        do_action('ezrwp_fs_loaded');
+        do_action( 'ezrwp_fs_loaded' );
 
         /**
          * Easy_Zillow_Reviews Class

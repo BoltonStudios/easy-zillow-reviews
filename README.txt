@@ -3,9 +3,9 @@ Contributors: boltonstudios
 Donate link: http://ko-fi.com/boltonstudios
 Tags: zillow, reviews, gutenberg, block, real estate, lender
 Requires at least: 4.0.0
-Tested up to: 6.0.3
+Tested up to: 6.1.0
 Requires PHP: 5.4
-Stable tag: 1.4.2
+Stable tag: 1.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,19 +13,18 @@ Display reviews from Zillow on your website.
 
 == Description ==
 
-*Easy Zillow Reviews* makes it easy for realtors and lenders to fetch and display reviews from the Zillow API Network.
+*Easy Zillow Reviews* makes it easy for real estate agents and lenders to display reviews from the Zillow API Network.
 
 View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
-= Free Edition Features =
+= Features (Free) =
 * Compliant with Zillow's [Terms of Use](https://www.zillow.com/corp/Terms.htm) and [Branding Requirements](https://www.zillow.com/howto/api/BrandingRequirements.htm).
-* Display your reviews using the official Zillow API data.
-* Free for Real Estate Agents (individuals and teams).
+* Display your latest reviews for real estate agents and teams.
 * List and grid layouts.
 * Widget and shortcode options.
 * Gutenberg block (edit review layouts in the new WordPress editor!).
 
-= Mortgages Partner Edition Features =
+= Lender Reviews Edition Features (Paid) =
 * Lender reviews.
 * Individual loan officer reviews.
 * Company profile reviews. 
@@ -34,16 +33,22 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
 The Free Edition requires a [Zillow Web Services ID (ZWSID)](https://www.zillow.com/howto/api/APIOverview.htm).
 
-The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](https://www.zillow.com/mortgage/api/).
+The Lender Reviews Edition requires a [Zillow Mortgages Partner ID (ZPID)](https://www.zillow.com/mortgage/api/).
 
 = Limitations =
 
-**Important**: Review the following limitations from [Zillow's Review API FAQ](https://www.zillow.com/howto/api/faq.htm) to avoid unexpected errors.
+**Important**: Follow the [Zillow's Review API FAQ](https://www.zillow.com/howto/api/faq.htm) guidelines including:
 
-* Include the approved Zillow logo on your website wherever reviews appear. *Easy Zillow Reviews* includes this logo, but you can disable it in Settings > Easy Zillow Reviews if you wish to add it elsewhere adjacent to the Reviews per the [Branding Guidelines](https://www.zillow.com/howto/api/BrandingRequirements.htm).
-* Include the Mandatory Disclaimer wherever reviews appear. *Easy Zillow Reviews* includes this disclaimer, but you can disable it in Settings > Easy Zillow Reviews if you wish to add it elsewhere (such as in the footer).
-* No local storage of reviews. *Easy Zillow Reviews* will always fetch the latest reviews directly from Zillow using your ZWSID or ZPID.
-* No more than 1,000 calls to the Reviews API in a day, and no more than 20 on one page at one time. *Easy Zillow Reviews* will display a simple text error message to help identify the problem if Zillow blocks your ZWSID or ZPID for any reason. Zillow may permit more calls for your account upon request. Per the FAQ, you may reach out to <huann@zillow.com> or <reviewsapi@zillow.com> for more info.
+* Show the approved Zillow logo on your website where reviews appear. You can disable the logo in Settings > Easy Zillow Reviews and add it elsewhere adjacent to the reviews per the [Branding Guidelines](https://www.zillow.com/howto/api/BrandingRequirements.htm).
+* Show the Mandatory Disclaimer where reviews appear. You can disable the disclaimer in Settings > Easy Zillow Reviews and add it elsewhere (such as in the footer).
+* No local storage of reviews. This plugin pulls reviews from Zillow using your ZWSID or ZPID.
+* No more than 1,000 calls to the API in a day. *Easy Zillow Reviews* shows an error message to help identify the problem if Zillow blocks your ZWSID or ZPID for any reason. Zillow may permit more calls upon request to <reviewsapi@zillow.com> or <api@bridgeinteractive.com>.
+
+= Supporting Easy Zillow Reviews =
+
+If you found this free plugin helpful, please support the developer with a small donation:
+
+* [Buy me a coffee](http://ko-fi.com/boltonstudios)
 
 = Shortcode =
 
@@ -77,8 +82,20 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 
 == Changelog ==
 
+= 1.4.4 =
+* Date Updated: 2022-11-02
+* Bug Fix: Fixed bug preventing default numeric values from loading in some Settings Sidebar fields.
+* Bug Fix: Fixed CSS layout bug causing elements to wrap to a new line in the Block editor content area.
+* Updated @wordpress/scripts Gutenberg dependency package to v24.4.0 and recompiled blocks code.
+* Changed the name of the premium plugin version to "Lender Reviews Edition".
+
+= 1.4.3 =
+* Date Updated: 2022-10-28
+* Rolling back to Freemius SDK version 2.4.3.
+
 = 1.4.2 =
 * Date Updated: 2022-10-26
+* Updated Freemius SDK to version 2.5.0.
 * Bug Fix: Fixed bug that caused "invalidInput" error message for Mortgage Lender names containing ampersands.
 
 = 1.4.1 =
@@ -87,7 +104,7 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 
 = 1.4.0 =
 * Date Updated: 2022-02-03
-* Added a "screenname" attribute to the shortcode.
+* New Feature: Added a "screenname" attribute to the shortcode.
 
 = 1.3.1 =
 * Date Updated: 2021-11-09
@@ -101,17 +118,17 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 * Updated Freemius SDK to version 2.4.2.
 
 = 1.2.3 =
-* Date Updated: 2020-29-05
+* Date Updated: 2020-05-29
 * Bug Fix: Fixed bug that caused Reviews Summary badge to appear in-line with reviews instead of below them in certain grid layouts.
 * Hardcoded blockquote line-height in public CSS file.
 * Modified labels for a few Dashboard settings.
 
 = 1.2.2 =
-* Date Updated: 2020-28-05
+* Date Updated: 2020-05-28
 * Minor style changes to plugin CSS file.
 
 = 1.2.1 =
-* Date Updated: 2020-28-05
+* Date Updated: 2020-05-28
 * New Feature: Display a Zillow profile card with average star rating.
 * Bug Fix: Added fallback to cURL for PHP configurations that have allow_url_fopen disabled.
 * Bug Fix: Removed erroneous reference to a second Gutenberg block.
@@ -120,47 +137,47 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 * Updated Freemius SDK to version 2.3.2.
 
 = 1.2.0 =
-* Date Updated: 2020-28-04
+* Date Updated: 2020-04-28
 * New Feature: Gutenberg Block
 * Moved the Settings page menu item to the top-level of the Dashboard Menu
 
 = 1.1.7 =
-* Date Updated: 2020-21-04
+* Date Updated: 2020-04-21
 * Bug Fix: Fixed error that prevented review count and profile link from displaying in Mortgages Partner Edition.
 * Bug Fix: Fixed error that caused "Settings" plugin action link to appear under other plugin names in the Plugin menu.
 * Added attribution for function copied from FooGallery by Brad Vincent and Contributors.
 
 = 1.1.6 =
-* Date Updated: 2020-19-04
+* Date Updated: 2020-04-19
 * Bug Fix: Fixed error that prevented Mortgages Partner Edition from activating while Free Edition was active.
 * Bug Fix: Fixed error that prevented reviews for Lending Companies from displaying.
 
 = 1.1.5 =
-* Date Updated: 2020-18-04
+* Date Updated: 2020-04-18
 * Bug Fix: Resolved PHP notices when certain elements are set to hidden and WP_DEBUG is true.
 * Bug Fix: Restored feature to hide Reviewer Summary.
 
 = 1.1.4 =
-* Date Updated: 2020-18-04
+* Date Updated: 2020-04-18
 * *NOTE* Due to changes in v1.1.x, please check your widgets to confirm that Easy Zillow Reviews is still active.
 * Bug Fix: Changed plugin widget name back to 'ezrwp_widget' (free version) 
 * Bug Fix: Restored options to style and hide reviews output.
 * Bug Fix: Resolved miscellaneous notices when WP_DEBUG is true.
 
 = 1.1.3 =
-* Date Updated: 2020-13-04
+* Date Updated: 2020-04-13
 * Added more fields to Upgrader class, which assists with backwards compatibility from v1.0 to v1.1.
 
 = 1.1.2 =
-* Date Updated: 2020-13-04
+* Date Updated: 2020-04-13
 * Bug Fix: Migrated backwards compatibility patch to main plugin file to better support updates, in addition to activations.
 
 = 1.1.1 =
-* Date Updated: 2020-13-04
+* Date Updated: 2020-04-13
 * Bug Fix: Added backwards compatibility for new database option names.
 
 = 1.1.0 =
-* Date Updated: 2020-13-04
+* Date Updated: 2020-04-13
 * New Feature: Option to upgrade for access to Lender Reviews.
 * New Feature: Tabbed Settings interface improves organization of plugin options.
 * Bug Fix: Added fix to prevent errors generated by dashes and spaces in screennames.
@@ -171,20 +188,20 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 * New Feature: Company Profile Reviews
 
 = 1.0.3 =
-* Date Updated: 2019-03-01
+* Date Updated: 2019-01-03
 * Bug Fix: Replaced dashicons with image sprite.
 
 = 1.0.2 =
-* Date Updated: 2018-31-12
+* Date Updated: 2018-12-31
 * Bug Fix: Fixed typo in admin Settings page.
 
 = 1.0.1 =
-* Date Updated: 2018-31-12
+* Date Updated: 2018-12-31
 * New Feature: New Settings Options: Hide Zillow Logo and "View All" link.
 * New Feature: Added "Settings" plugin action link.
 * Bug Fixes: Resolved miscellaneous notices when WP_DEBUG is true.
 * Added support for PHP 5.4, 5.5, 5.6 and 7.2.
 
 = 1.0.0 =
-* Date Released: 2018-30-12
+* Date Released: 2018-12-30
 * Initial Release

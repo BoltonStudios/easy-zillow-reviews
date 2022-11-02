@@ -27,19 +27,19 @@ registerBlockType( 'boltonstudios/easy-zillow-reviews', {
         },
         gridColumns: {
             type: 'number',
-            default: generalOptions.ezrwp_cols,
+            default: parseInt( generalOptions.ezrwp_cols ),
         },
         reviewsCount: {
             type: 'number',
-            default: generalOptions.ezrwp_count,
+            default: parseInt( generalOptions.ezrwp_count ),
         }
     },
 	example: {
 		attributes: {
             reviewsType: 'professional',
             reviewsLayout: 'grid',
-            gridColumns: '2',
-            reviewCount: '2'
+            gridColumns: 2,
+            reviewCount: 2
 		},
 	},
     edit: function( props ) {

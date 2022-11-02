@@ -39,10 +39,10 @@ The Lender Reviews Edition requires a [Zillow Mortgages Partner ID (ZPID)](https
 
 **Important**: Follow the [Zillow's Review API FAQ](https://www.zillow.com/howto/api/faq.htm) guidelines including:
 
-* Show the approved Zillow logo on your website where reviews appear. You can disable the logo in Settings > Easy Zillow Reviews and add it elsewhere adjacent to the Reviews per the [Branding Guidelines](https://www.zillow.com/howto/api/BrandingRequirements.htm).
+* Show the approved Zillow logo on your website where reviews appear. You can disable the logo in Settings > Easy Zillow Reviews and add it elsewhere adjacent to the reviews per the [Branding Guidelines](https://www.zillow.com/howto/api/BrandingRequirements.htm).
 * Show the Mandatory Disclaimer where reviews appear. You can disable the disclaimer in Settings > Easy Zillow Reviews and add it elsewhere (such as in the footer).
 * No local storage of reviews. This plugin pulls reviews from Zillow using your ZWSID or ZPID.
-* No more than 1,000 calls to the Reviews API in a day. *Easy Zillow Reviews* shows an error message to help identify the problem if Zillow blocks your ZWSID or ZPID for any reason. Zillow may permit more calls upon request to <reviewsapi@zillow.com> or <api@bridgeinteractive.com>.
+* No more than 1,000 calls to the API in a day. *Easy Zillow Reviews* shows an error message to help identify the problem if Zillow blocks your ZWSID or ZPID for any reason. Zillow may permit more calls upon request to <reviewsapi@zillow.com> or <api@bridgeinteractive.com>.
 
 = Supporting Easy Zillow Reviews =
 
@@ -83,7 +83,7 @@ If you found this free plugin helpful, please support the developer with a small
 == Changelog ==
 
 = 1.4.4 =
-* Date Updated: 2022-11-02-2022
+* Date Updated: 2022-11-02
 * Bug Fix: Fixed bug preventing default numeric values from loading in some Settings Sidebar fields.
 * Bug Fix: Fixed CSS layout bug causing elements to wrap to a new line in the Block editor content area.
 * Updated @wordpress/scripts Gutenberg dependency package to v24.4.0 and recompiled blocks code.

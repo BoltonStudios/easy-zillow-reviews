@@ -13,19 +13,19 @@ Display reviews from Zillow on your website.
 
 == Description ==
 
-*Easy Zillow Reviews* makes it easy for realtors and lenders to fetch and display reviews from the Zillow API Network.
+*Easy Zillow Reviews* makes it easy for realtors and lenders to display reviews from the Zillow API Network.
 
 View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
-= Free Edition Features =
+= Features (Free) =
 * Compliant with Zillow's [Terms of Use](https://www.zillow.com/corp/Terms.htm) and [Branding Requirements](https://www.zillow.com/howto/api/BrandingRequirements.htm).
 * Display your reviews using the official Zillow API data.
-* Free for Real Estate Agents (individuals and teams).
+* Free for real estate agents (individuals and teams).
 * List and grid layouts.
 * Widget and shortcode options.
-* Gutenberg block (edit review layouts in the new WordPress editor!).
+* Gutenberg block (edit review layouts in the new WordPress editor).
 
-= Mortgages Partner Edition Features =
+= Lender Reviews Edition Features (Paid) =
 * Lender reviews.
 * Individual loan officer reviews.
 * Company profile reviews. 
@@ -34,16 +34,16 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
 The Free Edition requires a [Zillow Web Services ID (ZWSID)](https://www.zillow.com/howto/api/APIOverview.htm).
 
-The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](https://www.zillow.com/mortgage/api/).
+The Lender Reviews Edition requires a [Zillow Mortgages Partner ID (ZPID)](https://www.zillow.com/mortgage/api/).
 
 = Limitations =
 
-**Important**: Review the following limitations from [Zillow's Review API FAQ](https://www.zillow.com/howto/api/faq.htm) to avoid unexpected errors.
+**Important**: Follow the [Zillow's Review API FAQ](https://www.zillow.com/howto/api/faq.htm) guidelines including:
 
-* Include the approved Zillow logo on your website wherever reviews appear. *Easy Zillow Reviews* includes this logo, but you can disable it in Settings > Easy Zillow Reviews if you wish to add it elsewhere adjacent to the Reviews per the [Branding Guidelines](https://www.zillow.com/howto/api/BrandingRequirements.htm).
-* Include the Mandatory Disclaimer wherever reviews appear. *Easy Zillow Reviews* includes this disclaimer, but you can disable it in Settings > Easy Zillow Reviews if you wish to add it elsewhere (such as in the footer).
-* No local storage of reviews. *Easy Zillow Reviews* will always fetch the latest reviews directly from Zillow using your ZWSID or ZPID.
-* No more than 1,000 calls to the Reviews API in a day, and no more than 20 on one page at one time. *Easy Zillow Reviews* will display a simple text error message to help identify the problem if Zillow blocks your ZWSID or ZPID for any reason. Zillow may permit more calls for your account upon request. Per the FAQ, you may reach out to <huann@zillow.com> or <reviewsapi@zillow.com> for more info.
+* Show the approved Zillow logo on your website where reviews appear. You can disable the logo in Settings > Easy Zillow Reviews and add it elsewhere adjacent to the Reviews per the [Branding Guidelines](https://www.zillow.com/howto/api/BrandingRequirements.htm).
+* Show the Mandatory Disclaimer where reviews appear. You can disable the disclaimer in Settings > Easy Zillow Reviews and add it elsewhere (such as in the footer).
+* No local storage of reviews. This plugin pulls reviews from Zillow using your ZWSID or ZPID.
+* No more than 1,000 calls to the Reviews API in a day. *Easy Zillow Reviews* shows an error message to help identify the problem if Zillow blocks your ZWSID or ZPID for any reason. Zillow may permit more calls upon your request at <reviewsapi@zillow.com> or <api@bridgeinteractive.com>.
 
 = Shortcode =
 
@@ -58,6 +58,12 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 * columns...A number between 1 and 6.
 * count...A number between 1 and 10.
 * screenname...The screenname that appears in your Zillow profile link.
+
+= Supporting Easy Zillow Reviews =
+
+If you found this free plugin helpful, please support the developer with a small donation:
+
+* [Buy me a coffee](http://ko-fi.com/boltonstudios)
 
 == Installation ==
 
@@ -79,8 +85,10 @@ The Mortgages Partner Edition requires a [Zillow Mortgages Partner ID (ZPID)](ht
 
 = 1.4.4 =
 * Date Updated: 2022-11-02-2022
-* Bug Fix: Fixed CSS layout bug that caused some elements to improperly wrap to a new line in the Gutenberg blocks preview.
+* Bug Fix: Fixed bug preventing default numeric values from loading in some Settings Sidebar fields.
+* Bug Fix: Fixed CSS layout bug causing elements to wrap to a new line in the Block editor content area.
 * Updated @wordpress/scripts Gutenberg dependency package to v24.4.0 and recompiled blocks code.
+* Changed the name of the premium plugin version to "Lender Reviews Edition".
 
 = 1.4.3 =
 * Date Updated: 2022-10-28

@@ -5,7 +5,7 @@ Tags: zillow, reviews, gutenberg, block, real estate, lender
 Requires at least: 4.0.0
 Tested up to: 6.1.0
 Requires PHP: 5.4
-Stable tag: 1.4.4
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -81,6 +81,10 @@ If you found this free plugin helpful, please support the developer with a small
 4. Settings
 
 == Changelog ==
+
+= 1.5.0 =
+* Date Updated: 2022-11-03
+* New Feature: Added support for Bridge Interative API access tokens.
 
 = 1.4.4 =
 * Date Updated: 2022-11-02

@@ -13,7 +13,7 @@
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
 
-require_once( 'class-easy-zillow-reviews-review.php' );
+include 'class-easy-zillow-reviews-review.php';
 
 if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
@@ -133,7 +133,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $screenname = str_replace( $disallowed_characters, "%20", $screenname );
             
             // If the $bridge_token argument is not null...
-            if( isset( $bridge_token ) ){
+            if( isset( $bridge_token ) && $bridge_token != "" ){
 
                 // Fetch data from Bridge.
 
@@ -151,77 +151,94 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 // Decode the account data.
                 $bridge_account_data = json_decode( $bridge_account_data );
 
-                // Update the bridge account data variable.
-                $bridge_account_data = $bridge_account_data->bundle[0];
-
-                //
-                //var_dump( $bridge_account_data );
-
-                // Get the reviewee ID.
-                $reviewee_id = $bridge_account_data->AccountIdReviewee;
-
-                // Construct the Bridge URL for the Zillow Professional's reviews.
-                //$bridge_reviews_url = 'https://api.bridgedataoutput.com/api/v2/reviews/review?access_token='. $bridge_token .'&AccountIdReviewee=' . $reviewee_id;
-                $bridge_reviews_url = 'https://api.bridgedataoutput.com/api/v2/OData/reviews/Review?access_token='. $bridge_token .'&$top='. $count .'&$filter=AccountIdReviewee%20eq%20%27'. $reviewee_id .'%27&$skip='. $count;
-                
-                // Fetch data from the Zillow API Network.
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_URL, $bridge_reviews_url);
-                $bridge_reviews_data = curl_exec($ch);
-                curl_close($ch);
-
-                // Decode the account data.
-                $bridge_reviews_data = json_decode( $bridge_reviews_data );
-
                 // Handle errors
                 // If the API returned the status item...
-                if( isset( $bridge_reviews_data->status) ){
+                if( isset( $bridge_account_data->status) ){
 
                     // Update the $code variable.
-                    $code = $bridge_reviews_data->status;
+                    $code = $bridge_account_data->status;
                 }
 
                 // If the code is neither 200 nor 0 (default)...
                 if( $code != 200 && $code != 0 ){
 
                     // Update the error message variables to be returned to the user.
-                    $error_name = $bridge_reviews_data->error->name;
-                    $message = $error_name . ": " . $bridge_reviews_data->error->message;
+                    $error_name = $bridge_account_data->bundle->name;
+                    $message = $error_name . ": " . $bridge_account_data->bundle->message;
 
                 } else{
 
-                    // Update other variables.
-                    $profile_url = $bridge_account_data->RevieweeProfileURL;
-                    //$sale_count = $bridge_account_data->;
-                    $profile_name = $bridge_account_data->RevieweeFullName;
-                    //$profile_image_url = $bridge_account_data->;
-                    $profile_url = $bridge_account_data->RevieweeProfileURL;
-                    $rating = $bridge_account_data->AverageReviewRating;
-                    $review_count = $bridge_account_data->ReviewCount;
-                    $zillow_reviews_data = $bridge_reviews_data->value;
+                    // Update the bridge account data variable.
+                    $bridge_account_data = $bridge_account_data->bundle[0];
 
                     //
-                    for( $i = 0; $i < count( $zillow_reviews_data ); $i++ ){
-                        
-                        $review_data = $zillow_reviews_data[ $i ];
-                        $description = $review_data->Description;
-                        $summary = lcfirst( $review_data->ServiceProviderDesc );
-                        $url = 'https://www.zillow.com/profile/'. $screenname .'/#reviews';
-                        $date = $review_data->ReviewDate;
-                        $rating = floatval( $review_data->Rating );
-                        
-                        $reviews[ $i ] = new Easy_Zillow_Reviews_Review(
-                            $description,
-                            $summary,
-                            $url,
-                            $date,
-                            $rating
-                        );
-                    }
-                }
+                    //var_dump( $bridge_account_data );
 
+                    // Get the reviewee ID.
+                    $reviewee_id = $bridge_account_data->AccountIdReviewee;
+
+                    // Construct the Bridge URL for the Zillow Professional's reviews.
+                    //$bridge_reviews_url = 'https://api.bridgedataoutput.com/api/v2/reviews/review?access_token='. $bridge_token .'&AccountIdReviewee=' . $reviewee_id;
+                    $bridge_reviews_url = 'https://api.bridgedataoutput.com/api/v2/OData/reviews/Review?access_token='. $bridge_token .'&$top='. $count .'&$filter=AccountIdReviewee%20eq%20%27'. $reviewee_id .'%27&$skip='. $count;
+                    
+                    // Fetch data from the Zillow API Network.
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_URL, $bridge_reviews_url);
+                    $bridge_reviews_data = curl_exec($ch);
+                    curl_close($ch);
+
+                    // Decode the account data.
+                    $bridge_reviews_data = json_decode( $bridge_reviews_data );
+
+                    // Handle errors
+                    // If the API returned the status item...
+                    if( isset( $bridge_reviews_data->status) ){
+
+                        // Update the $code variable.
+                        $code = $bridge_reviews_data->status;
+                    }
+
+                    // If the code is neither 200 nor 0 (default)...
+                    if( $code != 200 && $code != 0 ){
+
+                        // Update the error message variables to be returned to the user.
+                        $error_name = $bridge_reviews_data->error->name;
+                        $message = $error_name . ": " . $bridge_reviews_data->error->message;
+
+                    } else{
+
+                        // Update other variables.
+                        $profile_url = $bridge_account_data->RevieweeProfileURL;
+                        //$sale_count = $bridge_account_data->;
+                        $profile_name = $bridge_account_data->RevieweeFullName;
+                        //$profile_image_url = $bridge_account_data->;
+                        $profile_url = $bridge_account_data->RevieweeProfileURL;
+                        $rating = $bridge_account_data->AverageReviewRating;
+                        $review_count = $bridge_account_data->ReviewCount;
+                        $zillow_reviews_data = $bridge_reviews_data->value;
+
+                        //
+                        for( $i = 0; $i < count( $zillow_reviews_data ); $i++ ){
+                            
+                            $review_data = $zillow_reviews_data[ $i ];
+                            $description = $review_data->Description;
+                            $summary = lcfirst( $review_data->ServiceProviderDesc );
+                            $url = 'https://www.zillow.com/profile/'. $screenname .'/#reviews';
+                            $date = $review_data->ReviewDate;
+                            $rating = floatval( $review_data->Rating );
+                            
+                            $reviews[ $i ] = new Easy_Zillow_Reviews_Review(
+                                $description,
+                                $summary,
+                                $url,
+                                $date,
+                                $rating
+                            );
+                        }
+                    }
+                } 
             } else{
             
                 // Construct the URL for a Zillow Professional.
@@ -305,7 +322,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
             // Pass data from Zillow to this class instance.
             $this->set_message( $message );
-            $this->set_has_reviews( $code > 0 ? false : true );
+            $this->set_has_reviews( ($code != 200 && $code != 0 ) ? false : true );
 
             // If the API returned reviews...
             if( $this->get_has_reviews() ){

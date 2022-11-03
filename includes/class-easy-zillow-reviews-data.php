@@ -105,6 +105,24 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         private $info;
         
         /**
+         * The name of the reviewee returned by the Zillow API Network.
+         *
+         * @since    1.5.0
+         * @access   private
+         * @var      string   $profile_name 
+         */
+        private $profile_name;
+        
+        /**
+         * The image URL for the reviewee either uploaded to WordPress or returned by the Zillow API response.
+         *
+         * @since    1.5.0
+         * @access   private
+         * @var      string   $profile_image_url
+         */
+        private $profile_image_url;
+        
+        /**
          * The option to hide the time elapsed since the review was written.
          * Determined by options selected on Settings page.
          * 
@@ -185,6 +203,16 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         private $rating;
         
         /**
+         * The total number of sales that this profile has on Zillow.
+         * This is determined by the results of the plugin's call to the Zillow API Network.
+         *
+         * @since    1.5.0
+         * @access   private
+         * @var      int   $sale_count   
+         */
+        private $sale_count;
+        
+        /**
          * The total number of reviews that this profile has on Zillow.
          * This is determined by the results of the plugin's call to the Zillow API Network.
          *
@@ -199,7 +227,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
          *
          * @since    1.1.0
          * @access   protected
-         * @var      object   $reviews   
+         * @var      array   $reviews   
          */
         protected $reviews;
         
@@ -478,6 +506,46 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
 
                 return $this;
         }
+
+        /**
+         * Get the value of $profile_name
+         */ 
+        public function get_profile_name()
+        {
+                return $this->profile_name;
+        }
+
+        /**
+         * Set the value of $profile_name
+         *
+         * @return  self
+         */ 
+        public function set_profile_name( $profile_name )
+        {
+                $this->profile_name = $profile_name;
+
+                return $this;
+        }
+
+        /**
+         * Get the value of $profile_image_url
+         */ 
+        public function get_profile_image_url()
+        {
+                return $this->profile_image_url;
+        }
+
+        /**
+         * Set the value of $profile_image_url
+         *
+         * @return  self
+         */ 
+        public function set_profile_image_url( $profile_image_url )
+        {
+                $this->profile_image_url = $profile_image_url;
+
+                return $this;
+        }
         
         /**
          * Get the value of rating
@@ -498,6 +566,26 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
 
             $this->rating = $rating;
             return $this;
+        }
+
+        /**
+         * Get the value of sale_count
+         */ 
+        public function get_sale_count()
+        {
+                return $this->sale_count;
+        }
+
+        /**
+         * Set the value of sale_count
+         *
+         * @return  self
+         */ 
+        public function set_sale_count( $sale_count )
+        {
+                $this->sale_count = $sale_count;
+
+                return $this;
         }
 
         /**

@@ -12,7 +12,9 @@
  * @subpackage Easy_Zillow_Reviews/includes
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
-    
+
+require_once( 'class-easy-zillow-reviews-review.php' );
+
 if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
     class Easy_Zillow_Reviews_Professional extends Easy_Zillow_Reviews_Data{
@@ -76,9 +78,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
             $this->init();
             $this->set_professional_reviews_options( get_option('ezrwp_professional_reviews_options') );
+            $this->set_bridge_token( $this->professional_reviews_options['ezrwp_bridge_token_1'] );
             $this->set_zwsid( $this->professional_reviews_options['ezrwp_zwsid'] );
             $this->set_screenname( $this->professional_reviews_options['ezrwp_screenname'] );
-            $this->set_bridge_token( $this->professional_reviews_options['ezrwp_bridge_token_1'] );
         }
 
         // Methods
@@ -95,6 +97,17 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $disallowed_characters = array("-", " ");
             $toggle_team_members = $this->get_show_team_members() ? '&returnTeamMemberReviews=true' : '';
 
+            $message = "";
+            $error_name = "";
+            $code = 0;
+            $profile_url = "";
+            $profile_name = "";
+            $profile_image_url = "";
+            $sale_count = 0;
+            $review_count = 0;
+            $rating = 0.0;
+            $reviews = array();
+            
             /**
              * allow_url_fopen must be enabled to use simplexml_load_file().
              * Some hosts disable allow_url_fopen for security reasons.
@@ -118,7 +131,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             
             // Strip spaces from the screenname.
             $screenname = str_replace( $disallowed_characters, "%20", $screenname );
-
+            
             // If the $bridge_token argument is not null...
             if( isset( $bridge_token ) ){
 
@@ -127,8 +140,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 // Construct the Bridge URL for a Zillow Professional.
                 $bridge_account_url = 'https://api.bridgedataoutput.com/api/v2/reviews/reviewee?access_token='. $bridge_token .'&RevieweeScreenName='. $screenname;
 
-                // Read the account data.
-                $bridge_account_data =  file_get_contents( $bridge_account_url );
+                // Fetch data from the Zillow API Network.
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_URL, $bridge_account_url);
+                $bridge_account_data = curl_exec($ch);
+                curl_close($ch);
 
                 // Decode the account data.
                 $bridge_account_data = json_decode( $bridge_account_data );
@@ -137,77 +155,171 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 $bridge_account_data = $bridge_account_data->bundle[0];
 
                 //
-                var_dump( $bridge_account_data );
+                //var_dump( $bridge_account_data );
 
                 // Get the reviewee ID.
                 $reviewee_id = $bridge_account_data->AccountIdReviewee;
 
-                //
-                $bridge_reviews_url = 'https://api.bridgedataoutput.com/api/v2/reviews/review?access_token='. $bridge_token .'&AccountIdReviewee=' . $reviewee_id;
-
-                // Read the account data.
-                $bridge_reviews_data =  file_get_contents( $bridge_reviews_url );
-
-                // Decode the account data.
-                $bridge_reviews_data = json_decode( $bridge_reviews_data );
-
-                //
-                var_dump( $bridge_reviews_data );
-
-            }
-            
-            // Construct the URL for a Zillow Professional.
-            $zillow_url = 'http://www.zillow.com/webservice/ProReviews.htm?zws-id='. $zwsid .'&screenname='. $screenname .'&count='. $count . $toggle_team_members;
-
-            // Fetch data from Zillow.
-
-            // Enable user error handling. Use for debugging.
-            // libxml_use_internal_errors(true);
-            
-            // If allow_url_fopen is enabled...
-            if( $allow_url ){
-
-                // Fetch data from the Zillow API Network.
-                $zillow_data = simplexml_load_file( $zillow_url );
+                // Construct the Bridge URL for the Zillow Professional's reviews.
+                //$bridge_reviews_url = 'https://api.bridgedataoutput.com/api/v2/reviews/review?access_token='. $bridge_token .'&AccountIdReviewee=' . $reviewee_id;
+                $bridge_reviews_url = 'https://api.bridgedataoutput.com/api/v2/OData/reviews/Review?access_token='. $bridge_token .'&$top='. $count .'&$filter=AccountIdReviewee%20eq%20%27'. $reviewee_id .'%27&$skip='. $count;
                 
-            } else{
-
                 // Fetch data from the Zillow API Network.
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_URL, $zillow_url);
-                $curl_result = curl_exec($ch);
+                curl_setopt($ch, CURLOPT_URL, $bridge_reviews_url);
+                $bridge_reviews_data = curl_exec($ch);
                 curl_close($ch);
 
-                // Interpret XML Data into an object.
-                $zillow_data = simplexml_load_string( $curl_result );
-            }
+                // Decode the account data.
+                $bridge_reviews_data = json_decode( $bridge_reviews_data );
 
-            // Handle XML errors.  
-            if( $zillow_data === false ){
+                // Handle errors
+                // If the API returned the status item...
+                if( isset( $bridge_reviews_data->status) ){
 
-                echo "Failed loading XML.";
-
-                // Handle errors in debugging.
-                /*
-                foreach(libxml_get_errors() as $error) {
-                    echo "\n\t", $error->message;
+                    // Update the $code variable.
+                    $code = $bridge_reviews_data->status;
                 }
-                */
-            }
+
+                // If the code is neither 200 nor 0 (default)...
+                if( $code != 200 && $code != 0 ){
+
+                    // Update the error message variables to be returned to the user.
+                    $error_name = $bridge_reviews_data->error->name;
+                    $message = $error_name . ": " . $bridge_reviews_data->error->message;
+
+                } else{
+
+                    // Update other variables.
+                    $profile_url = $bridge_account_data->RevieweeProfileURL;
+                    //$sale_count = $bridge_account_data->;
+                    $profile_name = $bridge_account_data->RevieweeFullName;
+                    //$profile_image_url = $bridge_account_data->;
+                    $profile_url = $bridge_account_data->RevieweeProfileURL;
+                    $rating = $bridge_account_data->AverageReviewRating;
+                    $review_count = $bridge_account_data->ReviewCount;
+                    $zillow_reviews_data = $bridge_reviews_data->value;
+
+                    //
+                    for( $i = 0; $i < count( $zillow_reviews_data ); $i++ ){
+                        
+                        $review_data = $zillow_reviews_data[ $i ];
+                        $description = $review_data->Description;
+                        $summary = lcfirst( $review_data->ServiceProviderDesc );
+                        $url = 'https://www.zillow.com/profile/'. $screenname .'/#reviews';
+                        $date = $review_data->ReviewDate;
+                        $rating = floatval( $review_data->Rating );
+                        
+                        $reviews[ $i ] = new Easy_Zillow_Reviews_Review(
+                            $description,
+                            $summary,
+                            $url,
+                            $date,
+                            $rating
+                        );
+                    }
+                }
+
+            } else{
             
+                // Construct the URL for a Zillow Professional.
+                $zillow_url = 'http://www.zillow.com/webservice/ProReviews.htm?zws-id='. $zwsid .'&screenname='. $screenname .'&count='. $count . $toggle_team_members;
+
+                // Fetch data from Zillow.
+
+                // Enable user error handling. Use for debugging.
+                // libxml_use_internal_errors(true);
+                
+                // If allow_url_fopen is enabled...
+                if( $allow_url ){
+
+                    // Fetch data from the Zillow API Network.
+                    $zillow_data = simplexml_load_file( $zillow_url );
+                    
+                } else{
+
+                    // Fetch data from the Zillow API Network.
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_URL, $zillow_url);
+                    $curl_result = curl_exec($ch);
+                    curl_close($ch);
+
+                    // Interpret XML Data into an object.
+                    $zillow_data = simplexml_load_string( $curl_result );
+                }
+
+                // Handle XML errors.  
+                if( $zillow_data === false ){
+
+                    echo "Failed loading XML.";
+
+                    // Handle errors in debugging.
+                    /*
+                    foreach(libxml_get_errors() as $error) {
+                        echo "\n\t", $error->message;
+                    }
+                    */
+                }
+
+                // Update instance variables.
+                $message = $zillow_data->message->text;
+                $code = $zillow_data->message->code;
+
+                // If the API returned reviews...
+                if( $code > 0 ? false : true ){
+
+                    // Update more instance variables.
+                    $this->set_info( $zillow_data->response->result->proInfo );
+                    $sale_count = $this->get_info()->recentSaleCount;
+                    $profile_name = $this->get_info()->name;
+                    $profile_image_url = $this->get_info()->photo;
+                    $profile_url = $zillow_data->response->result->proInfo->profileURL;
+                    $rating = $zillow_data->response->result->proInfo->avgRating;
+                    $review_count = $zillow_data->response->result->proInfo->reviewCount;
+                    $zillow_reviews_data = $zillow_data->response->result->proReviews->review;
+
+                    //
+                    for( $i = 0; $i < count( $zillow_reviews_data ); $i++ ){
+
+                        $review_data = $zillow_reviews_data[ $i ];
+                        $description = $review_data->description;
+                        $summary = lcfirst( $review_data->reviewSummary );
+                        $url = $review_data->reviewURL;
+                        $date = $review_data->reviewDate;
+                        $rating = floatval( $review_data->rating );
+                        
+                        $reviews[ $i ] = new Easy_Zillow_Reviews_Review(
+                            $description,
+                            $summary,
+                            $url,
+                            $date,
+                            $rating
+                        );
+                    }
+                }
+            }
+
             // Pass data from Zillow to this class instance.
-            $this->set_message($zillow_data->message->text);
-            $this->set_has_reviews(( $zillow_data->message->code > 0 ) ? false : true);
-            if($this->get_has_reviews()){
+            $this->set_message( $message );
+            $this->set_has_reviews( $code > 0 ? false : true );
+
+            // If the API returned reviews...
+            if( $this->get_has_reviews() ){
 
                 // Success
-                $this->set_info($zillow_data->response->result->proInfo);
-                $this->set_url($zillow_data->response->result->proInfo->profileURL);
-                $this->set_rating($zillow_data->response->result->proInfo->avgRating);
-                $this->set_review_count($zillow_data->response->result->proInfo->reviewCount);
-                $this->set_reviews($zillow_data->response->result->proReviews);
+                // Update the object properties with Zillow data.
+                //$this->set_info( $zillow_data->response->result->proInfo );
+                $this->set_profile_name( $profile_name );
+                $this->set_profile_image_url( $profile_image_url );
+                $this->set_url( $profile_url );
+                $this->set_rating( $rating );
+                $this->set_sale_count( $sale_count );
+                $this->set_review_count( $review_count );
+                $this->set_reviews( $reviews );
             }
         }
         
@@ -228,13 +340,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $hide_view_all_link = $this->get_hide_view_all_link();
             $hide_zillow_logo = $this->get_hide_zillow_logo();
             $layout = ($as_layout == '') ? $this->get_layout() : $as_layout;
+            $name = $this->get_profile_name();
             $number_cols = ($number_cols == '') ? $this->get_grid_columns() : $number_cols;
+            $photo = $this->get_profile_image_url();
             $profile_url = $this->get_url();
-            $review_count = $this->get_review_count();
-            $name = $this->get_info()->name;
-            $photo = $this->get_info()->photo;
             $rating = $this->get_rating();
-            $sale_count = $this->get_info()->recentSaleCount;
+            $review_count = $this->get_review_count();
+            $sale_count = $this->get_sale_count();
             $profile_card = $this->get_profile_card( $name, $photo, $profile_url, $rating, $review_count, $sale_count );
 
             // Output
@@ -250,17 +362,17 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $template->set_profile_card( $profile_card );
             
             // Iterate over reviews.
-            foreach( $this->reviews->review as $review ) :
+            foreach( $this->reviews as $review ) :
 
                 // Update local variables.
-                $description = $review->description;
-                $summary = lcfirst( $review->reviewSummary );
-                $url = $review->reviewURL;
-                $date = ( !$hide_date ) ? '<div class="ezrwp-date">'. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime($review->reviewDate))) .'</div>' : '';
+                $description = $review->get_description();
+                $summary = lcfirst( $review->get_summary() );
+                $url = $review->get_url();
+                $date = ( !$hide_date ) ? '<div class="ezrwp-date">'. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime( $review->get_date() ) ) ) .'</div>' : '';
                 $reviewer_summary = ( !$hide_reviewer_summary ) ? '<span class="review-summary">who '. $summary .'</span>' : '';
                 $stars = 0;
                 if( !$hide_stars ){
-                    $stars = floatval( $review->rating );
+                    $stars = floatval( $review->get_rating() );
                     $star_count = floor($stars); // count whole stars
                     $half_star_toggle = '';
                     if( $stars - floor($stars) > 0 ){

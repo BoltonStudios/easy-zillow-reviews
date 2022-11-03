@@ -254,8 +254,6 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Zillow Web Services ID</label>
                 <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
 
-                <p>Sign-up for a <strong>Zillow Web Services ID (ZWSID)</strong> at <a href="https://www.zillow.com/howto/api/APIOverview.htm" target="_blank">https://www.zillow.com/howto/api/APIOverview.htm</a>. <span class="dashicons dashicons-external" style="font-size: 14px;"></span></p>
-
                 <?php
             }
             

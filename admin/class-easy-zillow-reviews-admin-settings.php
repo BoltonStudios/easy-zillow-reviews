@@ -160,7 +160,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
             );
             $settings[] = array(
                 'id'        => 'ezrwp_disclaimer', // id. Used only internally
-                'title'     => __( 'Mandatory Disclaimer', 'ezrwp_general' ), // title
+                'title'     => __( 'Zillow Disclaimer', 'ezrwp_general' ), // title
                 'callback'  => 'ezrwp_disclaimer_pill_field_cb', // callback
                 'tab'       => 'ezrwp_general', // page
                 'section'   => 'ezrwp_section_for_defaults'
@@ -232,7 +232,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
             );
             $settings[] = array(
                 'id'        => 'ezrwp_zwsid', // id. Used only internally
-                'title'     => __( 'Zillow Web Services ID', 'ezrwp_professional_reviews' ), // title
+                'title'     => __( 'Zillow Web Services ID (Deprecated)', 'ezrwp_professional_reviews' ), // title
                 'callback'  => 'ezrwp_zwsid_text_field_cb', // callback
                 'tab'       => 'ezrwp_professional_reviews', // page
                 'section'   => 'ezrwp_section_for_zillow_professional_parameters'

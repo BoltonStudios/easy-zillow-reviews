@@ -32,9 +32,9 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
 = Requirements =
 
-The Free Edition requires a [Zillow Web Services ID (ZWSID)](https://www.zillow.com/howto/api/APIOverview.htm).
+The free plugin requires a [Zillow Web Services ID (ZWSID)](https://www.zillow.com/howto/api/APIOverview.htm).
 
-The Lender Reviews Edition requires a [Zillow Mortgages Partner ID (ZPID)](https://www.zillow.com/mortgage/api/).
+The lender reviews require a [Zillow Mortgages Partner ID (ZPID)](https://www.zillow.com/mortgage/api/).
 
 = Limitations =
 

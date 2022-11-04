@@ -85,7 +85,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
         // Methods
         /**
-         * Get reviews data from Zillow using the Zillow ProReviews API.
+         * Get reviews data from the Zillow Reviews API.
          *
          * @since    1.1.0
          */
@@ -93,10 +93,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             
             // Initialize variables.
             $bridge_token = $this->get_bridge_token();
-            $zwsid = $this->get_zwsid();
+            $zwsid = $this->get_zwsid(); // deprecated
             $disallowed_characters = array("-", " ");
             $toggle_team_members = $this->get_show_team_members() ? '&returnTeamMemberReviews=true' : '';
-
             $message = "";
             $error_name = "";
             $code = 0;
@@ -171,9 +170,6 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                     // Update the bridge account data variable.
                     $bridge_account_data = $bridge_account_data->bundle[0];
 
-                    //
-                    //var_dump( $bridge_account_data );
-
                     // Get the reviewee ID.
                     $reviewee_id = $bridge_account_data->AccountIdReviewee;
 
@@ -224,17 +220,21 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                             
                             $review_data = $zillow_reviews_data[ $i ];
                             $description = $review_data->Description;
-                            $summary = lcfirst( $review_data->ServiceProviderDesc );
                             $url = 'https://www.zillow.com/profile/'. $screenname .'/#reviews';
                             $date = $review_data->ReviewDate;
                             $rating = floatval( $review_data->Rating );
+                            $location = explode( ",", $review_data->FreeFormLocation );
+                            $city = $location[ 1 ];
+                            $city .= isset( $location[ 2 ] ) ? ", " . $location[ 2 ] : "";
+                            $summary = lcfirst( $review_data->ServiceProviderDesc . ' in ' . $city );
                             
                             $reviews[ $i ] = new Easy_Zillow_Reviews_Review(
                                 $description,
                                 $summary,
                                 $url,
                                 $date,
-                                $rating
+                                $rating,
+                                $city
                             );
                         }
                     }

@@ -61,9 +61,18 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
          * @var      int    $rating
          */
         private $rating;
+
+        /**
+         * A description goes here.
+         *
+         * @since    1.5.0
+         * @access   private
+         * @var      string    $city
+         */
+        private $city;
         
         // Constructor
-        public function __construct( $description, $summary, $url, $date, $rating ){
+        public function __construct( $description, $summary, $url, $date, $rating, $city = "" ){
 
             // Initialize object properties.
             $this->description = $description;
@@ -71,6 +80,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
             $this->url = $url;
             $this->date = $date;
             $this->rating = $rating;
+            $this->city = $city;
         }
 
         // Methods
@@ -90,7 +100,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
         /**
          * Set $date
          *
-         * @param  string  $date  $date
+         * @param  string  $date
          *
          * @return  self
          */ 
@@ -114,7 +124,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
         /**
          * Set $description
          *
-         * @param  string  $description  $description
+         * @param  string  $description
          *
          * @return  self
          */ 
@@ -138,7 +148,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
         /**
          * Set $summary
          *
-         * @param  string  $summary  $summary
+         * @param  string  $summary
          *
          * @return  self
          */ 
@@ -162,7 +172,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
         /**
          * Set $url
          *
-         * @param  string  $url  $url
+         * @param  string  $url
          *
          * @return  self
          */ 
@@ -186,13 +196,37 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
         /**
          * Set $rating
          *
-         * @param  int  $rating  $rating
+         * @param  int  $rating
          *
          * @return  self
          */ 
         public function set_rating(int $rating)
         {
                 $this->rating = $rating;
+
+                return $this;
+        }
+
+        /**
+         * Get $city
+         *
+         * @return  string
+         */ 
+        public function get_city()
+        {
+                return $this->city;
+        }
+
+        /**
+         * Set $city
+         *
+         * @param  string  $city
+         *
+         * @return  self
+         */ 
+        public function set_city(string $city)
+        {
+                $this->city = $city;
 
                 return $this;
         }

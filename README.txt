@@ -25,7 +25,7 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 * Widget and shortcode options.
 * Gutenberg block (edit review layouts in the new WordPress editor!).
 
-= Lender Reviews Edition Features (Paid) =
+= Premium Features =
 * Lender reviews.
 * Individual loan officer reviews.
 * Company profile reviews. 

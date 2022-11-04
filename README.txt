@@ -29,6 +29,7 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 * Lender reviews.
 * Individual loan officer reviews.
 * Company profile reviews. 
+* [Get the Premium Version](https://www.boltonstudios.com/easy-zillow-reviews/).
 
 = Requirements =
 

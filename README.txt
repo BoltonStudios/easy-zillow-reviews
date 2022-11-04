@@ -18,12 +18,12 @@ Display reviews from Zillow on your website.
 View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
 = Features (Free) =
-* Compliant with Zillow's [Terms of Use](https://www.zillow.com/corp/Terms.htm) and [Branding Requirements](https://www.zillow.com/howto/api/BrandingRequirements.htm).
-* Display your latest reviews for real estate agents and teams.
+* Display latest reviews for real estate agents and teams.
 * Show reviews from multiple profiles.
 * List and grid layouts.
 * Widget and shortcode options.
 * Gutenberg block (edit review layouts in the new WordPress editor!).
+* Compliant with Zillow's Terms of Use and Branding Requirements.
 
 = Premium Features =
 * Lender reviews.

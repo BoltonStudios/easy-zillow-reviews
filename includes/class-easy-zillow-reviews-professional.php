@@ -226,7 +226,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                             $location = explode( ",", $review_data->FreeFormLocation );
                             $city = $location[ 1 ];
                             $city .= isset( $location[ 2 ] ) ? ", " . $location[ 2 ] : "";
-                            $summary = lcfirst( $review_data->ServiceProviderDesc . ' in ' . $city );
+                            $summary = lcfirst( $review_data->ServiceProviderDesc );
                             
                             $reviews[ $i ] = new Easy_Zillow_Reviews_Review(
                                 $description,
@@ -442,6 +442,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
         function get_profile_card( $name, $photo, $url, $rating, $review_count, $sale_count ){
 
             // Initialize variables.
+            $card_left = '';
             $star_average = '';
             if( $rating == 0 ){
                 $star_average = 'star-0';
@@ -472,16 +473,24 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                                     '. $sale_count .' recent home '. $sales_descriptor .'
                                 </div>';
             }
+            
+            // If the photo exists...
+            if( $photo != '' ){
+
+                // Add the photo to the card_left output.
+                $card_left = '
+                    <div class="ezrwp-profile-card-left">
+                        <div class="ezrwp-profile-image-container">
+                            <img class="ezrwp-photo" src="'. $photo .'" alt="" width="94" height="94" />
+                        </div>
+                    </div>';
+            }
 
             // Construct the Profile Card output.
             $profile_card = '
                 <div style="clear:both"></div>
                 <div class="ezrwp-profile-card">
-                    <div class="ezrwp-profile-card-left">
-                        <div class="ezrwp-profile-image-container">
-                            <img class="ezrwp-photo" src="'. $photo .'" alt="" width="94" height="94" />
-                        </div>
-                    </div>
+                    '. $card_left .'
                     <div class="ezrwp-profile-card-right">
                         <p class="ezrwp-profile-name"><strong>'. $name .'</strong></p>
                         <div class="ezrwp-activity">

@@ -76,11 +76,27 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
 
             // Initialize object properties.
             $this->description = $description;
-            $this->summary = $summary;
             $this->url = $url;
             $this->date = $date;
             $this->rating = $rating;
             $this->city = $city;
+            
+            // Adjust the summary parameter value.
+            switch ( strtolower( $summary ) ){
+                
+                case "helped me buy home" :
+                    
+                    $summary = "bought a home";
+                    break;
+
+                default:
+                
+                    // Do not adjust the summary parameter value.
+                    break;
+            }
+
+            // Update the summary instance variable.
+            $this->summary = $summary .= ' in ' . $city;
         }
 
         // Methods

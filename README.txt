@@ -85,8 +85,9 @@ If you found this free plugin helpful, please support the developer with a small
 == Changelog ==
 
 = 1.5.0 =
-* Date Updated: 2022-11-03
+* Date Updated: 2022-11-17
 * New Feature: Added support for Bridge Interative API access tokens.
+* Zillow replaced its Reviews API with Bridge API acess. Please create a Bridge API access token to continue using the plugin.
 
 = 1.4.4 =
 * Date Updated: 2022-11-02

@@ -159,11 +159,28 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 }
 
                 // If the code is neither 200 nor 0 (default)...
-                if( $code != 200 && $code != 0 ){
+                // Or if the response contains no data...
+                if( ( $code != 200 && $code != 0 ) || !isset( $bridge_account_data->bundle[0] ) ){
 
-                    // Update the error message variables to be returned to the user.
-                    $error_name = $bridge_account_data->bundle->name;
-                    $message = $error_name . ": " . $bridge_account_data->bundle->message;
+                    // If access denied...
+                    if ( $code != 200 && $code != 0 ){
+
+                        // Update the error message variables to be returned to the user.
+                        $error_name = $bridge_account_data->bundle->name;
+                        $message = $error_name . ": " . $bridge_account_data->bundle->message;
+
+                    }
+
+                    // If Bridge Interactive granted acccess but did not return data...
+                    if( !isset( $bridge_account_data->bundle[0] ) ){
+
+                        // Update the error message.
+                        $message = "Access granted but no data returned";
+
+                        // Flag error (any code other than 200 or 0 );
+                        $code = 1;
+
+                    }
 
                 } else{
 

@@ -138,7 +138,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
                 // Construct the Bridge URL for a Zillow Professional.
                 $bridge_account_url = 'https://api.bridgedataoutput.com/api/v2/reviews/reviewee?access_token='. $bridge_token .'&RevieweeScreenName='. $screenname;
-
+                
                 // Fetch data from the Zillow API Network.
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
@@ -169,11 +169,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                         $error_name = $bridge_account_data->bundle->name;
                         $message = $error_name . ": " . $bridge_account_data->bundle->message;
 
-                    }
+                    } else if( !isset( $bridge_account_data->bundle[0] ) ){
 
-                    // If Bridge Interactive granted acccess but did not return data...
-                    if( !isset( $bridge_account_data->bundle[0] ) ){
-
+                        // If access granted but no data returned...
                         // Update the error message.
                         $message = "Access granted but no data returned";
 

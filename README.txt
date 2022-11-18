@@ -86,15 +86,16 @@ If you found this free plugin helpful, please support the developer with a small
 
 = 1.5.0 =
 * Date Updated: 2022-11-17
+* Zillow transitioned to Bridge Interative API access. Create a Bridge API access token to get reviews.
 * New Feature: Added support for Bridge Interative API access tokens.
-* Zillow replaced its Reviews API with Bridge API acess. Please create a Bridge API access token to continue using the plugin.
+* Updated @wordpress/scripts Gutenberg dependency package to v24.6.0 and recompiled blocks code.
 
 = 1.4.4 =
 * Date Updated: 2022-11-02
 * Bug Fix: Fixed bug preventing default numeric values from loading in some Settings Sidebar fields.
 * Bug Fix: Fixed CSS layout bug causing elements to wrap to a new line in the Block editor content area.
 * Updated @wordpress/scripts Gutenberg dependency package to v24.4.0 and recompiled blocks code.
-* Changed the name of the premium plugin version to "Lender Reviews Edition".
+* Changed the name of the premium plugin version to "Premium Version".
 
 = 1.4.3 =
 * Date Updated: 2022-10-28

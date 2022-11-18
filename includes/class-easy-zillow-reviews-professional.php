@@ -174,9 +174,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                     $reviewee_id = $bridge_account_data->AccountIdReviewee;
 
                     // Construct the Bridge URL for the Zillow Professional's reviews.
-                    //$bridge_reviews_url = 'https://api.bridgedataoutput.com/api/v2/reviews/review?access_token='. $bridge_token .'&AccountIdReviewee=' . $reviewee_id;
-                    $bridge_reviews_url = 'https://api.bridgedataoutput.com/api/v2/OData/reviews/Review?access_token='. $bridge_token .'&$top='. $count .'&$filter=AccountIdReviewee%20eq%20%27'. $reviewee_id .'%27&$skip='. $count;
-                    
+                    $bridge_reviews_url = 'https://api.bridgedataoutput.com/api/v2/OData/reviews/Review?access_token='. $bridge_token .'&$top='. $count .'&$filter=AccountIdReviewee%20eq%20%27'. $reviewee_id;
+
                     // Fetch data from the Zillow API Network.
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);

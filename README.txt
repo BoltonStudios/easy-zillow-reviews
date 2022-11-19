@@ -26,8 +26,8 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 * Compliant with Zillow's Terms of Use and Branding Requirements.
 
 = Premium Features =
-* Lender Reviews.
-* Priority Support.
+* Lender reviews.
+* Priority support.
 * [Get the Premium Version](https://www.boltonstudios.com/easy-zillow-reviews/).
 
 = Requirements =
@@ -40,10 +40,8 @@ The lender reviews require a [Zillow Mortgages Partner ID (ZPID)](https://www.zi
 
 **Important**: Follow Zillow's [guidelines](https://www.zillow.com/howto/api/faq.htm) including:
 
-* Show the Zillow logo on your website where reviews appear. You can disable the logo in Settings > Easy Zillow Reviews and add it elsewhere adjacent to the reviews per the [Branding Guidelines](https://www.zillow.com/howto/api/BrandingRequirements.htm).
-* Show the Zillow Disclaimer where reviews appear. You can disable it in Settings > Easy Zillow Reviews and add it elsewhere (such as in the footer).
-* No local storage of reviews. This plugin pulls reviews from Zillow using your Bridge API Access Token or ZPID.
-* No more than 1,000 calls to the API in a day. *Easy Zillow Reviews* shows an error message to help identify the problem if Zillow blocks your Access Token or ZPID for any reason. Zillow may permit more calls upon request to <api@bridgeinteractive.com> or <mortgageapis@zillow.com>.
+* No local storage of reviews. This plugin gets reviews in real time with your Bridge API Access Token or ZPID.
+* 1,000 calls to the API per day maximum. Request more calls from <api@bridgeinteractive.com> or <mortgageapis@zillow.com>.
 
 = Supporting Easy Zillow Reviews =
 

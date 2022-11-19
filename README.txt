@@ -3,7 +3,7 @@ Contributors: boltonstudios
 Donate link: http://ko-fi.com/boltonstudios
 Tags: zillow, reviews, gutenberg, block, real estate, lender
 Requires at least: 4.0.0
-Tested up to: 6.1.0
+Tested up to: 6.1.1
 Requires PHP: 5.4
 Stable tag: 1.5.0
 License: GPLv2 or later
@@ -42,9 +42,9 @@ The lender reviews require a [Zillow Mortgages Partner ID (ZPID)](https://www.zi
 **Important**: Follow the [Zillow's Review API FAQ](https://www.zillow.com/howto/api/faq.htm) guidelines including:
 
 * Show the approved Zillow logo on your website where reviews appear. You can disable the logo in Settings > Easy Zillow Reviews and add it elsewhere adjacent to the reviews per the [Branding Guidelines](https://www.zillow.com/howto/api/BrandingRequirements.htm).
-* Show the Mandatory Disclaimer where reviews appear. You can disable the disclaimer in Settings > Easy Zillow Reviews and add it elsewhere (such as in the footer).
-* No local storage of reviews. This plugin pulls reviews from Zillow using your ZWSID or ZPID.
-* No more than 1,000 calls to the API in a day. *Easy Zillow Reviews* shows an error message to help identify the problem if Zillow blocks your ZWSID or ZPID for any reason. Zillow may permit more calls upon request to <reviewsapi@zillow.com> or <api@bridgeinteractive.com>.
+* Show the Zillow Disclaimer where reviews appear. You can disable the disclaimer in Settings > Easy Zillow Reviews and add it elsewhere (such as in the footer).
+* No local storage of reviews. This plugin pulls reviews from Zillow using your Bridge API Access Token or ZPID.
+* No more than 1,000 calls to the API in a day. *Easy Zillow Reviews* shows an error message to help identify the problem if Zillow blocks your Access Token or ZPID for any reason. Zillow may permit more calls upon request to <api@bridgeinteractive.com> or <mortgageapis@zillow.com>.
 
 = Supporting Easy Zillow Reviews =
 
@@ -59,7 +59,7 @@ If you found this free plugin helpful, please support the developer with a small
 
 = Optional Shortcode Parameters =
 
-    [ez-zillow-reviews layout="grid" columns="2" count="4"]
+    [ez-zillow-reviews layout="grid" columns="2" count="4" screenname="jsmith"]
 
 * layout..."list" or "grid".
 * columns...A number between 1 and 6.
@@ -69,10 +69,10 @@ If you found this free plugin helpful, please support the developer with a small
 == Installation ==
 
 1. Upload "easy-zillow-reviews" to the /wp-content/plugins/ directory.
-2. Activate the plugin through the "Plugins" menu in WordPress.
-3. Add your Zillow Web Services ID (ZWSID) and Zillow Screenname to the Easy Zillow Reviews Settings page.
-4. Adjust the Default Plugin Settings on the Easy Zillow Reviews Settings page (optional).
-4. Add an *Easy Zillow Reviews* widget or [ez-zillow-reviews] shortcode to your page or post.
+2. Activate the plugin through the **Plugins** menu in WordPress.
+3. Add your Bridge Access Token and Zillow Screenname to the **Settings** page.
+4. Adjust the Default Plugin Settings on the Settings page (optional).
+4. Add an *Easy Zillow Reviews* widget or **[ez-zillow-reviews]** shortcode to your page or post.
 5. Save Changes.
 
 == Screenshots ==
@@ -85,10 +85,11 @@ If you found this free plugin helpful, please support the developer with a small
 == Changelog ==
 
 = 1.5.0 =
-* Date Updated: 2022-11-17
+* Date Updated: 2022-11-19
 * Zillow transitioned to Bridge Interative API access. Create a Bridge API access token to get reviews.
 * New Feature: Added support for Bridge Interative API access tokens.
 * Updated @wordpress/scripts Gutenberg dependency package to v24.6.0 and recompiled blocks code.
+* Cleaned up Settings page by rewriting labels and hiding deprecated fields.
 
 = 1.4.4 =
 * Date Updated: 2022-11-02

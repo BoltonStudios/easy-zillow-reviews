@@ -396,48 +396,71 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             foreach( $this->reviews as $review ) :
 
                 // Update local variables.
-                $description = $review->get_description();
-                $summary = lcfirst( $review->get_summary() );
                 $url = $review->get_url();
                 $date = ( !$hide_date ) ? '<div class="ezrwp-date">'. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime( $review->get_date() ) ) ) .'</div>' : '';
-                $reviewer_summary = ( !$hide_reviewer_summary ) ? '<span class="review-summary">who '. $summary .'</span>' : '';
                 $stars = 0;
-                if( !$hide_stars ){
-                    $stars = floatval( $review->get_rating() );
-                    $star_count = floor($stars); // count whole stars
-                    $half_star_toggle = '';
-                    if( $stars - floor($stars) > 0 ){
-                        // add half star if required
-                        $half_star_toggle = "ezrwp-plus-half-star";
-                    } 
-
-                    $stars = '
-                        <div class="ezrwp-stars ezrwp-stars-'. $star_count .' '. $half_star_toggle .'"></div>
-                    ';
-                }
-                $reviewer = '
-                    <div class="ezrwp-reviewer">
-                        <p> &mdash; <a href="'. $url .'" target="_blank" rel="nofollow">Zillow Reviewer</a> '. $reviewer_summary .'
-                        </p>
-                    </div>
-                ';
+                $star_rating_html = "";
+                $summary = lcfirst( $review->get_summary() );
+                $reviewer_summary = ( !$hide_reviewer_summary ) ? '<span class="review-summary">who '. $summary .'</span>' : '';
+                $description = $review->get_description();
                 $review_quote = '<blockquote>'. $description .'</blockquote>';
                 $before_review = '<div class="col ezrwp-col">';
                 $after_review = '</div>';
 
+                // If the user did not opt to hide the stars...
+                if( !$hide_stars ){
+
+                    // Initialize new local variables.
+                    $half_star_toggle = '';
+
+                    // Get the float value of the review rating.
+                    $stars = floatval( $review->get_rating() );
+
+                    // Count whole stars.
+                    $star_count = floor( $stars );
+
+                    // If the rating contains a fraction...
+                    // The float value of the rating less the count of whole "stars" will be greater than zero.
+                    if( $stars - $star_count > 0 ){
+
+                        // Add a half star.
+                        $half_star_toggle = "ezrwp-plus-half-star";
+                    }
+
+                    // Construct the HTML string for the star rating.
+                    $star_rating_html = '
+                        <div class="ezrwp-stars ezrwp-stars-'. $star_count .' '. $half_star_toggle .'"></div>
+                    ';
+                }
+
+                // Construct the HTML string for the reviewer element.
+                $reviewer = '
+                    <div class="ezrwp-reviewer">
+                        <p> &mdash;<a href="'. $url .'" target="_blank" rel="nofollow">Zillow Reviewer</a> '. $reviewer_summary .'
+                        </p>
+                    </div>
+                ';
+
+                // Update the reviews output HTML string.
                 $reviews_output .= $before_review;
                 $reviews_output .= $review_quote;
-                $reviews_output .= $stars;
+                $reviews_output .= $star_rating_html;
                 $reviews_output .= $date;
                 $reviews_output .= $reviewer;
                 $reviews_output .= $after_review;
 
+                // Increment the counter.
                 $i++;
+
+                // If the counter in the current loop iteration is divisible by the users' chosen number of columns...
                 if( $i % $number_cols == 0 ){
+
+                    // Add an element to create a line break.
                     $reviews_output .= '<div style="clear:both"></div>';
                 }
             endforeach;
 
+            // Return the output.
             return $template->generate_reviews_wrapper( $reviews_output, $layout, $number_cols );
         }
         

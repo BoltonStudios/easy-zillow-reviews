@@ -50,7 +50,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
          *
          * @since    1.1.0
          * @access   private
-         * @var      string  
+         * @var      object  
          */
         private $tabs;
 
@@ -177,7 +177,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                     <strong style="font-size: 14px">Shortcode</strong><br/>[ez-zillow-reviews]
                 </p>
                 <p id="<?php echo esc_attr( $args['id'] ); ?>-3">
-                    Example shortcode with overrides:<br />[ez-zillow-reviews layout="grid" columns="2" count="4"]
+                    Example shortcode with overrides:<br />[ez-zillow-reviews layout="grid" columns="2" count="4" screenname="jsmith"]
                 </p>
                 <?php
             }
@@ -235,7 +235,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Bridge API Access Token</label>
                 <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
 
-                <p><a href="https://bridgedataoutput.com/login" target="_blank">Login to Bridge</a> or <a href="https://bridgedataoutput.com/zgdata" target="_blank">create a new account <span class="dashicons dashicons-external" style="font-size: 14px;"></span></a> and request access to the API to get a <strong>Bridge API Access Token</strong>.
+                <p>To get your free <strong>API Access Token</strong>, <a href="https://bridgedataoutput.com/login" target="_blank">log in to Bridge</a> or <a href="https://bridgedataoutput.com/zgdata" target="_blank">create a new account <span class="dashicons dashicons-external" style="font-size: 14px;"></span></a> and request access to the <strong>Zillow Agent Reviews</strong> dataset.</p>
                 <?php
             }
 
@@ -271,7 +271,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Zillow Screenname</label>
                 <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
 
-                <p>The screenname of the user whose reviews you want to display.</p>
+                <p>The screenname of the user whose reviews you want to display. Use the shortcode options to show reviews for multiple profiles.</p>
 
                 <?php
             }
@@ -290,7 +290,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Review Count</label>
                 <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="1" max="10" required />
 
-                <p>The count of reviews you would like to return. Choose a number from 1 to 10.</p>
+                <p>The amount of reviews you want to show. Choose a number from 1 to 10.</p>
                 <?php
             }
 
@@ -361,12 +361,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 </select>
 
                 <div id="disclaimer-warning">
-                    <p><strong>Notice</strong>: Please add the disclaimer below somewhere on your website if you turn off the Disclaimer Setting on this page. According to Zillow's <a href="https://www.zillow.com/howto/api/BrandingRequirements.htm" target="_blank">Branding Requirements</a> <span class="dashicons dashicons-external" style="font-size: 14px;"></span>, <em>All pages that contain Zillow Data or tools must include the following text, typically at the bottom of the page</em>:<p>
-
-                    <blockquote>
-                        © Zillow, Inc., 2006-2016. Use is subject to <a href="https://www.zillow.com/corp/Terms.htm">Terms of Use</a><br />
-                        <a href="https://www.zillow.com/wikipages/What-is-a-Zestimate/">What's a Zestimate?</a>
-                    </blockquote>
+                    <p>Recommended: Consult the <a href="https://www.zillow.com/howto/api/BrandingRequirements.htm" target="_blank">Zillow Branding Requirements</a> <span class="dashicons dashicons-external" style="font-size: 14px;"></span> before you hide the Zillow Disclaimer.
                 </div>
             <?php
             }
@@ -383,7 +378,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 ?>
 
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Date</label>
-                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The time elapsed since the review was written. Example: 6 days ago.
+                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The time elapsed since the review. Example: "6 days ago".
             <?php
             }
 
@@ -415,7 +410,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 ?>
 
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Reviewer Description</label>
-                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> A short description of the reviewer. Example: "Sold a Single Family home in 2013 for approximately $500K in Roswell, GA."
+                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> A short description of the reviewer. Example: "Listed and sold a home in Ellicott City, MD 21043".
             <?php
             }
 
@@ -431,7 +426,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 ?>
 
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Reviews Summary</label>
-                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The reviews summary badge with overall star rating for the profile.
+                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The overall profile star rating.
             <?php
             }
 
@@ -447,7 +442,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 ?>
 
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide View All Link</label>
-                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The link to your Zillow profile labeled "View All Reviews".
+                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> The link to your Zillow profile.
             <?php
             }
 
@@ -463,7 +458,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 ?>
 
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Hide Zillow Logo</label>
-                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> Important: Consult the <a href="https://www.zillow.com/howto/api/BrandingRequirements.htm" target="_blank">Zillow Branding Requirements</a> <span class="dashicons dashicons-external" style="font-size: 14px;"></span> before you hide the Zillow logo.
+                <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> Recommended: Consult the <a href="https://www.zillow.com/howto/api/BrandingRequirements.htm" target="_blank">Zillow Branding Requirements</a> <span class="dashicons dashicons-external" style="font-size: 14px;"></span> before you hide the Zillow logo.
             <?php
             }
 

@@ -13,7 +13,7 @@ Display reviews from Zillow on your website.
 
 == Description ==
 
-*Easy Zillow Reviews* helps real estate agents and lenders display their reviews using Zillow's official API.
+*Easy Zillow Reviews* helps real estate agents and lenders display their Zillow reviews using the official API.
 
 View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
@@ -45,7 +45,7 @@ The lender reviews require a [Zillow Mortgages Partner ID (ZPID)](https://www.zi
 
 = Supporting Easy Zillow Reviews =
 
-If you found this free plugin helpful, please support the developer with a small donation:
+If you found this free plugin helpful, you can support the developer by upgrading to the Premium Version or making a donation:
 
 * [Buy me a coffee](http://ko-fi.com/boltonstudios)
 

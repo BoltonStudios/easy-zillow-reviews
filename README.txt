@@ -36,13 +36,6 @@ The free plugin requires a [Bridge API Access Token](https://bridgedataoutput.co
 
 The lender reviews require a [Zillow Mortgages Partner ID (ZPID)](https://www.zillow.com/mortgage/api/).
 
-= Limitations =
-
-**Important**: Follow Zillow's [guidelines](https://www.zillow.com/howto/api/faq.htm) including:
-
-* No local storage of reviews. This plugin gets reviews in real time with your Bridge API Access Token or ZPID.
-* 1,000 calls to the API per day maximum. Request more calls from <api@bridgeinteractive.com> or <mortgageapis@zillow.com>.
-
 = Supporting Easy Zillow Reviews =
 
 If you found this free plugin helpful, you can support the developer by upgrading to the Premium Version or making a donation:

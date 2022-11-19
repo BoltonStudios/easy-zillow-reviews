@@ -111,11 +111,6 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
                 'page'  => 'ezrwp_general' // page
             );
             $sections[] = array(
-                'id'  => 'ezrwp_section_for_appearance', // id
-                'title'  => __( 'Appearance', 'ezrwp_general' ), // title
-                'page'  => 'ezrwp_general' // page
-            );
-            $sections[] = array(
                 'id'  => 'ezrwp_section_for_support', // id
                 'title'  => __( 'Debugging Information', 'ezrwp_general' ), // title
                 'page'  => 'ezrwp_general' // page
@@ -206,20 +201,6 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
                 'callback'  => 'ezrwp_hide_zillow_logo_field_cb', // callback
                 'tab'       => 'ezrwp_general', // page
                 'section'   => 'ezrwp_section_for_defaults'
-            );
-            $settings[] = array(
-                'id'        => 'ezrwp_quote_font_size', // id. Used only internally
-                'title'     => __( 'Review Quote Font Size', 'ezrwp_general' ), // title
-                'callback'  => 'ezrwp_quote_font_size_field_cb', // callback
-                'tab'       => 'ezrwp_general', // page
-                'section'   => 'ezrwp_section_for_appearance'
-            );
-            $settings[] = array(
-                'id'        => 'ezrwp_review_description_font_size', // id. Used only internally
-                'title'     => __( 'Reviewer Description Font Size', 'ezrwp_general' ), // title
-                'callback'  => 'ezrwp_reviewer_description_font_size_field_cb', // callback
-                'tab'       => 'ezrwp_general', // page
-                'section'   => 'ezrwp_section_for_appearance'
             );
 
             // Professional Reviews

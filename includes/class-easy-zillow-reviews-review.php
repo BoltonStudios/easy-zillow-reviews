@@ -96,7 +96,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
             }
 
             // Update the summary instance variable.
-            $this->summary = $summary .= ' in ' . $city;
+            $this->summary = $summary .= ' in ' . $city . '.';
         }
 
         // Methods

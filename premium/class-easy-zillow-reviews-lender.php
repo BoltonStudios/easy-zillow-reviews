@@ -63,7 +63,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
              * Check if the following options appear in the 'ezrwp_lender_reviews_options' row of the 'wp_options' table.
              * If not, set the variables to null.
             */
-            $zmpid =  isset( $this->lender_reviews_options['ezrwp_zmpid'] ) ? $this->lender_reviews_options['ezrwp_zmpid'] : null;
+            $zmpid = isset( $this->lender_reviews_options['ezrwp_zmpid'] ) ? $this->lender_reviews_options['ezrwp_zmpid'] : null;
             $nmlsid = isset( $this->lender_reviews_options['ezrwp_nmlsid'] ) ? $this->lender_reviews_options['ezrwp_nmlsid'] : null;
             $company_name = isset( $this->lender_reviews_options['ezrwp_company_name'] ) ? $this->lender_reviews_options['ezrwp_company_name'] : null;
             

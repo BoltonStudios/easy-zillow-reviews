@@ -83,7 +83,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
              * Check if the following options appear in the 'ezrwp_professional_reviews_options' row of the 'wp_options' table.
              * If not, set the variables to null.
             */
-            $bridge_token =  isset( $this->professional_reviews_options['ezrwp_bridge_token_1'] ) ? $this->professional_reviews_options['ezrwp_bridge_token_1'] : null;
+            $bridge_token = isset( $this->professional_reviews_options['ezrwp_bridge_token_1'] ) ? $this->professional_reviews_options['ezrwp_bridge_token_1'] : null;
             $screenname = isset( $this->professional_reviews_options['ezrwp_screenname'] ) ? $this->professional_reviews_options['ezrwp_screenname'] : null;
             $zwsid = isset( $this->professional_reviews_options['ezrwp_zwsid'] ) ? $this->professional_reviews_options['ezrwp_zwsid'] : null;
             

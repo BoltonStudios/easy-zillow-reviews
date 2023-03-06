@@ -5,7 +5,7 @@ Tags: zillow, reviews, gutenberg, block, real estate, lender
 Requires at least: 4.0.0
 Tested up to: 6.1.1
 Requires PHP: 5.4
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,6 +76,7 @@ If you found this free plugin helpful, you can support the developer by upgradin
 
 = 1.5.2 =
 * Date Updated: 2023-03-05
+* Bug Fix: Fixed bug that caused reviews to appear out of sequence (should be newest first).
 * Updated @wordpress/scripts Gutenberg dependency package to v25.5.0 and recompiled blocks code.
 
 = 1.5.1 =

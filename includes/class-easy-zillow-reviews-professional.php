@@ -201,7 +201,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                     $reviewee_id = $bridge_account_data->AccountIdReviewee;
 
                     // Construct the Bridge URL for the Zillow Professional's reviews.
-                    $bridge_reviews_url = 'https://api.bridgedataoutput.com/api/v2/OData/reviews/Review?access_token='. $bridge_token .'&$top='. $count .'&$filter=AccountIdReviewee%20eq%20%27'. $reviewee_id . '%27';
+                    $bridge_reviews_url = 'https://api.bridgedataoutput.com/api/v2/OData/reviews/Review?access_token='. $bridge_token .'&$filter=AccountIdReviewee%20eq%20%27'. $reviewee_id . '%27';
 
                     // Fetch data from the Zillow API Network.
                     $ch = curl_init();
@@ -240,7 +240,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                         $zillow_reviews_data = $bridge_reviews_data->value;
 
                         /* The following data was available in the old Zillow API implementation,
-                         * so we may include it in future variables if Bridge permits it.
+                         * so we may re-include it if Bridge shares this data in the future.
                          */
                         // $sale_count = $bridge_account_data->;
                         // $profile_image_url = $bridge_account_data->;
@@ -248,9 +248,21 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                         // $zillow_reviews_data must be an array or an object that 
                         // implements Countable.
                         if( gettype( $zillow_reviews_data ) == 'array' ){
+
+                            // Count the reviews available in the API response.
+                            $reviews_available_count = count( $zillow_reviews_data );
+
+                            // Check if the user specified the $count parameter.
+                            // If not, set the $count parameter equal to the number of reviews available.
+                            $count = isset( $count ) ? $count : $reviews_available_count;
+
+                            // The $count parameter should provide a subset of the reviews available.
+                            // Check if the user-specified $count parameter is less than the reviews available.
+                            // If not, set the $count parameter equal to the number of reviews available.
+                            $count = $count < $reviews_available_count ? $count : $reviews_available_count;
                             
                             // Iterate over the elements in $zillow_reviews_data.
-                            for( $i = 0; $i < count( $zillow_reviews_data ); $i++ ){
+                            for( $i = 0; $i < $count; $i++ ){
                                 
                                 $review_data = $zillow_reviews_data[ $i ];
                                 $description = $review_data->Description;

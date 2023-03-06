@@ -300,18 +300,18 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                             // If the $count is different than $reviews_available_count...
                             if( $count != $reviews_available_count ){
 
-                                //
+                                // Create a temporary reviews array.
                                 $temp_reviews = array();
 
                                 // Iterate over the elements in $reviews.
                                 for( $i = 0; $i < $count; $i++ ){
 
-                                    //
+                                    // Populate the temporary array with a subset of reviews.
                                     $temp_reviews[ $i ] = $reviews[ $i ];
                 
                                 }
 
-                                //
+                                // Update the $reviews array.
                                 $reviews = $temp_reviews;
                             }
                         }

@@ -1,6 +1,6 @@
 {
   "name": "easy-zillow-reviews",
-  "version": "1.4.3",
+  "version": "1.5.2",
   "description": "Display Zillow Reviews on your website",
   "main": "build/index.js",
   "scripts": {
@@ -23,6 +23,6 @@
   },
   "homepage": "https://github.com/BoltonStudios/easy-zillow-reviews#readme",
   "devDependencies": {
-    "@wordpress/scripts": "^24.6.0"
+    "@wordpress/scripts": "^25.5.0"
   }
 }

@@ -74,6 +74,10 @@ If you found this free plugin helpful, you can support the developer by upgradin
 
 == Changelog ==
 
+= 1.5.2 =
+* Date Updated: 2023-03-05
+* Updated @wordpress/scripts Gutenberg dependency package to v25.5.0 and recompiled blocks code.
+
 = 1.5.1 =
 * Date Updated: 2022-11-21
 * Bug Fix: Fixed bug that raised warnings about an undefined array key after upgrading to v 1.5.0.

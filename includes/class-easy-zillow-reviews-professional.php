@@ -168,20 +168,22 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                     $code = $bridge_account_data->status;
                 }
 
-                // If the code is neither 200 nor 0 (default)...
+                // If the code is neither 200 (OK) nor 0 (default value)...
                 // Or if the response contains no data...
                 if( ( $code != 200 && $code != 0 ) || !isset( $bridge_account_data->bundle[0] ) ){
 
-                    // If access denied...
+                    // If the code is neither 200 nor 0, access denied...
                     if ( $code != 200 && $code != 0 ){
 
                         // Update the error message variables to be returned to the user.
                         $error_name = $bridge_account_data->bundle->name;
-                        $message = $error_name . ": " . $bridge_account_data->bundle->message;
+                        $error_message = $bridge_account_data->bundle->message;
+                        $message = $error_name . ": " . $error_message;
 
                     } else if( !isset( $bridge_account_data->bundle[0] ) ){
 
                         // If access granted but no data returned...
+
                         // Update the error message.
                         $message = "Access granted but no data returned";
 
@@ -231,39 +233,50 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
                         // Update other variables.
                         $profile_url = $bridge_account_data->RevieweeProfileURL;
-                        //$sale_count = $bridge_account_data->;
                         $profile_name = $bridge_account_data->RevieweeFullName;
-                        //$profile_image_url = $bridge_account_data->;
                         $profile_url = $bridge_account_data->RevieweeProfileURL;
                         $rating = $bridge_account_data->AverageReviewRating;
                         $review_count = $bridge_account_data->ReviewCount;
                         $zillow_reviews_data = $bridge_reviews_data->value;
 
-                        //
-                        for( $i = 0; $i < count( $zillow_reviews_data ); $i++ ){
+                        /* The following data was available in the old Zillow API implementation,
+                         * so we may include it in future variables if Bridge permits it.
+                         */
+                        // $sale_count = $bridge_account_data->;
+                        // $profile_image_url = $bridge_account_data->;
+
+                        // $zillow_reviews_data must be an array or an object that 
+                        // implements Countable.
+                        if( gettype( $zillow_reviews_data ) == 'array' ){
                             
-                            $review_data = $zillow_reviews_data[ $i ];
-                            $description = $review_data->Description;
-                            $url = 'https://www.zillow.com/profile/'. $screenname .'/#reviews';
-                            $date = $review_data->ReviewDate;
-                            $rating = floatval( $review_data->Rating );
-                            $location = explode( ",", $review_data->FreeFormLocation );
-                            $city = $location[ 1 ];
-                            $city .= isset( $location[ 2 ] ) ? ", " . $location[ 2 ] : "";
-                            $summary = lcfirst( $review_data->ServiceProviderDesc );
-                            
-                            $reviews[ $i ] = new Easy_Zillow_Reviews_Review(
-                                $description,
-                                $summary,
-                                $url,
-                                $date,
-                                $rating,
-                                $city
-                            );
+                            // Iterate over the elements in $zillow_reviews_data.
+                            for( $i = 0; $i < count( $zillow_reviews_data ); $i++ ){
+                                
+                                $review_data = $zillow_reviews_data[ $i ];
+                                $description = $review_data->Description;
+                                $url = 'https://www.zillow.com/profile/'. $screenname .'/#reviews';
+                                $date = $review_data->ReviewDate;
+                                $rating = floatval( $review_data->Rating );
+                                $location = explode( ",", $review_data->FreeFormLocation );
+                                $city = isset( $location[ 1 ] ) ? $location[ 1 ] : "";
+                                $city .= isset( $location[ 2 ] ) ? ", " . $location[ 2 ] : "";
+                                $summary = lcfirst( $review_data->ServiceProviderDesc );
+                                
+                                $reviews[ $i ] = new Easy_Zillow_Reviews_Review(
+                                    $description,
+                                    $summary,
+                                    $url,
+                                    $date,
+                                    $rating,
+                                    $city
+                                );
+                            }
                         }
                     }
                 } 
             } else{
+
+                // The following applies only to sites that still use the deprecated ZWSID.
             
                 // Construct the URL for a Zillow Professional.
                 $zillow_url = 'http://www.zillow.com/webservice/ProReviews.htm?zws-id='. $zwsid .'&screenname='. $screenname .'&count='. $count . $toggle_team_members;

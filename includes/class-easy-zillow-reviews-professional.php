@@ -251,18 +251,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
                             // Count the reviews available in the API response.
                             $reviews_available_count = count( $zillow_reviews_data );
-
-                            // Check if the user specified the $count parameter.
-                            // If not, set the $count parameter equal to the number of reviews available.
-                            $count = isset( $count ) ? $count : $reviews_available_count;
-
-                            // The $count parameter should provide a subset of the reviews available.
-                            // Check if the user-specified $count parameter is less than the reviews available.
-                            // If not, set the $count parameter equal to the number of reviews available.
-                            $count = $count < $reviews_available_count ? $count : $reviews_available_count;
                             
                             // Iterate over the elements in $zillow_reviews_data.
-                            for( $i = 0; $i < $count; $i++ ){
+                            for( $i = 0; $i < $reviews_available_count; $i++ ){
                                 
                                 $review_data = $zillow_reviews_data[ $i ];
                                 $description = $review_data->Description;
@@ -282,6 +273,46 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                                     $rating,
                                     $city
                                 );
+                            }
+                            
+                            /**
+                             * Sort reviews by date.
+                             * 
+                             * Citation
+                             * Title: "Heres a nicer way using ..."
+                             * Author: Scott Quinlan
+                             * Date: 04/15/2012
+                             * Availability: https://stackoverflow.com/questions/4282413/sort-array-of-objects-by-one-property
+                             */
+                            usort( $reviews, function( $a, $b ){
+                                return strtotime( $b->get_date() ) - strtotime( $a->get_date() );
+                            });
+
+                            // Check if the user specified the $count parameter.
+                            // If not, set the $count parameter equal to the number of reviews available.
+                            $count = isset( $count ) ? $count : $reviews_available_count;
+
+                            // The $count parameter should provide a subset of the reviews available.
+                            // Check if the user-specified $count parameter is less than the reviews available.
+                            // If not, set the $count parameter equal to the number of reviews available.
+                            $count = $count < $reviews_available_count ? $count : $reviews_available_count;
+
+                            // If the $count is different than $reviews_available_count...
+                            if( $count != $reviews_available_count ){
+
+                                //
+                                $temp_reviews = array();
+
+                                // Iterate over the elements in $reviews.
+                                for( $i = 0; $i < $count; $i++ ){
+
+                                    //
+                                    $temp_reviews[ $i ] = $reviews[ $i ];
+                
+                                }
+
+                                //
+                                $reviews = $temp_reviews;
                             }
                         }
                     }

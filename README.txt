@@ -5,7 +5,7 @@ Tags: zillow, reviews, gutenberg, block, real estate, lender
 Requires at least: 4.0.0
 Tested up to: 6.1.1
 Requires PHP: 5.4
-Stable tag: 1.5.2
+Stable tag: 1.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,10 +74,14 @@ If you found this free plugin helpful, you can support the developer by upgradin
 
 == Changelog ==
 
+= 1.5.3 =
+* Date Updated: 2023-03-06
+* Bug Fix: Fixed bug that caused reviews to appear out of sequence (should be newest first).
+
 = 1.5.2 =
 * Date Updated: 2023-03-05
-* Bug Fix: Fixed bug that caused reviews to appear out of sequence (should be newest first).
-* Updated @wordpress/scripts Gutenberg dependency package to v25.5.0 and recompiled blocks code.
+* Implemented new method to count reviews.
+* Updated @wordpress/scripts Gutenberg dependency package to v25.5.0.
 
 = 1.5.1 =
 * Date Updated: 2022-11-21
@@ -87,7 +91,7 @@ If you found this free plugin helpful, you can support the developer by upgradin
 * Date Updated: 2022-11-19
 * Zillow transitioned to Bridge Interative API access. Create a Bridge API access token to get reviews.
 * New Feature: Added support for Bridge Interative API access tokens.
-* Updated @wordpress/scripts Gutenberg dependency package to v24.6.0 and recompiled blocks code.
+* Updated @wordpress/scripts Gutenberg dependency package to v24.6.0.
 * Cleaned up Settings page by rewriting labels and hiding deprecated fields.
 
 = 1.4.4 =

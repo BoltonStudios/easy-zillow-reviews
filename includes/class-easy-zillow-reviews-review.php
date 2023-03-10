@@ -18,7 +18,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
     class Easy_Zillow_Reviews_Review{
 
         /**
-         * A description goes here.
+         * The review quotation.
          *
          * @since    1.5.0
          * @access   private
@@ -27,7 +27,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
         private $description;
 
         /**
-         * A description goes here.
+         * Identifing qualities of the reviewer, 
+         * e.g., "helped me buy home"
          *
          * @since    1.5.0
          * @access   private
@@ -36,7 +37,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
         private $summary;
 
         /**
-         * A description goes here.
+         * A link to the reviewee's reviews.
          *
          * @since    1.5.0
          * @access   private
@@ -45,7 +46,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
         private $url;
 
         /**
-         * A description goes here.
+         * The date the review was published.
          *
          * @since    1.5.0
          * @access   private
@@ -54,7 +55,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
         private $date;
 
         /**
-         * A description goes here.
+         * A rating from 1.0 to 5.0
          *
          * @since    1.5.0
          * @access   private
@@ -63,7 +64,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
         private $rating;
 
         /**
-         * A description goes here.
+         * The location pertaining to the review.
          *
          * @since    1.5.0
          * @access   private

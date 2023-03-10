@@ -116,6 +116,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $profile_image_url = "";
             $sale_count = 0;
             $review_count = 0;
+            $word_count = 40;
             $rating = 0.0;
             $reviews = array();
             
@@ -274,6 +275,31 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                                 $city = isset( $location[ 1 ] ) ? $location[ 1 ] : "";
                                 $city .= isset( $location[ 2 ] ) ? ", " . $location[ 2 ] : "";
                                 $summary = lcfirst( $zillow_reviews_data[ $i ]->ServiceProviderDesc );
+
+                                // If the user specified a word count limit...
+                                if( $word_count > 0 ){
+
+                                    // Define a temporary array of words.
+                                    $temp_words = [""];
+
+                                    // Store the words in the review quotation as an array.
+                                    $words = str_word_count( $description, 1 );
+
+                                    // If the $word_count is less than the words in the review quotation...
+                                    if( $word_count < count( $words ) ){
+
+                                        //
+                                        for( $x = 0; $x < $word_count; $x++ ){
+
+                                            $temp_words[ $x ] = $words[ $x ];
+
+                                        }
+
+                                        //
+                                        $description = implode( " ", $temp_words ) . "...";
+
+                                    }
+                                }
                                 
                                 // Create a new Easy_Zillow_Reviews_Review object.
                                 $review = new Easy_Zillow_Reviews_Review(

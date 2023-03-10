@@ -116,7 +116,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $profile_image_url = "";
             $sale_count = 0;
             $review_count = 0;
-            $word_count = 40;
+            $word_count = 80;
             $rating = 0.0;
             $reviews = array();
             
@@ -279,25 +279,20 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                                 // If the user specified a word count limit...
                                 if( $word_count > 0 ){
 
-                                    // Define a temporary array of words.
-                                    $temp_words = [""];
-
-                                    // Store the words in the review quotation as an array.
-                                    $words = str_word_count( $description, 1 );
-
                                     // If the $word_count is less than the words in the review quotation...
-                                    if( $word_count < count( $words ) ){
-
-                                        //
-                                        for( $x = 0; $x < $word_count; $x++ ){
-
-                                            $temp_words[ $x ] = $words[ $x ];
-
-                                        }
-
-                                        //
-                                        $description = implode( " ", $temp_words ) . "...";
-
+                                    if( $word_count < str_word_count( $description, 0 ) ){
+                            
+                                        /**
+                                         * Truncate words in a string.
+                                         * 
+                                         * Citation
+                                         * Title: "Change the number 3 to the number 20 below to get the first 20 words..."
+                                         * Author: nonopolarity
+                                         * Date: 06/08/2009
+                                         * Availability: https://stackoverflow.com/a/965343
+                                         */
+                                        $description = preg_replace( '/((\w+\W*){' . ( $word_count - 1 ) . '}(\w+))(.*)/', '${1}', $description ); 
+                                        $description = $description . "...";
                                     }
                                 }
                                 

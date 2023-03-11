@@ -76,13 +76,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
         private $show_team_members;
 
         /**
-         * The review text word-count limit set by the user.
+         * The review text word limit set by the user.
          *
          * @since    1.6.0
          * @access   private
-         * @var      int   $word_count
+         * @var      int   $word_limit
          */
-        private $word_count;
+        private $word_limit;
 
         // Constructor
         public function __construct(){
@@ -97,13 +97,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $bridge_token = isset( $this->professional_reviews_options['ezrwp_bridge_token_1'] ) ? $this->professional_reviews_options['ezrwp_bridge_token_1'] : null;
             $screenname = isset( $this->professional_reviews_options['ezrwp_screenname'] ) ? $this->professional_reviews_options['ezrwp_screenname'] : null;
             $zwsid = isset( $this->professional_reviews_options['ezrwp_zwsid'] ) ? $this->professional_reviews_options['ezrwp_zwsid'] : null;
-            $word_count = isset( $this->professional_reviews_options['ezrwp_word_count'] ) ? $this->professional_reviews_options['ezrwp_word_count'] : null;
+            $word_limit = isset( $this->professional_reviews_options['ezrwp_word_limit'] ) ? $this->professional_reviews_options['ezrwp_word_limit'] : null;
             
             // Update the instance variables.
             $this->set_bridge_token( $bridge_token );
             $this->set_zwsid( $zwsid );
             $this->set_screenname( $screenname );
-            $this->set_word_count( $word_count );
+            $this->set_word_limit( $word_limit );
         }
 
         // Methods
@@ -112,14 +112,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
          *
          * @since    1.1.0
          */
-        public function fetch_reviews_from_zillow( int $count, String $screenname = null, int $word_count = null ){
+        public function fetch_reviews_from_zillow( int $count, String $screenname = null, int $word_limit = null ){
             
             // Initialize variables.
             $bridge_token = $this->get_bridge_token();
             $zwsid = $this->get_zwsid(); // deprecated
             $disallowed_characters = array ( "-", " " );
             $toggle_team_members = $this->get_show_team_members() ? '&returnTeamMemberReviews=true' : '';
-            $word_count = $this->get_word_count();
             $message = "";
             $error_name = "";
             $status_code = 0;
@@ -149,6 +148,19 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
                 // Assign the value of the screenname from the Settings page to the local $screenname variable.
                 $screenname = $this->get_screenname();
+
+            }
+
+            // If the $word_limit argument is not null...
+            if( isset( $word_limit ) ){
+
+                // Assign the value of the $word_limit argument to the local $word_limit variable.
+                $word_limit = $word_limit;
+
+            } else{
+
+                // Assign the value of the word limit from the Settings page to the local word_limit variable.
+                $word_limit = $this->get_word_limit();
 
             }
             
@@ -288,10 +300,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                                 $summary = lcfirst( $zillow_reviews_data[ $i ]->ServiceProviderDesc );
 
                                 // If the user specified a word count limit...
-                                if( isset( $word_count ) && $word_count > 0 ){
-
+                                if( isset( $word_limit ) || $word_limit > 0 ){
+echo "isset( \$word_limit ) && \$word_limit > 0";
                                     // If the $word_count is less than the words in the review quotation...
-                                    if( $word_count < str_word_count( $description, 0 ) ){
+                                    if( $word_limit < str_word_count( $description, 0 ) ){
                             
                                         /**
                                          * Truncate words in a string.
@@ -302,7 +314,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                                          * Date: 06/08/2009
                                          * Availability: https://stackoverflow.com/a/965343
                                          */
-                                        $description = preg_replace( '/((\w+\W*){' . ( $word_count - 1 ) . '}(\w+))(.*)/', '${1}', $description ); 
+                                        $description = preg_replace( '/((\w+\W*){' . ( $word_limit - 1 ) . '}(\w+))(.*)/', '${1}', $description ); 
                                         $description = $description . "...";
                                     }
                                 }
@@ -821,9 +833,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
          *
          * @since    1.6.0
          */
-        public function get_word_count(){
+        public function get_word_limit(){
 
-            return $this->word_count;
+            return $this->word_limit;
         }
 
         /**
@@ -831,9 +843,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
          *
          * @return  self
          */ 
-        public function set_word_count($word_count){
+        public function set_word_limit($word_count){
 
-            $this->word_count = $word_count;
+            $this->word_limit = $word_count;
             return $this;
         }
     }

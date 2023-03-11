@@ -60,13 +60,15 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional_Shortcodes' ) ) {
             $number_of_columns = $reviews->get_grid_columns();
             $number_of_reviews = $reviews->get_count();
             $screenname = $reviews->get_screenname();
+            $word_limit = $reviews->get_word_limit();
 
             // Define the default shortcode attributes.
             $default_attributes = array(
                 'layout' => $reviews_layout,
                 'columns' => $number_of_columns,
                 'count' => $number_of_reviews,
-                'screenname' => $screenname
+                'screenname' => $screenname,
+                'excerpt' => $word_limit
             );
 
             // If the $shortcode_attributes argument is not null...
@@ -80,10 +82,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional_Shortcodes' ) ) {
                 $number_of_columns = $shortcode_attributes[ 'columns' ];
                 $number_of_reviews = $shortcode_attributes[ 'count' ];
                 $screenname = $shortcode_attributes[ 'screenname' ];
+                $word_limit = $shortcode_attributes[ 'excerpt' ];
             }
 
+            echo "excerpt is " . $word_limit;
+
             // Pass the shortcode parameters and get the reviews from Zillow.
-            $output = $reviews->get_reviews_output( $reviews, $reviews_layout, $number_of_columns, $number_of_reviews, $screenname );
+            $output = $reviews->get_reviews_output( $reviews, $reviews_layout, $number_of_columns, $number_of_reviews, $screenname, $word_limit );
 
             // Return the output.
             return $output;

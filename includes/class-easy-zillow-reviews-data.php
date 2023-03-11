@@ -320,7 +320,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
          * @since     1.2.0
          * @return    string    The name of the plugin.
          */
-        public function get_reviews_output( $reviews, $layout, $cols, $number_of_reviews, String $screenname = null ) {
+        public function get_reviews_output( $reviews, String $layout, int $cols, int $number_of_reviews, String $screenname = null, int $word_limit = null ) {
     
             // If the number of reviews is more than 10...
             if( $number_of_reviews > 10 ){
@@ -340,7 +340,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
             }
             
             // Fetch reviews from Zillow
-            $reviews->fetch_reviews_from_zillow( $number_of_reviews, $screenname );
+            $reviews->fetch_reviews_from_zillow( $number_of_reviews, $screenname, $word_limit );
 
             // Render output
             if( $reviews -> get_has_reviews() ){

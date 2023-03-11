@@ -85,8 +85,6 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional_Shortcodes' ) ) {
                 $word_limit = $shortcode_attributes[ 'excerpt' ];
             }
 
-            echo "excerpt is " . $word_limit;
-
             // Pass the shortcode parameters and get the reviews from Zillow.
             $output = $reviews->get_reviews_output( $reviews, $reviews_layout, $number_of_columns, $number_of_reviews, $screenname, $word_limit );
 

@@ -173,7 +173,7 @@ const apis = zillow_data[0].available_apis;
     },
     wordLimit: {
       type: 'number',
-      default: parseInt(generalOptions.ezrwp_word_limit)
+      default: 750
     }
   },
   example: {
@@ -259,7 +259,7 @@ const apis = zillow_data[0].available_apis;
     const WordLimitControl = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.RangeControl, {
       beforeIcon: "arrow-left-alt2",
       afterIcon: "arrow-right-alt2",
-      label: "Excerpt Length",
+      label: "Excerpt Length (Word Limit)",
       value: wordLimit,
       onChange: wordLimit => props.setAttributes({
         wordLimit

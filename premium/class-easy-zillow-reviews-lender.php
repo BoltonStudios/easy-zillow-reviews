@@ -53,6 +53,15 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
          */
         private $company_name;
 
+        /**
+         * The review text word limit set by the user.
+         *
+         * @since    1.6.0
+         * @access   private
+         * @var      int   $word_limit
+         */
+        private $word_limit;
+
         // Constructor
         public function __construct(){
 
@@ -81,50 +90,71 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
          * @since    1.1.0
          * @param    $count     The number of reviews to fetch.
          */
-        public function fetch_reviews_from_zillow( $count ){
+        public function fetch_reviews_from_zillow( $count, String $screenname = null, int $word_limit = null ){
             
+            // Initialize variables.
             $zmpid = $this->get_zmpid();
             $nmlsid = $this->get_nmlsid();
             $company_name = $this->get_company_name();
             $company_name = str_replace( array("-", " "), "%20", $company_name ); // Encode space characters.
             $company_name = str_replace( "&", "%26", $company_name ); // Encode ampersand character.
+            $zillow_api_error = false;
 
-            // Contstruct the Zillow URL for an Individual Loan Officer.
+            // If the $word_limit argument is not null...
+            if( isset( $word_limit ) ){
+
+                // Assign the value of the $word_limit argument to the local $word_limit variable.
+                $word_limit = $word_limit;
+
+            } else{
+
+                // Assign the value of the word limit from the Settings page to the local word_limit variable.
+                $word_limit = $this->get_word_limit();
+            }
+
+            // Update the value of $word_limit for this Easy_Zillow_Reviews_Lender object.
+            $this->set_word_limit( $word_limit );
+
+            // Contstruct the Zillow URL for a Lender.
             $zillow_url = 'https://mortgageapi.zillow.com/zillowLenderReviews?partnerId='. $zmpid .'&nmlsId='.$nmlsid.'&reviewLimit='. $count;
 
-            // If the user set a Company Name, add it to the Zillow URL to fetch Company reviews.
-            if($company_name != ''){
+            // If the user set a Company Name...
+            if( $company_name != '' ){
+
+                // Add it to the Zillow URL to fetch Company reviews.
                 $zillow_url = $zillow_url . '&companyName=' . $company_name;
             }
             
             // Fetch data from Zillow API Network.
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_URL, $zillow_url);
-            $result = curl_exec($ch);
-            curl_close($ch);
-            $json = json_decode($result);
+            curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
+            curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+            curl_setopt( $ch, CURLOPT_URL, $zillow_url );
+            $result = curl_exec( $ch );
+            curl_close( $ch );
+            $json = json_decode( $result );
 
             // Check for errors
-            $zillow_api_error = false;
             if( isset( $json->error ) ){
+
+                // Update error flag.
                 $zillow_api_error = true;
             }
             $this->set_has_reviews( $zillow_api_error ? false : true );
 
             // Store Zillow data in this Easy_Zillow_Reviews_Data child object instance.
-            if($this->get_has_reviews()){
+            if( $this->get_has_reviews() ){
 
                 // Success
-                $this->set_url($json->profileURL);
-                $this->set_rating($json->rating);
-                $this->set_review_count($json->totalReviews);
-                $this->set_reviews($json->reviews);
+                $this->set_url( $json->profileURL );
+                $this->set_rating( $json->rating );
+                $this->set_review_count( $json->totalReviews );
+                $this->set_reviews( $json->reviews );
+
             } else{
 
                 // Error
-                $this->set_message($json->error);
+                $this->set_message( $json->error );
             }
         }
         
@@ -167,6 +197,38 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
             foreach( $this->reviews as $review ) :
                 $reviewer_name = $review->reviewerName->displayName;
                 $description = $review->content;
+
+                // If the $word_limit argument is not null...
+                if( isset( $word_limit ) ){
+    
+                    // Assign the value of the $word_limit argument to the local $word_limit variable.
+                    $word_limit = $word_limit;
+    
+                } else{
+    
+                    // Assign the value of the word limit from the Settings page to the local word_limit variable.
+                    $word_limit = $this->get_word_limit();
+                }
+
+                // If the user specified a word count limit...
+                if( isset( $word_limit ) ){
+
+                    // If the $word_count is less than the words in the review quotation...
+                    if( $word_limit < str_word_count( $description, 0 ) ){
+            
+                        /**
+                         * Truncate words in a string.
+                         * 
+                         * Citation
+                         * Title: "Change the number 3 to the number 20 below to get the first 20 words..."
+                         * Author: nonopolarity
+                         * Date: 06/08/2009
+                         * Availability: https://stackoverflow.com/a/965343
+                         */
+                        $description = preg_replace( '/((\w+\W*){' . ( $word_limit - 1 ) . '}(\w+))(.*)/', '${1}', $description ); 
+                        $description = $description . "...";
+                    }
+                }
 
                 // Check if these properties exist in the Zillow Reviews API response and store their values
                 $loan_service_provided = property_exists( $review, 'serviceProvided' ) ? $this->format_loan_service_provided( $review->serviceProvided ) : '';
@@ -450,9 +512,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                     $layout = isset( $attributes[ 'reviewsLayout' ] ) ? $attributes[ 'reviewsLayout' ] : $reviews->get_layout();
                     $cols = isset( $attributes[ 'gridColumns' ] ) ? $attributes[ 'gridColumns' ] : $reviews->get_grid_columns();
                     $count = isset( $attributes[ 'reviewsCount' ] ) ? $attributes[ 'reviewsCount' ] : $reviews->get_count();
+                    $word_limit = isset( $attributes[ 'wordLimit' ] ) ? $attributes[ 'wordLimit' ] : $reviews->get_word_limit();
                     
                     // Overwite the Gutenberg block output with lender reviews from this object instance.
-                    $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count );
+                    $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count, null, $word_limit );
                 }
             }
 
@@ -542,6 +605,27 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
         public function set_company_name($company_name){
 
             $this->company_name = $company_name;
+            return $this;
+        }
+        
+        /**
+         * Get the value of word_count
+         *
+         * @since    1.6.0
+         */
+        public function get_word_limit(){
+
+            return $this->word_limit;
+        }
+
+        /**
+         * Set the value of word_count
+         *
+         * @return  self
+         */ 
+        public function set_word_limit($word_count){
+
+            $this->word_limit = $word_count;
             return $this;
         }
     }

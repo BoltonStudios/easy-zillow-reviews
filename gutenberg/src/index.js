@@ -35,7 +35,7 @@ registerBlockType( 'boltonstudios/easy-zillow-reviews', {
         },
         wordLimit: {
             type: 'number',
-            default: parseInt( generalOptions.ezrwp_word_limit ),
+            default: 750
         }
     },
 	example: {
@@ -110,7 +110,7 @@ registerBlockType( 'boltonstudios/easy-zillow-reviews', {
         const WordLimitControl = <RangeControl
                                     beforeIcon="arrow-left-alt2"
                                     afterIcon="arrow-right-alt2"
-                                    label= 'Excerpt Length'
+                                    label= 'Excerpt Length (Word Limit)'
                                     value={ wordLimit }
                                     onChange={ wordLimit => props.setAttributes( { wordLimit } ) }
                                     min={ 20 }

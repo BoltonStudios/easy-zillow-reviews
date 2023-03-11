@@ -1,6 +1,6 @@
 {
   "name": "easy-zillow-reviews",
-  "version": "1.5.2",
+  "version": "1.6.0np",
   "description": "Display Zillow Reviews on your website",
   "main": "build/index.js",
   "scripts": {

@@ -32,6 +32,10 @@ registerBlockType( 'boltonstudios/easy-zillow-reviews', {
         reviewsCount: {
             type: 'number',
             default: parseInt( generalOptions.ezrwp_count ),
+        },
+        wordLimit: {
+            type: 'number',
+            default: parseInt( generalOptions.ezrwp_word_limit ),
         }
     },
 	example: {
@@ -39,7 +43,8 @@ registerBlockType( 'boltonstudios/easy-zillow-reviews', {
             reviewsType: 'professional',
             reviewsLayout: 'grid',
             gridColumns: 2,
-            reviewCount: 2
+            reviewCount: 2,
+            wordLimit: 750
 		},
 	},
     edit: function( props ) {
@@ -49,6 +54,7 @@ registerBlockType( 'boltonstudios/easy-zillow-reviews', {
         const columns = props.attributes.gridColumns;
         const count = props.attributes.reviewsCount;
         const type = props.attributes.reviewsType;
+        const wordLimit = props.attributes.wordLimit;
 
         const ReviewsControl = (apis) => {
 
@@ -100,6 +106,16 @@ registerBlockType( 'boltonstudios/easy-zillow-reviews', {
                                         min={ 1 }
                                         max={ 10 }
                                     />
+
+        const WordLimitControl = <RangeControl
+                                    beforeIcon="arrow-left-alt2"
+                                    afterIcon="arrow-right-alt2"
+                                    label= 'Excerpt Length'
+                                    value={ wordLimit }
+                                    onChange={ wordLimit => props.setAttributes( { wordLimit } ) }
+                                    min={ 20 }
+                                    max={ 750 }
+                                />
 
         // Append the grid class name to the reviews wrapper if the user selected the grid layout.
         function getWrapperLayoutClass( reviewsLayout, gridColumns ){
@@ -165,12 +181,13 @@ registerBlockType( 'boltonstudios/easy-zillow-reviews', {
                     { LayoutControl }
                     { GridControl( layout ) }
                     { ReviewsCountControl }
+                    { WordLimitControl }
                 </PanelBody>
             </InspectorControls>,
             <div className={ props.className }>
                 <div className={ "ezrwp-wrapper " + getWrapperLayoutClass( layout, columns ) }>
                     <div className="ezrwp-content">
-                        { getReviewPlaceholders( layout, columns, count ) }
+                        { getReviewPlaceholders( layout, columns, count, wordLimit ) }
                     </div>
                 </div>
             </div>

@@ -41,7 +41,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Gutenberg' ) ) {
          * @since    1.2.0  $attributes and $content passed from corresponding properties in gutenberg/src/index.js
          */
         function render_ezrwp_block( $attributes, $content ) {
-           //var_dump($this->get_zillow_data()[0]);
+            // var_dump($this->get_zillow_data());
             $output = null;
             $output = apply_filters( 'ezrwp_render_block', $output, $attributes );
             return $output;

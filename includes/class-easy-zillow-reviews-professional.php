@@ -693,9 +693,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $layout = isset( $attributes[ 'reviewsLayout' ] ) ? $attributes[ 'reviewsLayout' ] : $reviews->get_layout();
             $cols = isset( $attributes[ 'gridColumns' ] ) ? $attributes[ 'gridColumns' ] : $reviews->get_grid_columns();
             $count = isset( $attributes[ 'reviewsCount' ] ) ? $attributes[ 'reviewsCount' ] : $reviews->get_count();
+            $word_limit = isset( $attributes[ 'wordLimit' ] ) ? $attributes[ 'wordLimit' ] : $reviews->get_word_limit();
             
             // Overwite the Gutenberg block output with professional reviews from this object instance.
-            $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count );
+            $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count, null, $word_limit );
 
             // Return the updated output.
             return $output;

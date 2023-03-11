@@ -5,7 +5,7 @@ Tags: zillow, reviews, gutenberg, block, real estate, lender
 Requires at least: 4.0.0
 Tested up to: 6.1.1
 Requires PHP: 5.4
-Stable tag: 1.5.3
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,12 +49,13 @@ If you found this free plugin helpful, you can support the developer by upgradin
 
 = Optional Shortcode Parameters =
 
-    [ez-zillow-reviews layout="grid" columns="2" count="4" screenname="jsmith"]
+    [ez-zillow-reviews layout="grid" columns="2" count="4" screenname="jsmith" excerpt="50"]
 
 * layout..."list" or "grid".
 * columns...A number between 1 and 6.
 * count...A number between 1 and 10.
 * screenname...The screenname that appears in your Zillow profile link.
+* excerpt...A number between 20 and 750. The maximum length of each review (word limit).
 
 == Installation ==
 
@@ -73,6 +74,10 @@ If you found this free plugin helpful, you can support the developer by upgradin
 4. Settings
 
 == Changelog ==
+
+= 1.6.0 =
+* Date Updated: 2023-03-11
+* New Feature: Added option to specify an excerpt length (word limit).
 
 = 1.5.3 =
 * Date Updated: 2023-03-06

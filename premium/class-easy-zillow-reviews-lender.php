@@ -209,25 +209,21 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                     // Assign the value of the word limit from the Settings page to the local word_limit variable.
                     $word_limit = $this->get_word_limit();
                 }
-
-                // If the user specified a word count limit...
-                if( isset( $word_limit ) ){
-
-                    // If the $word_count is less than the words in the review quotation...
-                    if( $word_limit < str_word_count( $description, 0 ) ){
-            
-                        /**
-                         * Truncate words in a string.
-                         * 
-                         * Citation
-                         * Title: "Change the number 3 to the number 20 below to get the first 20 words..."
-                         * Author: nonopolarity
-                         * Date: 06/08/2009
-                         * Availability: https://stackoverflow.com/a/965343
-                         */
-                        $description = preg_replace( '/((\w+\W*){' . ( $word_limit - 1 ) . '}(\w+))(.*)/', '${1}', $description ); 
-                        $description = $description . "...";
-                    }
+                
+                // If the $word_count is less than the words in the review quotation...
+                if( $word_limit < str_word_count( $description, 0 ) ){
+        
+                    /**
+                     * Truncate words in a string.
+                     * 
+                     * Citation
+                     * Title: "Change the number 3 to the number 20 below to get the first 20 words..."
+                     * Author: nonopolarity
+                     * Date: 06/08/2009
+                     * Availability: https://stackoverflow.com/a/965343
+                     */
+                    $description = preg_replace( '/((\w+\W*){' . ( $word_limit - 1 ) . '}(\w+))(.*)/', '${1}', $description ); 
+                    $description = $description . "...";
                 }
 
                 // Check if these properties exist in the Zillow Reviews API response and store their values

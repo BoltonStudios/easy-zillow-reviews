@@ -161,8 +161,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
                 // Assign the value of the word limit from the Settings page to the local word_limit variable.
                 $word_limit = $this->get_word_limit();
-
             }
+
+            // Update the value of $word_limit for this Easy_Zillow_Reviews_Professional object.
+            $this->set_word_limit( $word_limit );
             
             // Strip spaces from the screenname.
             $screenname = str_replace( $disallowed_characters, "%20", $screenname );
@@ -298,26 +300,6 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                                 $city = isset( $location[ 1 ] ) ? $location[ 1 ] : "";
                                 $city .= isset( $location[ 2 ] ) ? ", " . $location[ 2 ] : "";
                                 $summary = lcfirst( $zillow_reviews_data[ $i ]->ServiceProviderDesc );
-
-                                // If the user specified a word count limit...
-                                if( isset( $word_limit ) ){
-
-                                    // If the $word_count is less than the words in the review quotation...
-                                    if( $word_limit < str_word_count( $description, 0 ) ){
-                            
-                                        /**
-                                         * Truncate words in a string.
-                                         * 
-                                         * Citation
-                                         * Title: "Change the number 3 to the number 20 below to get the first 20 words..."
-                                         * Author: nonopolarity
-                                         * Date: 06/08/2009
-                                         * Availability: https://stackoverflow.com/a/965343
-                                         */
-                                        $description = preg_replace( '/((\w+\W*){' . ( $word_limit - 1 ) . '}(\w+))(.*)/', '${1}', $description ); 
-                                        $description = $description . "...";
-                                    }
-                                }
                                 
                                 // Create a new Easy_Zillow_Reviews_Review object.
                                 $review = new Easy_Zillow_Reviews_Review(
@@ -531,10 +513,42 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 $star_rating_html = "";
                 $summary = lcfirst( $review->get_summary() );
                 $reviewer_summary = ( !$hide_reviewer_summary ) ? '<span class="review-summary">who '. $summary .'</span>' : '';
+                $excerpt = "";
                 $description = $review->get_description();
-                $review_quote = '<blockquote>'. $description .'</blockquote>';
+                $read_more_link = '<span class="ezrwp-excerpt-break">... <button name="read more" id="ezrwp-read-more-'. $i .'" onclick="jQuery(\'#ezrwp-excerpt-'. $i .'\').attr(\'style\',\'display: none\');" type="button">Continue</button></span>';
                 $before_review = '<div class="col ezrwp-col">';
                 $after_review = '</div>';
+
+                // If the $word_limit argument is not null...
+                if( isset( $word_limit ) ){
+    
+                    // Assign the value of the $word_limit argument to the local $word_limit variable.
+                    $word_limit = $word_limit;
+    
+                } else{
+    
+                    // Assign the value of the word limit from the Settings page to the local word_limit variable.
+                    $word_limit = $this->get_word_limit();
+                }
+                
+                // If the $word_count is less than the words in the review quotation...
+                if( isset( $word_limit ) && $word_limit < str_word_count( $description, 0 ) ){
+        
+                    /**
+                     * Truncate words in a string.
+                     * 
+                     * Citation
+                     * Title: "Change the number 3 to the number 20 below to get the first 20 words..."
+                     * Author: nonopolarity
+                     * Date: 06/08/2009
+                     * Availability: https://stackoverflow.com/a/965343
+                     */
+                    $excerpt = preg_replace( '/((\w+\W*){' . ( $word_limit - 1 ) . '}(\w+))(.*)/', '${1}', $description ); 
+                    $excerpt = '<span class="ezrwp-excerpt-'. $i .'">'. $excerpt . '</span>' . $read_more_link;
+                }
+
+                //
+                $review_quote = '<blockquote>'. $excerpt . $description .'</blockquote>';
 
                 // If the user did not opt to hide the stars...
                 if( !$hide_stars ){

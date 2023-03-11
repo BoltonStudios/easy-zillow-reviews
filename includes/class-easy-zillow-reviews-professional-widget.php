@@ -146,7 +146,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional_Widget' ) ) {
             $layout = ! empty( $instance['layout'] ) ? $instance['layout'] : esc_html__( '', 'text_domain' );
             $cols = ! empty( $instance['cols'] ) ? $instance['cols'] : esc_html__( '', 'text_domain' );
             ?>
-            <p>Add your Zillow Web Services ID and Screenname in Settings -> Zillow Reviews.</p>
+            <p>Add your Bridge API Access Token and Screenname in Settings -> Zillow Reviews.</p>
             <p>
                 <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>">
                     <?php esc_attr_e( 'Title:', 'text_domain' ); ?>

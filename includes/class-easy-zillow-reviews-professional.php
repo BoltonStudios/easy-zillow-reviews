@@ -301,7 +301,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
                                 // If the user specified a word count limit...
                                 if( isset( $word_limit ) && $word_limit > 0 ){
-echo "isset( \$word_limit ) && \$word_limit > 0";
+
                                     // If the $word_count is less than the words in the review quotation...
                                     if( $word_limit < str_word_count( $description, 0 ) ){
                             

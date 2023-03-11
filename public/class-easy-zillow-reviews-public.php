@@ -35,24 +35,6 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Public' ) ) {
          * @var      string    $version    The current version of this plugin.
          */
         private $version;
-        
-        /**
-         * 
-         *
-         * @since    1.1.5
-         * @access   protected
-         * @var      int   $quote_font_size  
-         */
-        protected $quote_font_size;
-        
-        /**
-         * 
-         *
-         * @since    1.1.5
-         * @access   protected
-         * @var      int   $reviewer_description_font_size  
-         */
-        protected $reviewer_description_font_size;
 
         /**
          * Initialize the class and set its properties.
@@ -111,81 +93,6 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Public' ) ) {
 
             wp_enqueue_script( $this->plugin_slug, plugin_dir_url( __FILE__ ) . 'js/easy-zillow-reviews-public.js', array( 'jquery' ), $this->version, false );
 
-        }
-
-        /**
-         * 
-         *
-         * @since    1.1.5
-         */
-        public function generate_inline_styles(){
-
-            $quote_font_size = $this->get_quote_font_size();
-            $reviewer_description_font_size = $this->get_reviewer_description_font_size();
-            $quote_styles = '';
-
-            // Styles
-            if( $quote_font_size != null && $quote_font_size != '' ){
-                $quote_styles = '
-                body .ezrwp-wrapper .ezrwp-content blockquote,
-                body .entry-content .ezrwp-wrapper .ezrwp-content blockquote{
-                    font-size: ' . $quote_font_size . 'px;
-                }
-                ';
-            }
-            if( $reviewer_description_font_size != null && $reviewer_description_font_size != '' ){
-                $reviewer_description_font_size = '
-                body .ezrwp-wrapper .ezrwp-content .ezrwp-reviewer p,
-                body .ezrwp-wrapper .ezrwp-content .ezrwp-reviewer *{
-                    font-size: '. $reviewer_description_font_size .'px;
-                }
-                ';
-            }
-            $inline_styles = '';
-            $inline_styles .= $quote_styles;
-            $inline_styles .= $reviewer_description_font_size;
-
-            return $inline_styles;
-            
-        }
-        /**
-         * Get the value of $quote_font_size
-         */ 
-        public function get_quote_font_size()
-        {
-                return $this->quote_font_size;
-        }
-
-        /**
-         * Set the value of $quote_font_size
-         *
-         * @return  self
-         */ 
-        public function set_quote_font_size($quote_font_size)
-        {
-                $this->quote_font_size = $quote_font_size;
-
-                return $this;
-        }
-
-        /**
-         * Get the value of $reviewer_description_font_size
-         */ 
-        public function get_reviewer_description_font_size()
-        {
-                return $this->reviewer_description_font_size;
-        }
-
-        /**
-         * Set the value of $reviewer_description_font_size
-         *
-         * @return  self
-         */ 
-        public function set_reviewer_description_font_size($reviewer_description_font_size)
-        {
-                $this->reviewer_description_font_size = $reviewer_description_font_size;
-
-                return $this;
         }
     }
 }

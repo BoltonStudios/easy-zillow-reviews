@@ -175,8 +175,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 // Fetch data from Bridge.
 
                 // Construct the Bridge URL for a Zillow Professional.
-                $bridge_account_url = 'https://api.bridgedataoutput.com/api/v2/reviews/reviewee?access_token='. $bridge_token .'&RevieweeScreenName='. $screenname;
-                
+                $bridge_account_url = 'https://api.bridgedataoutput.com/api/v2/reviews/reviewee?access_token=';
+                $bridge_account_url .= $bridge_token .'&RevieweeScreenName='. $screenname;
+
                 // Fetch data from the Zillow API Network.
                 $ch = curl_init();
                 curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
@@ -233,7 +234,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                     $reviewee_id = $bridge_account_data->AccountIdReviewee;
 
                     // Construct the Bridge URL for the Zillow Professional's reviews.
-                    $bridge_reviews_url = 'https://api.bridgedataoutput.com/api/v2/OData/reviews/Review?access_token='. $bridge_token .'&$filter=AccountIdReviewee%20eq%20%27'. $reviewee_id . '%27';
+                    $bridge_reviews_url = 'https://api.bridgedataoutput.com/api/v2/OData/reviews/Review?access_token=';
+                    $bridge_reviews_url .= $bridge_token .'&$filter=AccountIdReviewee%20eq%20%27'. $reviewee_id . '%27';
 
                     // Fetch data from the Zillow API Network.
                     $ch = curl_init();
@@ -281,8 +283,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                         // $sale_count = $bridge_account_data->;
                         // $profile_image_url = $bridge_account_data->;
 
-                        // $zillow_reviews_data must be an array or an object that 
-                        // implements Countable.
+                        // $zillow_reviews_data must be an array or an object that implements Countable.
                         if( gettype( $zillow_reviews_data ) == 'array' ){
 
                             // Count the reviews available in the API response.
@@ -515,9 +516,14 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 $reviewer_summary = ( !$hide_reviewer_summary ) ? '<span class="review-summary">who '. $summary .'</span>' : '';
                 $excerpt = "";
                 $description = $review->get_description();
-                $read_more_link = '<span class="ezrwp-excerpt-break">... <button name="read more" id="ezrwp-read-more-'. $i .'" onclick="jQuery(\'#ezrwp-excerpt-'. $i .'\').attr(\'style\',\'display: none\');" type="button">Continue</button></span>';
                 $before_review = '<div class="col ezrwp-col">';
                 $after_review = '</div>';
+
+                // We will hide the Read More link with CSS to allow it to degrade gracefully if the user disables JavaScript.
+                // Otherwise, we will use JavaScript to display the button when the page loads.
+                $read_more_link = '<span class="ezrwp-read-more" id="ezrwp-read-more-'. $i .'" style="display: none;">... ';
+                $read_more_link .= '<button name="read more" type="button" onclick="toggleReadMore( '. $i .' )">Continue</button>';
+                $read_more_link .= '</span>';
 
                 // If the $word_limit argument is not null...
                 if( isset( $word_limit ) ){
@@ -530,9 +536,11 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                     // Assign the value of the word limit from the Settings page to the local word_limit variable.
                     $word_limit = $this->get_word_limit();
                 }
+
+                $word_count = str_word_count( $description, 0 );
                 
                 // If the $word_count is less than the words in the review quotation...
-                if( isset( $word_limit ) && $word_limit < str_word_count( $description, 0 ) ){
+                if( isset( $word_limit ) && $word_limit < $word_count ){
         
                     /**
                      * Truncate words in a string.
@@ -543,12 +551,58 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                      * Date: 06/08/2009
                      * Availability: https://stackoverflow.com/a/965343
                      */
-                    $excerpt = preg_replace( '/((\w+\W*){' . ( $word_limit - 1 ) . '}(\w+))(.*)/', '${1}', $description ); 
-                    $excerpt = '<span class="ezrwp-excerpt-'. $i .'">'. $excerpt . '</span>' . $read_more_link;
+
+                    // The text excerpt.
+                    $excerpt .= preg_replace( '/((\w+\W*){' . ( $word_limit - 1 ) . '}(\w+))(.*)/', '${1}', $description );
+                    
+                    // The rest of the text.
+                    $excerpt_after = '<span class="ezrwp-toggle" id="ezrwp-toggle-'. $i .'">';
+                    $excerpt_after .= preg_replace( '/((\w+\W*){' . ( $word_limit - 1 ) . '}(\w+))(.*)/', '${4}', $description ); 
+                    $excerpt_after .= '</span>';
+
+                    // Reconstruct the review text using the excerpt.
+                    $description = $excerpt . $excerpt_after . $read_more_link;
+
+                    $description .= '
+                        <script>
+
+                            // Check if the document is ready.
+                            jQuery( document ).ready( function(){
+
+                                // For each "read more" element, i.e., review...
+                                jQuery( ".ezrwp-read-more" ).each( function(){
+
+                                    // Display the Read More button.
+                                    jQuery( this ).show();
+                                });
+
+                                // For each review (toggle element).
+                                jQuery( ".ezrwp-toggle" ).each( function(){
+
+                                    // Hide the non-excerpt text.
+                                    jQuery( this ).hide();
+                                });
+                            });
+
+                            // Define the onclick action event for the Read More button.
+                            function toggleReadMore( id ){
+
+                                // Get the element, i.e., the review text, associated with the clicked button.
+                                jQuery( "#ezrwp-toggle-" + id ).each( function( id ){
+
+                                    // Toggle its visibility.
+                                    jQuery( this ).toggle();
+                                });
+
+                                // Hide the Read More button.
+                                jQuery( "#ezrwp-read-more-" + id ).hide();
+                            }
+                        </script>
+                    ';
                 }
 
                 //
-                $review_quote = '<blockquote>'. $excerpt . $description .'</blockquote>';
+                $review_quote = '<blockquote>'. $description . '</blockquote>';
 
                 // If the user did not opt to hide the stars...
                 if( !$hide_stars ){

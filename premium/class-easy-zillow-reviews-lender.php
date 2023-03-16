@@ -223,17 +223,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                 }
 
                 $word_count = str_word_count( $description, 0 );
-
-                echo "For wrapper ID " . $wrapper_id . "...<br>";
-                echo "word limit is " . $word_limit . "<br>";
-                echo "word count is " . $word_count . "<br>";
                 
                 // If the $word_count is less than the words in the review quotation...
                 if( isset( $word_limit ) && $word_limit < $word_count ){
-        echo "word limit is set and word limit <  word count <br><br>";
-
-        echo "description is " . $description . "<br><br>";
-        echo "excerpt is " .preg_replace( '/((\w+\W*){' . 20 . '}(\w+))(.*)/', '${1}', $description ) . "<br><br>";
+                    
                     /**
                      * Truncate words in a string.
                      * 

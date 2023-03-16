@@ -119,14 +119,29 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
          * @var      string   $profile_card
          */
         private $profile_card;
+        
+        /**
+         * An ID to tag this HTML wrapper for JavaScript targeting.
+         * 
+         * @since    1.6.0
+         * @access   private
+         * @var      int   $wrapper_id
+         */
+        private $wrapper_id;
 
 
         // Constructor
         public function __construct(){
+
+            // Run the initalization functions.
+            $this->init();
         }
 
         // Methods
         public function init(){
+
+            // Create an identifier for this HTML wrapper.
+            $this->wrapper_id = rand();
         }
 
         /**
@@ -142,6 +157,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
             $profile_url = $this->get_profile_url();
             $review_count = $this->get_review_count();
             $profile_card = $this->get_profile_card();
+            $wrapper_id = $this->get_wrapper_id();
 
             // Layout Options
             $grid_columns_class = ($layout == "grid" && $grid_columns > 0) 
@@ -183,7 +199,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
             }
             
             $output = sprintf(
-                '<div class="ezrwp-wrapper ezrwp-%1$s %2$s">
+                '<div id="ezrwp-wrapper-%8$s" class="ezrwp-wrapper ezrwp-%1$s %2$s">
                     <div class="ezrwp-content">
                         %3$s %4$s %5$s %6$s %7$s
                     </div>
@@ -194,7 +210,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
                 $profile_card,
                 $view_all_link,
                 $zillow_logo,
-                $mandatory_disclaimer
+                $mandatory_disclaimer,
+                $wrapper_id
             );
 
             return $output;
@@ -451,6 +468,26 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
         public function set_profile_card($profile_card)
         {
                 $this->profile_card = $profile_card;
+
+                return $this;
+        }
+
+        /**
+         * Get the value of $wrapper_id
+         */ 
+        public function get_wrapper_id()
+        {
+                return $this->wrapper_id;
+        }
+
+        /**
+         * Set the value of $wrapper_id
+         *
+         * @return  self
+         */ 
+        public function set_wrapper_id($wrapper_id)
+        {
+                $this->wrapper_id = $wrapper_id;
 
                 return $this;
         }

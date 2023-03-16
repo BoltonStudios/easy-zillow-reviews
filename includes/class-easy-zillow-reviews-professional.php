@@ -503,6 +503,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $template->set_profile_url( $profile_url );
             $template->set_review_count( $review_count );
             $template->set_profile_card( $profile_card );
+            $wrapper_id = $template->get_wrapper_id();
             
             // Iterate over reviews.
             foreach( $this->reviews as $review ) :
@@ -522,7 +523,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 // We will hide the Read More link with CSS to allow it to degrade gracefully if the user disables JavaScript.
                 // Otherwise, we will use JavaScript to display the button when the page loads.
                 $read_more_link = '<span class="ezrwp-read-more" id="ezrwp-read-more-'. $i .'" style="display: none;">... ';
-                $read_more_link .= '<button name="read more" type="button" onclick="toggleReadMore( '. $i .' )">Continue</button>';
+                $read_more_link .= '<button name="read more" type="button" onclick="ezrwpToggleReadMore( '. $wrapper_id .', '. $i .' )">Continue</button>';
                 $read_more_link .= '</span>';
 
                 // If the $word_limit argument is not null...
@@ -562,43 +563,6 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
                     // Reconstruct the review text using the excerpt.
                     $description = $excerpt . $excerpt_after . $read_more_link;
-
-                    $description .= '
-                        <script>
-
-                            // Check if the document is ready.
-                            jQuery( document ).ready( function(){
-
-                                // For each "read more" element, i.e., review...
-                                jQuery( ".ezrwp-read-more" ).each( function(){
-
-                                    // Display the Read More button.
-                                    jQuery( this ).show();
-                                });
-
-                                // For each review (toggle element).
-                                jQuery( ".ezrwp-toggle" ).each( function(){
-
-                                    // Hide the non-excerpt text.
-                                    jQuery( this ).hide();
-                                });
-                            });
-
-                            // Define the onclick action event for the Read More button.
-                            function toggleReadMore( id ){
-
-                                // Get the element, i.e., the review text, associated with the clicked button.
-                                jQuery( "#ezrwp-toggle-" + id ).each( function( id ){
-
-                                    // Toggle its visibility.
-                                    jQuery( this ).toggle();
-                                });
-
-                                // Hide the Read More button.
-                                jQuery( "#ezrwp-read-more-" + id ).hide();
-                            }
-                        </script>
-                    ';
                 }
 
                 //

@@ -29,4 +29,40 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+    // Check if the document is ready.
+    $( function() {
+
+        // For each "read more" element, i.e., review...
+        $( ".ezrwp-read-more" ).each( function(){
+
+            // Display the Read More button.
+            $( this ).show();
+        });
+
+        // For each review (toggle element).
+        $( ".ezrwp-toggle" ).each( function(){
+
+            // Hide the non-excerpt text.
+            $( this ).hide();
+        });
+    });
+
 })( jQuery );
+
+// Define the onclick action event for the Read More button.
+function ezrwpToggleReadMore( wrapperId, reviewId ){
+
+    // Define targets.
+    var textToggle = '#ezrwp-wrapper-' + wrapperId + ' #ezrwp-toggle-' + reviewId;
+    var buttonToggle = '#ezrwp-wrapper-' + wrapperId + ' #ezrwp-read-more-' + reviewId;
+
+    // Get the element, i.e., the review text, associated with the clicked button.
+    $( textToggle ).each( function(){
+
+        // Toggle its visibility.
+        $( this ).toggle();
+    });
+
+    // Hide the Read More button.
+    $( buttonToggle ).hide();
+}

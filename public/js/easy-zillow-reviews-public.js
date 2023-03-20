@@ -54,7 +54,8 @@ function ezrwpToggleReadMore( wrapperId, reviewId ){
 
     // Define targets.
     var textToggle = '#ezrwp-wrapper-' + wrapperId + ' #ezrwp-toggle-' + reviewId;
-    var buttonToggle = '#ezrwp-wrapper-' + wrapperId + ' #ezrwp-read-more-' + reviewId;
+    var buttonToggle = $( '#ezrwp-wrapper-' + wrapperId + ' #ezrwp-read-more-' + reviewId ).children( "button" );
+    var buttonToggleText = buttonToggle.html();
 
     // Get the element, i.e., the review text, associated with the clicked button.
     $( textToggle ).each( function(){
@@ -63,6 +64,15 @@ function ezrwpToggleReadMore( wrapperId, reviewId ){
         $( this ).toggle();
     });
 
-    // Hide the Read More button.
-    $( buttonToggle ).hide();
+    // If the button says "Continue"...
+    if( buttonToggleText == "Continue" ){
+
+        // Change the button to "Less".
+        $( buttonToggle ).html( "Less" )
+    } else{
+
+        // Otherwise, change the button to "Continue".
+        $( buttonToggle ).html( "Continue" )
+    }
+    
 }

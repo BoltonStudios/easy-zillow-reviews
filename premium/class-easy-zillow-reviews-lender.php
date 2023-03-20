@@ -199,10 +199,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
 
                 // Update local variables.
                 $reviewer_name = $review->reviewerName->displayName;
-                $description = $review->content;
                 $excerpt = "";
                 $before_review = '<div class="col ezrwp-col">';
                 $after_review = '</div>';
+                $description = $review->content;
+
+                // Replace \n with a space.
+                $description = trim( preg_replace('/\s\s+/', ' ', $description ) );
 
                 // We will hide the Read More link with CSS to allow it to degrade gracefully if the user disables JavaScript.
                 // Otherwise, we will use JavaScript to display the button when the page loads.
@@ -290,8 +293,14 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                 $reviews_output .= $reviewer_info;
                 $reviews_output .= $after_review;
 
+                // Increment the loop counter.
                 $i++;
+
+                // If we have iterated over the loop for as many columns as there are
+                // in the $number_cols parameter...
                 if( $i % $number_cols == 0 ){
+
+                    // Ensure the reviews wrap to a new line (row).
                     $reviews_output .= '<div style="clear:both"></div>';
                 }
             endforeach;

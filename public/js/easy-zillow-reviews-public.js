@@ -54,6 +54,7 @@ function ezrwpToggleReadMore( wrapperId, reviewId ){
 
     // Define targets.
     var textToggle = '#ezrwp-wrapper-' + wrapperId + ' #ezrwp-toggle-' + reviewId;
+    var ellipsis =  $( '#ezrwp-wrapper-' + wrapperId + ' #ezrwp-read-more-' + reviewId ).children( ".ellipsis" );
     var buttonToggle = $( '#ezrwp-wrapper-' + wrapperId + ' #ezrwp-read-more-' + reviewId ).children( "button" );
     var buttonToggleText = buttonToggle.html();
 
@@ -62,6 +63,9 @@ function ezrwpToggleReadMore( wrapperId, reviewId ){
 
         // Toggle its visibility.
         $( this ).toggle();
+
+        // Toggle the ellipsis visibility.
+        ellipsis.toggle();
     });
 
     // If the button says "Continue"...

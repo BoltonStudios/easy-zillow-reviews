@@ -68,14 +68,14 @@ function ezrwpToggleReadMore( wrapperId, reviewId ){
         ellipsis.toggle();
     });
 
-    // If the button says "Continue"...
+    // If the button text says "Continue"...
     if( buttonToggleText == "More" ){
 
-        // Change the button to "Less".
+        // Change the button text to "Less".
         $( buttonToggle ).html( "Less" )
     } else{
 
-        // Otherwise, change the button to "More".
+        // Otherwise, change the button text to "More".
         $( buttonToggle ).html( "More" )
     }
     

@@ -525,8 +525,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
                 // We will hide the Read More link with CSS to allow it to degrade gracefully if the user disables JavaScript.
                 // Otherwise, we will use JavaScript to display the button when the page loads.
-                $read_more_link = '<span class="ezrwp-read-more" id="ezrwp-read-more-'. $i .'" style="display: none;"><span class="ellipsis">...</span> ';
-                $read_more_link .= '<button name="read more" type="button" onclick="ezrwpToggleReadMore( '. $wrapper_id .', '. $i .' )">Continue</button>';
+                $read_more_link = '<span class="ezrwp-read-more" id="ezrwp-read-more-'. $i .'" style="display: none;"><span class="ellipsis">...</span>';
+                $read_more_link .= '<button name="read more" type="button" onclick="ezrwpToggleReadMore( '. $wrapper_id .', '. $i .' )">More</button>';
                 $read_more_link .= '</span>';
 
                 // If the $word_limit argument is not null...

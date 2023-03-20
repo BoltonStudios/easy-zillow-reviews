@@ -69,14 +69,14 @@ function ezrwpToggleReadMore( wrapperId, reviewId ){
     });
 
     // If the button says "Continue"...
-    if( buttonToggleText == "Continue" ){
+    if( buttonToggleText == "More" ){
 
         // Change the button to "Less".
         $( buttonToggle ).html( "Less" )
     } else{
 
-        // Otherwise, change the button to "Continue".
-        $( buttonToggle ).html( "Continue" )
+        // Otherwise, change the button to "More".
+        $( buttonToggle ).html( "More" )
     }
     
 }

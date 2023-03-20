@@ -520,6 +520,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 $before_review = '<div class="col ezrwp-col">';
                 $after_review = '</div>';
 
+                // Replace \n with a space.
+                $description = trim( preg_replace('/\s\s+/', ' ', $description ) );
+
                 // We will hide the Read More link with CSS to allow it to degrade gracefully if the user disables JavaScript.
                 // Otherwise, we will use JavaScript to display the button when the page loads.
                 $read_more_link = '<span class="ezrwp-read-more" id="ezrwp-read-more-'. $i .'" style="display: none;">... ';

@@ -82,7 +82,7 @@ body .ezrwp-wrapper .ezrwp-content blockquote cite {
 body .ezrwp-wrapper .ezrwp-read-more button {
   color: #0d6efd;
   background-color: #ffffff;
-  border-color: #f8f9fa;
+  border-color: #e2e6ea;
   font-weight: 400;
   text-align: center;
   white-space: nowrap;
@@ -91,13 +91,15 @@ body .ezrwp-wrapper .ezrwp-read-more button {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  border: 1px solid transparent;
-  padding: 0.05rem 0.3rem;
-  font-size: 0.8rem;
+  border: 1px solid #e2e6ea;
+  margin: 0 0 0 2px;
+  padding: 0 0.3rem;
+  font-size: 9.75pt;
   line-height: 1.5;
   border-radius: 0.25rem;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+body .ezrwp-wrapper .ezrwp-read-more button.open,
 body .ezrwp-wrapper .ezrwp-read-more button:hover {
   color: #212529;
   background-color: #e2e6ea;

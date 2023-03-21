@@ -66,6 +66,9 @@ function ezrwpToggleReadMore( wrapperId, reviewId ){
 
         // Toggle the ellipsis visibility.
         ellipsis.toggle();
+
+        // Toggle the button's "open" class.
+        buttonToggle.toggleClass( 'open' );
     });
 
     // If the button text says "Continue"...

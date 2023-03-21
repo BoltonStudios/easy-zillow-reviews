@@ -80,6 +80,7 @@ If you found this free plugin helpful, you can support the developer by upgradin
 * New Feature: Added option to set an excerpt length (word limit).
 * Bug Fix: Fixed bug that caused location text to appear blank or in lowercase.
 * Bug Fix: Fixed CSS bug that caused elements to overlap in WordPress blocks.
+* Updated @wordpress/scripts Gutenberg dependency package to v26.0.0.
 
 = 1.5.3 =
 * Date Updated: 2023-03-06

@@ -78,7 +78,8 @@ If you found this free plugin helpful, you can support the developer by upgradin
 = 1.6.0 =
 * Date Updated: 2023-03-21
 * New Feature: Added option to set an excerpt length (word limit).
-* Bug Fix: Fixed bug that sometimes caused location text to appear blank or in lowercase.
+* Bug Fix: Fixed bug that caused location text to appear blank or in lowercase.
+* Bug Fix: Fixed CSS bug that caused elements to overlap in WordPress blocks.
 
 = 1.5.3 =
 * Date Updated: 2023-03-06

@@ -1,13 +1,13 @@
 === Easy Zillow Reviews ===
 Contributors: boltonstudios
-Donate link: http://ko-fi.com/boltonstudios
+Donate link: https://ko-fi.com/boltonstudios
 Tags: zillow, reviews, gutenberg, block, real estate, lender
 Requires at least: 4.0.0
 Tested up to: 6.1.1
 Requires PHP: 5.4
 Stable tag: 1.6.0
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Display reviews from Zillow on your website.
 

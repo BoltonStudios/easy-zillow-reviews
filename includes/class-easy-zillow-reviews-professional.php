@@ -298,8 +298,23 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                                 $date = $zillow_reviews_data[ $i ]->ReviewDate;
                                 $rating = floatval( $zillow_reviews_data[ $i ]->Rating );
                                 $location = explode( ",", $zillow_reviews_data[ $i ]->FreeFormLocation );
-                                $city = isset( $location[ 1 ] ) ? $location[ 1 ] : "";
-                                $city .= isset( $location[ 2 ] ) ? ", " . $location[ 2 ] : "";
+                                $city = isset( $location[ 1 ] ) ? mb_convert_case(  $location[ 1 ], MB_CASE_TITLE, "UTF-8") : "";
+                                $state = isset( $location[ 2 ] ) ? ", " . strtoupper( $location[ 2 ] ) : ""; 
+
+                                // If the "city" is *not* empty but the "state" is empty...
+                                if( $city != "" && $state == "" ){
+
+                                    // Assume the "city" is the two-level state code
+                                    // and change the string case to all upperase.
+                                    $city = strtoupper( $city );
+
+                                } else{
+
+                                    // Otherwise, concatenate the city and state text.
+                                    $city = $city . $state;
+                                }
+
+                                // Get the service desription, e.g., "helped me buy home".
                                 $summary = lcfirst( $zillow_reviews_data[ $i ]->ServiceProviderDesc );
                                 
                                 // Create a new Easy_Zillow_Reviews_Review object.
@@ -448,7 +463,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
             // Pass data from Zillow to this class instance.
             $this->set_message( $message );
-            $this->set_has_reviews( ($status_code != 200 && $status_code != 0 ) ? false : true );
+            $this->set_has_reviews( ( $status_code != 200 && $status_code != 0 ) ? false : true );
 
             // If the API returned reviews...
             if( $this->get_has_reviews() ){

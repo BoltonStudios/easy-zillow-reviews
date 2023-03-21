@@ -76,8 +76,9 @@ If you found this free plugin helpful, you can support the developer by upgradin
 == Changelog ==
 
 = 1.6.0 =
-* Date Updated: 2023-03-11
-* New Feature: Added option to specify an excerpt length (word limit).
+* Date Updated: 2023-03-21
+* New Feature: Added option to set an excerpt length (word limit).
+* Bug Fix: Fixed bug that sometimes caused location text to appear blank or in lowercase.
 
 = 1.5.3 =
 * Date Updated: 2023-03-06

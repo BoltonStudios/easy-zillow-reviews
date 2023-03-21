@@ -90,14 +90,26 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
                     $summary = "bought a home";
                     break;
 
+                case "showed me homes" :
+                    
+                    $summary = "shopped for a new home";
+                    break;
+
                 default:
                 
                     // Do not adjust the summary parameter value.
                     break;
             }
 
+            // If the city property is not blank...
+            if( $city != '' ){
+
+                // Add the city to the local summary text.
+                $summary .= ' in ' . $city;
+            }
+
             // Update the summary instance variable.
-            $this->summary = $summary .= ' in ' . $city . '.';
+            $this->summary = $summary .= '.';
         }
 
         // Methods

@@ -177,7 +177,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                     <strong style="font-size: 14px">Shortcode</strong><br/>[ez-zillow-reviews]
                 </p>
                 <p id="<?php echo esc_attr( $args['id'] ); ?>-3">
-                    Example shortcode with overrides:<br />[ez-zillow-reviews layout="grid" columns="2" count="4" screenname="jsmith"]
+                    Example shortcode with overrides:<br />[ez-zillow-reviews columns="2" count="4" excerpt="30" layout="grid" screenname="jsmith"]
                 </p>
                 <?php
             }

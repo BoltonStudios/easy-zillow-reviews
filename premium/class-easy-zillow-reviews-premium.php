@@ -96,7 +96,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Premium' ) ) {
                     <strong style="font-size: 14px">Shortcode</strong><br/>[ez-zillow-lender-reviews]
                 </p>
                 <p id="'. $id['id'] .'-3">
-                    Example shortcode with overrides:<br />[ez-zillow-lender-reviews layout="grid" columns="2" count="4"]
+                    Example shortcode with overrides:<br />[ez-zillow-lender-reviews columns="2" count="4" excerpt="30" layout="grid"]
                 </p>
                 ';
                 echo $output;

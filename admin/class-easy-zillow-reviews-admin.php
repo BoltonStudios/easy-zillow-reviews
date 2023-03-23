@@ -314,6 +314,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                     </option>
                     <option value="grid" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'grid', false ) ) : ( '' ); ?>>
                     <?php esc_html_e( 'Grid', 'ezrwp' ); ?>
+                    <option value="slider" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'slider', false ) ) : ( '' ); ?>>
+                    <?php esc_html_e( 'Slider', 'ezrwp' ); ?>
                     </option>
                 </select>
 

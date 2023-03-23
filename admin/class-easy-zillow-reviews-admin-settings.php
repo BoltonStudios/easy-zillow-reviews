@@ -202,6 +202,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
                 'tab'       => 'ezrwp_general', // page
                 'section'   => 'ezrwp_section_for_defaults'
             );
+            $settings[] = array(
+                'id'        => 'ezrwp_dequeue_slider_scripts', // id. Used only internally
+                'title'     => __( 'Dequeue Slider Scripts', 'ezrwp_general' ), // title
+                'callback'  => 'ezrwp_dequeue_slider_scripts_cb', // callback
+                'tab'       => 'ezrwp_general', // page
+                'section'   => 'ezrwp_section_for_defaults'
+            );
 
             // Professional Reviews
             $settings[] = array(

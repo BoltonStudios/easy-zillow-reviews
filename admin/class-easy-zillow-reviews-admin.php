@@ -516,6 +516,22 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 <?php
             }
         }
+
+        // Zillow Dequeue Slider Script callback
+        function ezrwp_dequeue_slider_scripts_cb( $args ) {
+            
+            $options = get_option('ezrwp_general_options');
+            
+            $setting = '';
+            if( isset( $options[$args['label_for']] ) ){
+                $setting = $options[$args['label_for']];
+            };
+            ?>
+
+            <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Dequeue Slider Scripts</label>
+            <input name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" value="1" <?php checked('1', $setting); ?> /> Select this option to dequeue the slider scripts if you do not intend to use the slider layout.
+        <?php
+        }
         
         /**
          * Include the HTML code to display the settings page tabs and more.

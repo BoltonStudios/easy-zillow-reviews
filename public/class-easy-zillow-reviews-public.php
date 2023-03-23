@@ -69,7 +69,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Public' ) ) {
              */
 
             wp_enqueue_style( $this->plugin_slug, plugin_dir_url( __FILE__ ) . 'css/easy-zillow-reviews-public.css', array(), $this->version, 'all' );
-            //wp_add_inline_style( $this->plugin_slug, $this->generate_inline_styles() );
+            wp_enqueue_style( $this->plugin_slug, plugin_dir_url( __DIR__ ) . 'library/library/flickity/flickity.pkgd.min.js', array(), $this->version, 'all' );
         }
 
         /**
@@ -92,7 +92,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Public' ) ) {
              */
 
             wp_enqueue_script( $this->plugin_slug, plugin_dir_url( __FILE__ ) . 'js/easy-zillow-reviews-public.js', array( 'jquery' ), $this->version, false );
-
+            wp_enqueue_script( $this->plugin_slug, plugin_dir_url( __DIR__ ) . 'library/library/flickity/flickity.pkgd.min.js', array( 'jquery' ), $this->version, false );
         }
     }
 }

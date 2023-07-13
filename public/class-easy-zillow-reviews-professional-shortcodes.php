@@ -9,7 +9,7 @@
  * @link       https://www.boltonstudios.com
  * @since      1.1.0
  * @package    Easy_Zillow_Reviews
- * @subpackage Easy_Zillow_Reviews/includes
+ * @subpackage Easy_Zillow_Reviews/public
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
     

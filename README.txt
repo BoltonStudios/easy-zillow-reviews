@@ -77,7 +77,7 @@ If you found this free plugin helpful, you can support the developer by upgradin
 
 = 1.6.2 =
 * Date Updated: 2023-07-13
-* Updated Freemius SDK to the latest version
+* Updated Freemius SDK to the latest version.
 
 = 1.6.1 =
 * Date Updated: 2023-03-21

@@ -3,9 +3,9 @@ Contributors: boltonstudios
 Donate link: https://ko-fi.com/boltonstudios
 Tags: zillow, reviews, gutenberg, block, real estate, lender
 Requires at least: 4.0.0
-Tested up to: 6.2.2
+Tested up to: 6.7.1
 Requires PHP: 5.4
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,10 @@ If you found this free plugin helpful, you can support the developer by upgradin
 4. Settings
 
 == Changelog ==
+
+= 1.6.3 =
+* Date Released: 2025-02-10
+* Updated Freemius SDK to the latest version.
 
 = 1.6.2 =
 * Date Updated: 2023-07-13

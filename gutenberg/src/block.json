@@ -1,0 +1,28 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "boltonstudios/easy-zillow-reviews",
+	"version": "1.7.0",
+	"title": "Zillow Reviews",
+	"category": "widgets",
+	"icon": "star-filled",
+	"description": "Display your latest Reviews on Zillow.",
+	"keywords": [ "zillow", "reviews", "real estate", "testimonials", "lender" ],
+	"textdomain": "easy-zillow-reviews",
+	"attributes": {
+		"reviewsType": { "type": "string" },
+		"reviewsLayout": { "type": "string" },
+		"gridColumns": { "type": "number" },
+		"reviewsCount": { "type": "number" },
+		"wordLimit": { "type": "number" },
+		"screenname": { "type": "string" },
+		"includeTeam": { "type": "boolean" }
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"spacing": { "margin": true, "padding": true }
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": [ "easy-zillow-reviews", "file:./index.css" ]
+}

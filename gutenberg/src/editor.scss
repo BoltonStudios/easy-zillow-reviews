@@ -1,0 +1,16 @@
+.wp-block-boltonstudios-easy-zillow-reviews {
+	min-height: 60px;
+
+	.components-placeholder {
+		min-height: 120px;
+	}
+
+	// The front-end script truncates long reviews; mirror that in the preview.
+	.ezrwp-toggle {
+		display: none;
+	}
+
+	.ezrwp-read-more[hidden] {
+		display: inline !important;
+	}
+}

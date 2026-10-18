@@ -1,12 +1,10 @@
 {
   "name": "easy-zillow-reviews",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Display Zillow Reviews on your website",
-  "main": "build/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "wp-scripts start gutenberg/src/index.js --output-path=gutenberg/build",
-    "build": "wp-scripts build gutenberg/src/index.js --output-path=gutenberg/build"
+    "start": "wp-scripts start --webpack-src-dir=gutenberg/src --output-path=gutenberg/build",
+    "build": "wp-scripts build --webpack-src-dir=gutenberg/src --output-path=gutenberg/build"
   },
   "repository": {
     "type": "git",
@@ -23,6 +21,6 @@
   },
   "homepage": "https://github.com/BoltonStudios/easy-zillow-reviews#readme",
   "devDependencies": {
-    "@wordpress/scripts": "^26.0.0"
+    "@wordpress/scripts": "^36.1.0"
   }
 }

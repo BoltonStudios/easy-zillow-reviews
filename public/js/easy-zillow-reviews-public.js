@@ -52,6 +52,9 @@
 // Define the onclick action event for the Read More button.
 function ezrwpToggleReadMore( wrapperId, reviewId ){
 
+    // WordPress loads jQuery in no-conflict mode, so $ is not defined globally.
+    var $ = jQuery;
+
     // Define targets.
     var textToggle = '#ezrwp-wrapper-' + wrapperId + ' #ezrwp-toggle-' + reviewId;
     var ellipsis =  $( '#ezrwp-wrapper-' + wrapperId + ' #ezrwp-read-more-' + reviewId ).children( ".ellipsis" );

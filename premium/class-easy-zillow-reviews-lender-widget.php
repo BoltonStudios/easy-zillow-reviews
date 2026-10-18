@@ -123,15 +123,16 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender_Widget' ) ) {
                 $cols = $instance['cols'];
             }
             
-            // Get widget title
-            if ( ! empty( $instance['title'] ) ){
-                echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
-            }
-
             $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count );
-            
+
             // Output content
             echo $args['before_widget'];
+
+            // Widget title
+            if ( ! empty( $instance['title'] ) ){
+                echo $args['before_title'] . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $args['after_title'];
+            }
+
             echo $output;
             echo $args['after_widget'];
         }

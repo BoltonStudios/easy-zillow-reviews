@@ -90,14 +90,12 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
          * @since    1.1.0
          * @param    $count     The number of reviews to fetch.
          */
-        public function fetch_reviews_from_zillow( $count, String $screenname = null, int $word_limit = null ){
+        public function fetch_reviews_from_zillow( $count, $screenname = null, $word_limit = null ){
             
             // Initialize variables.
             $zmpid = $this->get_zmpid();
             $nmlsid = $this->get_nmlsid();
             $company_name = $this->get_company_name();
-            $company_name = str_replace( array("-", " "), "%20", $company_name ); // Encode space characters.
-            $company_name = str_replace( "&", "%26", $company_name ); // Encode ampersand character.
             $zillow_api_error = false;
 
             // If the $word_limit argument is not null...
@@ -115,27 +113,24 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
             // Update the value of $word_limit for this Easy_Zillow_Reviews_Lender object.
             $this->set_word_limit( $word_limit );
 
-            // Contstruct the Zillow URL for a Lender.
-            $zillow_url = 'https://mortgageapi.zillow.com/zillowLenderReviews?partnerId='. $zmpid .'&nmlsId='.$nmlsid.'&reviewLimit='. $count;
+            // Construct the Zillow URL for a Lender.
+            $query = array(
+                'partnerId'   => rawurlencode( (string) $zmpid ),
+                'nmlsId'      => rawurlencode( (string) $nmlsid ),
+                'reviewLimit' => min( max( absint( $count ), 1 ), 10 ),
+            );
 
-            // If the user set a Company Name...
+            // If the user set a Company Name, fetch Company reviews.
             if( $company_name != '' ){
-
-                // Add it to the Zillow URL to fetch Company reviews.
-                $zillow_url = $zillow_url . '&companyName=' . $company_name;
+                $query['companyName'] = rawurlencode( $company_name );
             }
-            
+
             // Fetch data from Zillow API Network.
-            $ch = curl_init();
-            curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
-            curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-            curl_setopt( $ch, CURLOPT_URL, $zillow_url );
-            $result = curl_exec( $ch );
-            curl_close( $ch );
-            $json = json_decode( $result );
+            $result = $this->remote_get_json( add_query_arg( $query, 'https://mortgageapi.zillow.com/zillowLenderReviews' ) );
+            $json = $result['data'];
 
             // Check for errors
-            if( isset( $json->error ) ){
+            if( $result['error'] !== '' || isset( $json->error ) || ! isset( $json->reviews ) || ! is_array( $json->reviews ) ){
 
                 // Update error flag.
                 $zillow_api_error = true;
@@ -146,15 +141,22 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
             if( $this->get_has_reviews() ){
 
                 // Success
-                $this->set_url( $json->profileURL );
-                $this->set_rating( $json->rating );
-                $this->set_review_count( $json->totalReviews );
+                $this->set_url( isset( $json->profileURL ) ? $json->profileURL : '' );
+                $this->set_rating( isset( $json->rating ) ? floatval( $json->rating ) : 0.0 );
+                $this->set_review_count( isset( $json->totalReviews ) ? absint( $json->totalReviews ) : 0 );
                 $this->set_reviews( $json->reviews );
 
             } else{
 
                 // Error
-                $this->set_message( $json->error );
+                if( isset( $json->error ) && is_scalar( $json->error ) ){
+                    $message = (string) $json->error;
+                } elseif( $result['error'] !== '' ){
+                    $message = $result['error'];
+                } else{
+                    $message = 'The reviews API returned an unexpected response (HTTP ' . $result['code'] . ')';
+                }
+                $this->set_message( $message );
             }
         }
         
@@ -198,59 +200,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
             foreach( $this->reviews as $review ) :
 
                 // Update local variables.
-                $reviewer_name = $review->reviewerName->displayName;
                 $excerpt = "";
                 $before_review = '<div class="col ezrwp-col">';
                 $after_review = '</div>';
-                $description = $review->content;
+                $word_limit = $this->get_word_limit();
 
-                // Replace \n with a space.
-                $description = trim( preg_replace('/\s\s+/', ' ', $description ) );
-
-                // We will hide the Read More link with CSS to allow it to degrade gracefully if the user disables JavaScript.
-                // Otherwise, we will use JavaScript to display the button when the page loads.
-                $read_more_link = '<span class="ezrwp-read-more" id="ezrwp-read-more-'. $i .'" style="display: none;"><span class="ellipsis">...</span>';
-                $read_more_link .= '<button name="read more" type="button" onclick="ezrwpToggleReadMore( '. $wrapper_id .', '. $i .' )">More</button>';
-                $read_more_link .= '</span>';
-
-                // If the $word_limit argument is not null...
-                if( isset( $word_limit ) ){
-    
-                    // Assign the value of the $word_limit argument to the local $word_limit variable.
-                    $word_limit = $word_limit;
-    
-                } else{
-    
-                    // Assign the value of the word limit from the Settings page to the local word_limit variable.
-                    $word_limit = $this->get_word_limit();
-                }
-
-                $word_count = str_word_count( $description, 0 );
-                
-                // If the $word_count is less than the words in the review quotation...
-                if( isset( $word_limit ) && $word_limit < $word_count ){
-                    
-                    /**
-                     * Truncate words in a string.
-                     * 
-                     * Citation
-                     * Title: "Change the number 3 to the number 20 below to get the first 20 words..."
-                     * Author: nonopolarity
-                     * Date: 06/08/2009
-                     * Availability: https://stackoverflow.com/a/965343
-                     */
-
-                    // The text excerpt.
-                    $excerpt .= preg_replace( '/((\w+\W*){' . ( $word_limit - 1 ) . '}(\w+))(.*)/', '${1}', $description );
-                    
-                    // The rest of the text.
-                    $excerpt_after = '<span class="ezrwp-toggle" id="ezrwp-toggle-'. $i .'">';
-                    $excerpt_after .= preg_replace( '/((\w+\W*){' . ( $word_limit - 1 ) . '}(\w+))(.*)/', '${4}', $description ); 
-                    $excerpt_after .= '</span>';
-
-                    // Reconstruct the review text using the excerpt.
-                    $description = $excerpt . $excerpt_after . $read_more_link;
-                }
+                // Escape the review text and truncate it to the word limit.
+                $description = $this->format_review_text( isset( $review->content ) ? $review->content : '', $word_limit, $wrapper_id, $i );
 
                 // Check if these properties exist in the Zillow Reviews API response and store their values
                 $loan_service_provided = property_exists( $review, 'serviceProvided' ) ? $this->format_loan_service_provided( $review->serviceProvided ) : '';
@@ -261,10 +217,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
 
                 $loan_summary = $loan_service_provided . " " . $loan_type . " " . $loan_program . " " . $loan_purpose;
                 $date = ( $hide_date == false ) ? '<div class="ezrwp-date">'. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime( $review_date ))) .'</div>' : '';
-                $reviewer_summary = ( $hide_reviewer_summary == false ) ? '<span class="review-summary">who '. $loan_summary .' loan.</span>' : '';
+                $reviewer_summary = ( $hide_reviewer_summary == false ) ? '<span class="review-summary">who '. esc_html( $loan_summary ) .' loan.</span>' : '';
                 $stars = '';
                 if( $hide_stars == false ){
-                    $stars = $review->rating;
+                    $stars = isset( $review->rating ) ? floatval( $review->rating ) : 0;
                     $star_count = floor( $stars ); // count whole stars
                     $half_star_toggle = '';
                     if( $stars - floor( $stars ) > 0 ){
@@ -475,6 +431,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
          */
         function get_profile_card( $rating, $review_count ){
             
+            $rating = floatval( $rating );
             $whole_stars = round($rating); // count whole stars
             $half_star_toggle = '';
             if( $rating - $whole_stars > 0 ){
@@ -490,7 +447,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                 <div class="ezrwp-lender-profile-card">
                     '. $stars .'
                     <div class="ezrwp-lender-activity">
-                        '. round( $rating, 2 ) .' Stars • '. $review_count .' Reviews
+                        '. esc_html( round( $rating, 2 ) ) .' Stars • '. absint( $review_count ) .' Reviews
                     </div>
                 </div>
             ';

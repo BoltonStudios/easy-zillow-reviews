@@ -108,377 +108,189 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
         // Methods
         /**
-         * Get reviews data from the Zillow Reviews API.
+         * Get reviews data from the Zillow Reviews API (via Bridge Interactive).
          *
          * @since    1.1.0
+         * @param    int          $count         The number of reviews to fetch (1-10).
+         * @param    string|null  $screenname    The Zillow screenname. Defaults to the screenname in the plugin settings.
+         * @param    int|null     $word_limit    The maximum number of words per review. Defaults to the plugin settings.
          */
-        public function fetch_reviews_from_zillow( int $count, String $screenname = null, int $word_limit = null ){
-            
+        public function fetch_reviews_from_zillow( $count, $screenname = null, $word_limit = null ){
+
             // Initialize variables.
             $bridge_token = $this->get_bridge_token();
-            $zwsid = $this->get_zwsid(); // deprecated
-            $disallowed_characters = array ( "-", " " );
-            $toggle_team_members = $this->get_show_team_members() ? '&returnTeamMemberReviews=true' : '';
-            $message = "";
-            $error_name = "";
-            $status_code = 0;
-            $profile_url = "";
-            $profile_name = "";
-            $profile_image_url = "";
-            $sale_count = 0;
-            $review_count = 0;
-            $rating = 0.0;
+            $count = min( max( absint( $count ), 1 ), 10 );
+            $screenname = trim( (string) ( ( $screenname === null || $screenname === '' ) ? $this->get_screenname() : $screenname ) );
+            $message = '';
+            $has_reviews = false;
             $reviews = array();
-            
-            /**
-             * allow_url_fopen must be enabled to use simplexml_load_file().
-             * Some hosts disable allow_url_fopen for security reasons.
-             * Logic below falls back to cURL if allow_url_fopen is disabled in the PHP configuration.
-             * 
-             * */
-            $allow_url = ini_get( 'allow_url_fopen' );
-
-            // If the $screenname argument is not null...
-            if( isset( $screenname ) ){
-
-                // Assign the value of the $screenname argument to the local $screenname variable.
-                $screenname = $screenname ;
-
-            } else{
-
-                // Assign the value of the screenname from the Settings page to the local $screenname variable.
-                $screenname = $this->get_screenname();
-
-            }
-
-            // If the $word_limit argument is not null...
-            if( isset( $word_limit ) ){
-
-                // Assign the value of the $word_limit argument to the local $word_limit variable.
-                $word_limit = $word_limit;
-
-            } else{
-
-                // Assign the value of the word limit from the Settings page to the local word_limit variable.
-                $word_limit = $this->get_word_limit();
-            }
 
             // Update the value of $word_limit for this Easy_Zillow_Reviews_Professional object.
-            $this->set_word_limit( $word_limit );
-            
-            // Strip spaces from the screenname.
-            $screenname = str_replace( $disallowed_characters, "%20", $screenname );
-            
-            // If the $bridge_token argument is not null...
-            if( isset( $bridge_token ) && $bridge_token != "" ){
+            $this->set_word_limit( ( $word_limit === null ) ? $this->get_word_limit() : $word_limit );
 
-                // Fetch data from Bridge.
+            if( empty( $bridge_token ) ){
 
-                // Construct the Bridge URL for a Zillow Professional.
-                $bridge_account_url = 'https://api.bridgedataoutput.com/api/v2/reviews/reviewee?access_token=';
-                $bridge_account_url .= $bridge_token .'&RevieweeScreenName='. $screenname;
+                // Zillow retired the ZWSID-based API in favor of Bridge Interactive.
+                $message = $this->get_zwsid()
+                    ? 'Zillow no longer supports the Zillow Web Services ID (ZWSID). Please add a Bridge API Access Token on the plugin Settings page'
+                    : 'Please add a Bridge API Access Token on the plugin Settings page';
 
-                // Fetch data from the Zillow API Network.
-                $ch = curl_init();
-                curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
-                curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-                curl_setopt( $ch, CURLOPT_URL, $bridge_account_url );
-                $bridge_account_data = curl_exec( $ch );
-                curl_close( $ch );
+            } elseif( $screenname === '' ){
 
-                // Decode the account data.
-                $bridge_account_data = json_decode( $bridge_account_data );
+                $message = 'Please add a Zillow Screenname on the plugin Settings page';
 
-                // Handle errors
-                // If the API returned the status item...
-                if( isset( $bridge_account_data->status) ){
+            } else{
 
-                    // Update the $code variable.
-                    $status_code = $bridge_account_data->status;
-                }
+                $headers = array( 'Authorization' => 'Bearer ' . $bridge_token );
 
-                // If the code is neither 200 (OK) nor 0 (default value)...
-                // Or if the response contains no data...
-                if( ( $status_code != 200 && $status_code != 0 ) || !isset( $bridge_account_data->bundle[0] ) ){
+                // Look up the reviewee (the Zillow professional) by screenname.
+                $account = $this->fetch_bridge_reviewee( $screenname, $headers, $message );
 
-                    // If the code is neither 200 nor 0...
-                    if ( $status_code != 200 && $status_code != 0 ){
+                if( $account ){
 
-                        // Access denied.
+                    // Request the most recent reviews. Chronology is the only selection
+                    // permitted by Zillow's terms for showing a subset of reviews.
+                    $reviews_url = add_query_arg(
+                        array(
+                            '$filter'  => rawurlencode( "AccountIdReviewee eq '" . $account->AccountIdReviewee . "'" ),
+                            '$orderby' => rawurlencode( 'ReviewDate desc' ),
+                            '$top'     => $count,
+                        ),
+                        'https://api.bridgedataoutput.com/api/v2/OData/reviews/Review'
+                    );
 
-                        // Update the error message variables to be returned to the user.
-                        $error_name = $bridge_account_data->bundle->name;
-                        $error_message = $bridge_account_data->bundle->message;
-                        $message = $error_name . ": " . $error_message;
+                    $result = $this->remote_get_json( $reviews_url, $headers );
 
-                    } else if( !isset( $bridge_account_data->bundle[ 0 ] ) ){
+                    if( $result['code'] !== 200 || ! isset( $result['data']->value ) || ! is_array( $result['data']->value ) ){
 
-                        // If access granted but no data returned...
-
-                        // Update the error message.
-                        $message = "Access granted but no data returned";
-
-                        // Flag error (any code other than 200 or 0 );
-                        $status_code = 1;
-
-                    }
-
-                } else{
-
-                    // Success! We fetched the reviewee account data from Bridge.
-
-                    // Update the Bridge account data variable.
-                    $bridge_account_data = $bridge_account_data->bundle[ 0 ];
-
-                    // Get the reviewee ID.
-                    $reviewee_id = $bridge_account_data->AccountIdReviewee;
-
-                    // Construct the Bridge URL for the Zillow Professional's reviews.
-                    $bridge_reviews_url = 'https://api.bridgedataoutput.com/api/v2/OData/reviews/Review?access_token=';
-                    $bridge_reviews_url .= $bridge_token .'&$filter=AccountIdReviewee%20eq%20%27'. $reviewee_id . '%27';
-
-                    // Fetch data from the Zillow API Network.
-                    $ch = curl_init();
-                    curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
-                    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-                    curl_setopt( $ch, CURLOPT_URL, $bridge_reviews_url );
-                    $bridge_reviews_data = curl_exec( $ch );
-                    curl_close( $ch );
-
-                    // Decode the account data.
-                    $bridge_reviews_data = json_decode( $bridge_reviews_data );
-
-                    // Handle errors
-                    // If the API returned the status item...
-                    if( isset( $bridge_reviews_data->status ) ){
-
-                        // Update the $code variable.
-                        $status_code = $bridge_reviews_data->status;
-                    }
-
-                    // If the code is neither 200 nor 0 (default)...
-                    if( $status_code != 200 && $status_code != 0 ){
-
-                        // Access denied.
-
-                        // Update the error message variables to be returned to the user.
-                        $error_name = $bridge_reviews_data->error->name;
-                        $message = $error_name . ": " . $bridge_reviews_data->error->message;
+                        $message = $this->get_bridge_error_message( $result );
 
                     } else{
 
-                        // Access granted.
+                        $profile_url = isset( $account->RevieweeProfileURL ) ? $account->RevieweeProfileURL : 'https://www.zillow.com/profile/' . rawurlencode( $screenname ) . '/';
 
-                        // Update other variables.
-                        $profile_url = $bridge_account_data->RevieweeProfileURL;
-                        $profile_name = $bridge_account_data->RevieweeFullName;
-                        $profile_url = $bridge_account_data->RevieweeProfileURL;
-                        $rating = $bridge_account_data->AverageReviewRating;
-                        $review_count = $bridge_account_data->ReviewCount;
-                        $zillow_reviews_data = $bridge_reviews_data->value;
-
-                        /* The following data was available in the old Zillow API implementation,
-                         * so we may re-include it if Bridge shares this data in the future.
-                         */
-                        // $sale_count = $bridge_account_data->;
-                        // $profile_image_url = $bridge_account_data->;
-
-                        // $zillow_reviews_data must be an array or an object that implements Countable.
-                        if( gettype( $zillow_reviews_data ) == 'array' ){
-
-                            // Count the reviews available in the API response.
-                            $reviews_available_count = count( $zillow_reviews_data );
-                            
-                            // Iterate over the elements in $zillow_reviews_data.
-                            for( $i = 0; $i < $reviews_available_count; $i++ ){
-
-                                // Extract information from the current element (i.e., review) in $zillow_reviews_data.
-                                $description = $zillow_reviews_data[ $i ]->Description;
-                                $url = 'https://www.zillow.com/profile/'. $screenname .'/#reviews';
-                                $date = $zillow_reviews_data[ $i ]->ReviewDate;
-                                $rating = floatval( $zillow_reviews_data[ $i ]->Rating );
-                                $location = explode( ",", $zillow_reviews_data[ $i ]->FreeFormLocation );
-                                $city = isset( $location[ 1 ] ) ? mb_convert_case(  $location[ 1 ], MB_CASE_TITLE, "UTF-8") : "";
-                                $state = isset( $location[ 2 ] ) ? ", " . strtoupper( $location[ 2 ] ) : ""; 
-
-                                // If the "city" is *not* empty but the "state" is empty...
-                                if( $city != "" && $state == "" ){
-
-                                    // Assume the "city" is the two-level state code
-                                    // and change the string case to all upperase.
-                                    $city = strtoupper( $city );
-
-                                } else{
-
-                                    // Otherwise, concatenate the city and state text.
-                                    $city = $city . $state;
-                                }
-
-                                // Get the service desription, e.g., "helped me buy home".
-                                $summary = lcfirst( $zillow_reviews_data[ $i ]->ServiceProviderDesc );
-                                
-                                // Create a new Easy_Zillow_Reviews_Review object.
-                                $review = new Easy_Zillow_Reviews_Review(
-                                    $description,
-                                    $summary,
-                                    $url,
-                                    $date,
-                                    $rating,
-                                    $city
-                                );
-
-                                // Add the new Easy_Zillow_Reviews_Review object to our array of review objects.
-                                $reviews[ $i ] = $review;
-                            }
-                            
-                            /**
-                             * Sort reviews by date.
-                             * 
-                             * Citation
-                             * Title: "Heres a nicer way using ..."
-                             * Author: Scott Quinlan
-                             * Date: 04/15/2012
-                             * Availability: https://stackoverflow.com/questions/4282413/sort-array-of-objects-by-one-property
-                             */
-                            usort( $reviews, function( $a, $b ){
-                                return strtotime( $b->get_date() ) - strtotime( $a->get_date() );
-                            });
-
-                            // Check if the user specified the $count parameter.
-                            // If not, set the $count parameter equal to the number of reviews available.
-                            $count = isset( $count ) ? $count : $reviews_available_count;
-
-                            // The $count parameter should provide a subset of the reviews available.
-                            // Check if the user-specified $count parameter is less than the reviews available.
-                            // If not, set the $count parameter equal to the number of reviews available.
-                            $count = $count < $reviews_available_count ? $count : $reviews_available_count;
-
-                            // If the $count is different than $reviews_available_count...
-                            if( $count != $reviews_available_count ){
-
-                                // Create a temporary reviews array.
-                                $temp_reviews = array();
-
-                                // Iterate over the elements in $reviews.
-                                for( $i = 0; $i < $count; $i++ ){
-
-                                    // Populate the temporary array with a subset of reviews.
-                                    $temp_reviews[ $i ] = $reviews[ $i ];
-                
-                                }
-
-                                // Update the $reviews array.
-                                $reviews = $temp_reviews;
-                            }
+                        foreach( $result['data']->value as $item ){
+                            $reviews[] = $this->create_review_from_bridge( $item, $profile_url );
                         }
-                    }
-                } 
-            } else{
 
-                // The following applies only to sites that still use the deprecated ZWSID.
-            
-                // Construct the URL for a Zillow Professional.
-                $zillow_url = 'http://www.zillow.com/webservice/ProReviews.htm?zws-id='. $zwsid .'&screenname='. $screenname .'&count='. $count . $toggle_team_members;
+                        // Sort reviews by date, newest first.
+                        usort( $reviews, function( $a, $b ){
+                            return strtotime( $b->get_date() ) - strtotime( $a->get_date() );
+                        });
 
-                // Fetch data from Zillow.
+                        $has_reviews = true;
 
-                // Enable user error handling. Use for debugging.
-                // libxml_use_internal_errors(true);
-                
-                // If allow_url_fopen is enabled...
-                if( $allow_url ){
-
-                    // Fetch data from the Zillow API Network.
-                    $zillow_data = simplexml_load_file( $zillow_url );
-                    
-                } else{
-
-                    // Fetch data from the Zillow API Network.
-                    $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_URL, $zillow_url);
-                    $curl_result = curl_exec($ch);
-                    curl_close($ch);
-
-                    // Interpret XML Data into an object.
-                    $zillow_data = simplexml_load_string( $curl_result );
-                }
-
-                // Handle XML errors.  
-                if( $zillow_data === false ){
-
-                    echo "Failed loading XML.";
-
-                    // Handle errors in debugging.
-                    /*
-                    foreach(libxml_get_errors() as $error) {
-                        echo "\n\t", $error->message;
-                    }
-                    */
-                }
-
-                // Update instance variables.
-                $message = $zillow_data->message->text;
-                $status_code = $zillow_data->message->code;
-
-                // If the API returned reviews...
-                if( $status_code > 0 ? false : true ){
-
-                    // Update more instance variables.
-                    $this->set_info( $zillow_data->response->result->proInfo );
-                    $sale_count = $this->get_info()->recentSaleCount;
-                    $profile_name = $this->get_info()->name;
-                    $profile_image_url = $this->get_info()->photo;
-                    $profile_url = $zillow_data->response->result->proInfo->profileURL;
-                    $rating = $zillow_data->response->result->proInfo->avgRating;
-                    $review_count = $zillow_data->response->result->proInfo->reviewCount;
-                    $zillow_reviews_data = $zillow_data->response->result->proReviews->review;
-
-                    //
-                    for( $i = 0; $i < count( $zillow_reviews_data ); $i++ ){
-
-                        // Extract information from the current element (i.e., review) in $zillow_reviews_data.
-                        $description = $zillow_reviews_data[ $i ]->description;
-                        $summary = lcfirst( $zillow_reviews_data[ $i ]->reviewSummary );
-                        $url = $zillow_reviews_data[ $i ]->reviewURL;
-                        $date = $zillow_reviews_data[ $i ]->reviewDate;
-                        $rating = floatval( $zillow_reviews_data[ $i ]->rating );
-
-                        // Create a new Easy_Zillow_Reviews_Review object.
-                        $review = new Easy_Zillow_Reviews_Review(
-                            $description,
-                            $summary,
-                            $url,
-                            $date,
-                            $rating
-                        );
-                        
-                        // Add the new Easy_Zillow_Reviews_Review object to our array of review objects.
-                        $reviews[ $i ] = $review;
+                        // The following data was available in the old Zillow API implementation,
+                        // so we may re-include it if Bridge shares this data in the future:
+                        // sale count and profile image URL.
+                        $this->set_profile_name( isset( $account->RevieweeFullName ) ? $account->RevieweeFullName : '' );
+                        $this->set_profile_image_url( '' );
+                        $this->set_url( $profile_url );
+                        $this->set_rating( isset( $account->AverageReviewRating ) ? floatval( $account->AverageReviewRating ) : 0.0 );
+                        $this->set_sale_count( 0 );
+                        $this->set_review_count( isset( $account->ReviewCount ) ? absint( $account->ReviewCount ) : 0 );
+                        $this->set_reviews( array_slice( $reviews, 0, $count ) );
                     }
                 }
-                // End deprecated ZWSID function.
             }
 
             // Pass data from Zillow to this class instance.
             $this->set_message( $message );
-            $this->set_has_reviews( ( $status_code != 200 && $status_code != 0 ) ? false : true );
+            $this->set_has_reviews( $has_reviews );
+        }
 
-            // If the API returned reviews...
-            if( $this->get_has_reviews() ){
+        /**
+         * Look up a Zillow professional's Bridge reviewee account by screenname.
+         *
+         * @since    1.6.5
+         * @param    string    $screenname    The Zillow screenname.
+         * @param    array     $headers       Request headers, including authorization.
+         * @param    string    $message       Updated with an error message if the lookup fails.
+         * @return   object|null              The reviewee account, or null.
+         */
+        private function fetch_bridge_reviewee( $screenname, $headers, &$message ){
 
-                // Success
-                // Update the object properties with Zillow data.
-                //$this->set_info( $zillow_data->response->result->proInfo );
-                $this->set_profile_name( $profile_name );
-                $this->set_profile_image_url( $profile_image_url );
-                $this->set_url( $profile_url );
-                $this->set_rating( $rating );
-                $this->set_sale_count( $sale_count );
-                $this->set_review_count( $review_count );
-                $this->set_reviews( $reviews );
+            $candidates = array( $screenname );
+
+            // Earlier versions replaced hyphens with spaces, so try that too for existing settings.
+            if( strpos( $screenname, '-' ) !== false ){
+                $candidates[] = str_replace( '-', ' ', $screenname );
             }
+
+            foreach( $candidates as $candidate ){
+
+                $url = add_query_arg(
+                    'RevieweeScreenName',
+                    rawurlencode( $candidate ),
+                    'https://api.bridgedataoutput.com/api/v2/reviews/reviewee'
+                );
+
+                $result = $this->remote_get_json( $url, $headers );
+
+                if( $result['code'] !== 200 ){
+                    $message = $this->get_bridge_error_message( $result );
+                    return null;
+                }
+
+                if( isset( $result['data']->bundle[0]->AccountIdReviewee ) ){
+                    return $result['data']->bundle[0];
+                }
+            }
+
+            $message = 'No Zillow profile found for the screenname "' . $screenname . '"';
+
+            return null;
+        }
+
+        /**
+         * Create a review object from a Bridge API review record.
+         *
+         * @since    1.6.5
+         * @param    object    $item           The review record.
+         * @param    string    $profile_url    The professional's Zillow profile URL.
+         * @return   Easy_Zillow_Reviews_Review
+         */
+        private function create_review_from_bridge( $item, $profile_url ){
+
+            $location = isset( $item->FreeFormLocation ) ? array_map( 'trim', explode( ',', $item->FreeFormLocation ) ) : array();
+            $city = isset( $location[1] ) ? mb_convert_case( $location[1], MB_CASE_TITLE, 'UTF-8' ) : '';
+            $state = isset( $location[2] ) ? ', ' . strtoupper( $location[2] ) : '';
+
+            // If the "city" is *not* empty but the "state" is empty, assume the "city" is the two-letter state code.
+            $city = ( $city !== '' && $state === '' ) ? strtoupper( $city ) : $city . $state;
+
+            return new Easy_Zillow_Reviews_Review(
+                isset( $item->Description ) ? (string) $item->Description : '',
+                isset( $item->ServiceProviderDesc ) ? lcfirst( (string) $item->ServiceProviderDesc ) : '',
+                trailingslashit( $profile_url ) . '#reviews',
+                isset( $item->ReviewDate ) ? (string) $item->ReviewDate : '',
+                isset( $item->Rating ) ? floatval( $item->Rating ) : 0,
+                $city
+            );
+        }
+
+        /**
+         * Build a readable error message from a failed Bridge API response.
+         *
+         * @since    1.6.5
+         * @param    array    $result    The result of remote_get_json().
+         * @return   string
+         */
+        private function get_bridge_error_message( $result ){
+
+            $data = $result['data'];
+
+            if( $result['error'] !== '' && $data === null ){
+                return $result['error'];
+            }
+
+            foreach( array( 'bundle', 'error' ) as $key ){
+                if( isset( $data->$key->message ) ){
+                    return ( isset( $data->$key->name ) ? $data->$key->name . ': ' : '' ) . $data->$key->message;
+                }
+            }
+
+            return 'The reviews API returned an unexpected response (HTTP ' . $result['code'] . ')';
         }
         
         /**
@@ -529,62 +341,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 $stars = 0;
                 $star_rating_html = "";
                 $summary = lcfirst( $review->get_summary() );
-                $reviewer_summary = ( !$hide_reviewer_summary ) ? '<span class="review-summary">who '. $summary .'</span>' : '';
-                $excerpt = "";
-                $description = $review->get_description();
+                $reviewer_summary = ( !$hide_reviewer_summary ) ? '<span class="review-summary">who '. esc_html( $summary ) .'</span>' : '';
+                $word_limit = $this->get_word_limit();
                 $before_review = '<div class="col ezrwp-col">';
                 $after_review = '</div>';
 
-                // Replace \n with a space.
-                $description = trim( preg_replace('/\s\s+/', ' ', $description ) );
-
-                // We will hide the Read More link with CSS to allow it to degrade gracefully if the user disables JavaScript.
-                // Otherwise, we will use JavaScript to display the button when the page loads.
-                $read_more_link = '<span class="ezrwp-read-more" id="ezrwp-read-more-'. $i .'" style="display: none;"><span class="ellipsis">...</span>';
-                $read_more_link .= '<button name="read more" type="button" onclick="ezrwpToggleReadMore( '. $wrapper_id .', '. $i .' )">More</button>';
-                $read_more_link .= '</span>';
-
-                // If the $word_limit argument is not null...
-                if( isset( $word_limit ) ){
-    
-                    // Assign the value of the $word_limit argument to the local $word_limit variable.
-                    $word_limit = $word_limit;
-    
-                } else{
-    
-                    // Assign the value of the word limit from the Settings page to the local word_limit variable.
-                    $word_limit = $this->get_word_limit();
-                }
-
-                $word_count = str_word_count( $description, 0 );
-                
-                // If the $word_count is less than the words in the review quotation...
-                if( isset( $word_limit ) && $word_limit < $word_count ){
-        
-                    /**
-                     * Truncate words in a string.
-                     * 
-                     * Citation
-                     * Title: "Change the number 3 to the number 20 below to get the first 20 words..."
-                     * Author: nonopolarity
-                     * Date: 06/08/2009
-                     * Availability: https://stackoverflow.com/a/965343
-                     */
-
-                    // The text excerpt.
-                    $excerpt .= preg_replace( '/((\w+\W*){' . ( $word_limit - 1 ) . '}(\w+))(.*)/', '${1}', $description );
-                    
-                    // The rest of the text.
-                    $excerpt_after = '<span class="ezrwp-toggle" id="ezrwp-toggle-'. $i .'">';
-                    $excerpt_after .= preg_replace( '/((\w+\W*){' . ( $word_limit - 1 ) . '}(\w+))(.*)/', '${4}', $description ); 
-                    $excerpt_after .= '</span>';
-
-                    // Reconstruct the review text using the excerpt.
-                    $description = $excerpt . $excerpt_after . $read_more_link;
-                }
-
-                //
-                $review_quote = '<blockquote>'. $description . '</blockquote>';
+                // Escape the review text and truncate it to the word limit.
+                $review_quote = '<blockquote>'. $this->format_review_text( $review->get_description(), $word_limit, $wrapper_id, $i ) . '</blockquote>';
 
                 // If the user did not opt to hide the stars...
                 if( !$hide_stars ){
@@ -615,7 +378,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 // Construct the HTML string for the reviewer element.
                 $reviewer = '
                     <div class="ezrwp-reviewer">
-                        <p> &mdash;<a href="'. $url .'" target="_blank" rel="nofollow">Zillow Reviewer</a> '. $reviewer_summary .'
+                        <p> &mdash;<a href="'. esc_url( $url ) .'" target="_blank" rel="nofollow">Zillow Reviewer</a> '. $reviewer_summary .'
                         </p>
                     </div>
                 ';
@@ -686,7 +449,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
                 // If the profile has recent sales, update the output.
                 $recent_sales = '<div class="ezrwp-activity-sales">
-                                    '. $sale_count .' recent home '. $sales_descriptor .'
+                                    '. absint( $sale_count ) .' recent home '. $sales_descriptor .'
                                 </div>';
             }
             
@@ -697,7 +460,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 $card_left = '
                     <div class="ezrwp-profile-card-left">
                         <div class="ezrwp-profile-image-container">
-                            <img class="ezrwp-photo" src="'. $photo .'" alt="" width="94" height="94" />
+                            <img class="ezrwp-photo" src="'. esc_url( $photo ) .'" alt="" width="94" height="94" />
                         </div>
                     </div>';
             }
@@ -708,12 +471,12 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 <div class="ezrwp-profile-card">
                     '. $card_left .'
                     <div class="ezrwp-profile-card-right">
-                        <p class="ezrwp-profile-name"><strong>'. $name .'</strong></p>
+                        <p class="ezrwp-profile-name"><strong>'. esc_html( $name ) .'</strong></p>
                         <div class="ezrwp-activity">
                             <div class="ezrwp-activity-reviews">
                                 <div class="ezrwp-rating-reviews">
-                                    <span class="ezrwp-avg-rating">'. $star_average . $rating .'</span>/<span class="ezrwp-max-rating">5</span>
-                                    <a href="'. $url . '#reviews" class="ezrwp-reviews-count">'. $review_count .' Reviews</a>
+                                    <span class="ezrwp-avg-rating">'. $star_average . esc_html( round( floatval( $rating ), 2 ) ) .'</span>/<span class="ezrwp-max-rating">5</span>
+                                    <a href="'. esc_url( $url . '#reviews' ) . '" class="ezrwp-reviews-count">'. absint( $review_count ) .' Reviews</a>
                                 </div>
                             </div>
                             '. $recent_sales .'

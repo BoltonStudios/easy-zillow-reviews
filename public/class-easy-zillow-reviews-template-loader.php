@@ -161,7 +161,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
 
             // Layout Options
             $grid_columns_class = ($layout == "grid" && $grid_columns > 0) 
-                                ? 'ezrwp-grid-'. $grid_columns 
+                                ? 'ezrwp-grid-'. absint( $grid_columns ) 
                                 : '';
 
             // Other options
@@ -172,8 +172,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
             if( $hide_view_all_link == false ){
                 $view_all_link = '
                     <p class="ezrwp-call-to-action">
-                        <a href="'. $profile_url . '#reviews" class="z-profile-link" target="_blank" rel="nofollow">
-                            View all '. $review_count .' reviews.
+                        <a href="'. esc_url( $profile_url . '#reviews' ) . '" class="z-profile-link" target="_blank" rel="nofollow">
+                            View all '. absint( $review_count ) .' reviews.
                         </a>
                     </p>';
             }
@@ -182,7 +182,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
             if( $hide_zillow_logo == false ){
                 $zillow_logo = '
                     <p class="ezrwp-attribution">
-                        <a href="'. $profile_url . '" class="z-profile-link" target="_blank" rel="nofollow">
+                        <a href="'. esc_url( $profile_url ) . '" class="z-profile-link" target="_blank" rel="nofollow">
                             <img src="//www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" width="150" height="38" alt="Real Estate on Zillow">
                         </a>
                     </p>';
@@ -204,14 +204,14 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
                         %3$s %4$s %5$s %6$s %7$s
                     </div>
                 </div>',
-                $layout,
-                $grid_columns_class,
+                esc_attr( $layout ),
+                esc_attr( $grid_columns_class ),
                 $reviews_output,
                 $profile_card,
                 $view_all_link,
                 $zillow_logo,
                 $mandatory_disclaimer,
-                $wrapper_id
+                esc_attr( $wrapper_id )
             );
 
             return $output;

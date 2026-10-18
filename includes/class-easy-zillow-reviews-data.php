@@ -320,25 +320,17 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
          * @since     1.2.0
          * @return    string    The name of the plugin.
          */
-        public function get_reviews_output( $reviews, String $layout, int $cols, int $number_of_reviews, String $screenname = null, int $word_limit = null ) {
-    
-            // If the number of reviews is more than 10...
-            if( $number_of_reviews > 10 ){
+        public function get_reviews_output( $reviews, $layout, $cols, $number_of_reviews, $screenname = null, $word_limit = null ) {
 
-                // Review count cannot be more than 10.
-                // Set the number of reviews to 10.
-                $number_of_reviews = 10;
+            // Sanitize the options, which may come from shortcode attributes, widgets, or blocks.
+            $layout = sanitize_key( (string) $layout );
+            $layout = in_array( $layout, $this->get_available_layouts(), true ) ? $layout : $this->get_layout();
+            $layout = in_array( $layout, $this->get_available_layouts(), true ) ? $layout : 'list';
+            $cols = min( max( absint( $cols ), 1 ), 6 );
+            $number_of_reviews = min( max( absint( $number_of_reviews ), 1 ), 10 );
+            $screenname = ( $screenname === null || $screenname === '' ) ? null : sanitize_text_field( (string) $screenname );
+            $word_limit = ( $word_limit === null || $word_limit === '' || absint( $word_limit ) < 1 ) ? null : absint( $word_limit );
 
-            } 
-            
-            // If the number of reviews is less than 1...
-            if( floor( $number_of_reviews ) < 1 ){
-
-                // Review count cannot be more than 1.
-                // Set the number of reviews to 1.
-                $number_of_reviews = 1;
-            }
-            
             // Fetch reviews from Zillow
             $reviews->fetch_reviews_from_zillow( $number_of_reviews, $screenname, $word_limit );
 
@@ -346,15 +338,112 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
             if( $reviews -> get_has_reviews() ){
 
                 // Success
-                $output = $reviews -> layout_reviews( $layout, $cols );
-            } else {
-
-                // Error
-                $output = '<p>Unable to load reviews. Zillow says: <strong>'. $reviews -> get_message() .'</strong>.</p>';
+                return $reviews -> layout_reviews( $layout, $cols );
             }
 
-            // Return the output.
-            return $output;
+            // Only show API error details to site administrators.
+            if( current_user_can( 'manage_options' ) ){
+
+                return '<p class="ezrwp-error">' . esc_html__( 'Unable to load reviews. Zillow says:', 'easy-zillow-reviews' ) . ' <strong>' . esc_html( $reviews -> get_message() ) . '</strong> <em>' . esc_html__( '(This message is only visible to site administrators.)', 'easy-zillow-reviews' ) . '</em></p>';
+            }
+
+            return '';
+        }
+
+        /**
+         * Send a GET request to a reviews API and decode the JSON response.
+         *
+         * Identical requests within the same page load share a single response,
+         * so multiple shortcodes or widgets do not repeat API calls. Responses are
+         * never stored beyond the current request (Zillow's terms prohibit caching).
+         *
+         * @since     1.6.5
+         * @param     string    $url        The request URL.
+         * @param     array     $headers    Optional request headers.
+         * @return    array     array( 'code' => int, 'data' => mixed, 'error' => string )
+         */
+        protected function remote_get_json( $url, $headers = array() ) {
+
+            static $responses = array();
+
+            $key = md5( $url . serialize( $headers ) );
+
+            if( isset( $responses[ $key ] ) ){
+                return $responses[ $key ];
+            }
+
+            $response = wp_remote_get(
+                $url,
+                array(
+                    'timeout' => apply_filters( 'ezrwp_api_timeout', 8 ),
+                    'headers' => $headers,
+                )
+            );
+
+            if( is_wp_error( $response ) ){
+
+                $result = array(
+                    'code'  => 0,
+                    'data'  => null,
+                    'error' => $response->get_error_message(),
+                );
+
+            } else{
+
+                $data = json_decode( wp_remote_retrieve_body( $response ) );
+
+                $result = array(
+                    'code'  => (int) wp_remote_retrieve_response_code( $response ),
+                    'data'  => $data,
+                    'error' => ( $data === null ) ? 'Invalid response from the reviews API' : '',
+                );
+            }
+
+            $responses[ $key ] = $result;
+
+            return $result;
+        }
+
+        /**
+         * Build the escaped HTML for a review's text, truncated to a word limit with a "More" toggle.
+         *
+         * @since     1.6.5
+         * @param     string    $description    The raw review text from the API.
+         * @param     int|null  $word_limit     The maximum number of words to show before the toggle.
+         * @param     string    $wrapper_id     The identifier of the reviews wrapper element.
+         * @param     int       $i              The index of the review within the wrapper.
+         * @return    string
+         */
+        protected function format_review_text( $description, $word_limit, $wrapper_id, $i ) {
+
+            // Collapse whitespace, including line breaks.
+            $description = trim( preg_replace( '/\s+/u', ' ', (string) $description ) );
+
+            $word_limit = absint( $word_limit );
+
+            if( $word_limit < 1 ){
+                return esc_html( $description );
+            }
+
+            // Split the text into words, keeping each word's trailing whitespace.
+            $words = preg_split( '/(?<=\s)/u', $description, -1, PREG_SPLIT_NO_EMPTY );
+
+            if( ! is_array( $words ) || count( $words ) <= $word_limit ){
+                return esc_html( $description );
+            }
+
+            $excerpt = rtrim( implode( '', array_slice( $words, 0, $word_limit ) ) );
+            $rest = ' ' . implode( '', array_slice( $words, $word_limit ) );
+
+            $wrapper_id = esc_attr( $wrapper_id );
+            $i = absint( $i );
+
+            // The Read More link is hidden with CSS so the text degrades gracefully without JavaScript.
+            $read_more_link  = '<span class="ezrwp-read-more" id="ezrwp-read-more-' . $i . '" style="display: none;"><span class="ellipsis">...</span>';
+            $read_more_link .= '<button name="read more" type="button" onclick="ezrwpToggleReadMore( ' . $wrapper_id . ', ' . $i . ' )">More</button>';
+            $read_more_link .= '</span>';
+
+            return esc_html( $excerpt ) . '<span class="ezrwp-toggle" id="ezrwp-toggle-' . $i . '">' . esc_html( $rest ) . '</span>' . $read_more_link;
         }
         
         /**

@@ -3,9 +3,9 @@ Contributors: boltonstudios
 Donate link: https://ko-fi.com/boltonstudios
 Tags: zillow, reviews, gutenberg, block, real estate, lender
 Requires at least: 4.0.0
-Tested up to: 7.1.3
+Tested up to: 7.1
 Requires PHP: 5.6
-Stable tag: 1.6.4
+Stable tag: 1.6.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,20 @@ If you found this free plugin helpful, you can support the developer by upgradin
 4. Settings
 
 == Changelog ==
+
+= 1.6.5 =
+* Date Released: 2026-10-18
+* Bug fix: Agents with more than 10 reviews now see their newest reviews (previously, a random set of 10 was sorted by date).
+* Bug fix: The "More" button on long reviews works again.
+* Bug fix: Screennames containing hyphens are now supported.
+* Bug fix: Invalid shortcode values (e.g., columns="two") no longer cause a fatal error.
+* Bug fix: Widget titles now appear inside the widget.
+* Security: Escaped review content and sanitized shortcode attributes.
+* Security: The Bridge API token is now sent in a request header instead of the URL.
+* Reliability: API requests now time out after 8 seconds instead of potentially hanging the page.
+* Reliability: Identical API requests on the same page are only made once.
+* API error messages are now only shown to site administrators.
+* Removed requests to Zillow's retired ZWSID API. Sites still using a ZWSID should add a Bridge API Access Token.
 
 = 1.6.4 =
 * Date Released: 2026-10-18

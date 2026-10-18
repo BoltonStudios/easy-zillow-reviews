@@ -5,7 +5,7 @@ Tags: zillow, reviews, gutenberg, block, real estate, lender
 Requires at least: 4.0.0
 Tested up to: 7.1.3
 Requires PHP: 5.6
-Stable tag: 1.6.3
+Stable tag: 1.6.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,11 +75,15 @@ If you found this free plugin helpful, you can support the developer by upgradin
 
 == Changelog ==
 
-= 1.6.3 =
+= 1.6.4 =
 * Date Released: 2026-10-18
 * Security: Updated Freemius SDK to version 2.13.4.
 * Fixed broken image.
 * Minimum required PHP version is now 5.6 (required by the Freemius SDK).
+
+= 1.6.3 =
+* Date Released: 2025-02-10
+* Updated Freemius SDK to the latest version.
 
 = 1.6.2 =
 * Date Updated: 2023-07-13

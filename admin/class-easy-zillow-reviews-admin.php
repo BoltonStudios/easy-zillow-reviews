@@ -13,6 +13,9 @@
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
 
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
 if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
 
     class Easy_Zillow_Reviews_Admin {
@@ -80,6 +83,192 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
             $this->version = $version;
             $this->settings = $settings;
             $this->tabs = $settings->get_tabs();
+
+            add_filter( 'ezrwp_sanitize_ezrwp_general_options', array( $this, 'sanitize_general_options' ) );
+            add_filter( 'ezrwp_sanitize_ezrwp_professional_reviews_options', array( $this, 'sanitize_professional_reviews_options' ) );
+            add_action( 'wp_ajax_ezrwp_test_connection', array( $this, 'ajax_test_connection' ) );
+            add_action( 'admin_notices', array( $this, 'setup_notice' ) );
+            add_action( 'admin_post_ezrwp_dismiss_setup_notice', array( $this, 'dismiss_setup_notice' ) );
+        }
+
+        /**
+         * Sanitize the General options before saving.
+         *
+         * @since    1.7.0
+         * @param    array    $input    The submitted options.
+         * @return   array
+         */
+        public function sanitize_general_options( $input ) {
+
+            $layouts = apply_filters( 'ezrwp_available_layouts', array( 'list', 'grid' ) );
+            $output = array();
+
+            $output['ezrwp_count'] = isset( $input['ezrwp_count'] ) ? min( max( absint( $input['ezrwp_count'] ), 1 ), 10 ) : 3;
+            $output['ezrwp_layout'] = ( isset( $input['ezrwp_layout'] ) && in_array( $input['ezrwp_layout'], $layouts, true ) ) ? $input['ezrwp_layout'] : 'list';
+            $output['ezrwp_cols'] = isset( $input['ezrwp_cols'] ) ? min( max( absint( $input['ezrwp_cols'] ), 1 ), 6 ) : 3;
+
+            foreach( array( 'ezrwp_disclaimer', 'ezrwp_hide_date', 'ezrwp_hide_stars', 'ezrwp_hide_reviewer_summary', 'ezrwp_hide_profile_card', 'ezrwp_hide_view_all_link', 'ezrwp_hide_zillow_logo' ) as $key ){
+                $output[ $key ] = empty( $input[ $key ] ) ? 0 : 1;
+            }
+
+            foreach( array( 'ezrwp_quote_font_size' => 18, 'ezrwp_review_description_font_size' => 16 ) as $key => $default ){
+                $output[ $key ] = ( isset( $input[ $key ] ) && absint( $input[ $key ] ) > 0 ) ? min( absint( $input[ $key ] ), 72 ) : $default;
+            }
+
+            /**
+             * Filters the sanitized General options, so extensions can save their own options.
+             *
+             * @since 1.7.0
+             * @param array $output The sanitized options.
+             * @param array $input  The submitted options.
+             */
+            return apply_filters( 'ezrwp_sanitize_general_extra', $output, $input );
+        }
+
+        /**
+         * Sanitize the Zillow Professional options before saving.
+         *
+         * @since    1.7.0
+         * @param    array    $input    The submitted options.
+         * @return   array
+         */
+        public function sanitize_professional_reviews_options( $input ) {
+
+            $saved = get_option( 'ezrwp_professional_reviews_options' );
+            $output = array(
+                'ezrwp_bridge_token_1' => isset( $input['ezrwp_bridge_token_1'] ) ? preg_replace( '/[^A-Za-z0-9_\-]/', '', $input['ezrwp_bridge_token_1'] ) : '',
+                'ezrwp_screenname'     => isset( $input['ezrwp_screenname'] ) ? sanitize_text_field( $input['ezrwp_screenname'] ) : '',
+            );
+
+            // Keep a retired ZWSID so the plugin can explain that it is no longer supported.
+            if( is_array( $saved ) && ! empty( $saved['ezrwp_zwsid'] ) && $output['ezrwp_bridge_token_1'] === '' ){
+                $output['ezrwp_zwsid'] = sanitize_text_field( $saved['ezrwp_zwsid'] );
+            }
+
+            /**
+             * Filters the sanitized Zillow Professional options, so extensions can save their own options.
+             *
+             * @since 1.7.0
+             * @param array $output The sanitized options.
+             * @param array $input  The submitted options.
+             */
+            return apply_filters( 'ezrwp_sanitize_professional_reviews_extra', $output, $input );
+        }
+
+        /**
+         * Check the Bridge token and screenname entered on the settings page.
+         *
+         * @since    1.7.0
+         */
+        public function ajax_test_connection() {
+
+            check_ajax_referer( 'ezrwp_test_connection' );
+
+            if( ! current_user_can( 'manage_options' ) ){
+                wp_send_json_error( array( 'message' => __( 'You are not allowed to do this.', 'easy-zillow-reviews' ) ), 403 );
+            }
+
+            $type = isset( $_POST['type'] ) ? sanitize_key( wp_unslash( $_POST['type'] ) ) : 'professional';
+            $fields = isset( $_POST['fields'] ) && is_array( $_POST['fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fields'] ) ) : array();
+
+            /**
+             * Filters the result of a connection test.
+             *
+             * @since 1.7.0
+             * @param array|null $result The result: array( 'success' => bool, 'message' => string ), or null if the type is not handled.
+             * @param string     $type   The connection type, e.g. 'professional'.
+             * @param array      $fields The values entered on the settings page.
+             */
+            $result = apply_filters( 'ezrwp_test_connection', null, $type, $fields );
+
+            if( ! is_array( $result ) ){
+                wp_send_json_error( array( 'message' => __( 'Unknown connection type.', 'easy-zillow-reviews' ) ) );
+            }
+
+            if( $result['success'] ){
+                wp_send_json_success( array( 'message' => $result['message'] ) );
+            }
+
+            wp_send_json_error( array( 'message' => $result['message'] ) );
+        }
+
+        /**
+         * Print a "Test connection" button for a settings section.
+         *
+         * @since    1.7.0
+         * @param    string    $type      The connection type, e.g. 'professional'.
+         * @param    array     $fields    Field name => input ID pairs to send.
+         */
+        public static function test_connection_button( $type, $fields ) {
+            ?>
+            <p class="ezrwp-test-connection" data-type="<?php echo esc_attr( $type ); ?>" data-fields="<?php echo esc_attr( wp_json_encode( $fields ) ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'ezrwp_test_connection' ) ); ?>">
+                <button type="button" class="button button-secondary"><?php esc_html_e( 'Test connection', 'easy-zillow-reviews' ); ?></button>
+                <span class="ezrwp-test-connection-result" role="status" aria-live="polite"></span>
+            </p>
+            <?php
+        }
+
+        /**
+         * Ask site administrators to finish setting up the plugin.
+         *
+         * @since    1.7.0
+         */
+        public function setup_notice() {
+
+            if( ! current_user_can( 'manage_options' ) ){
+                return;
+            }
+
+            $screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+            if( ! $screen || ! in_array( $screen->id, array( 'dashboard', 'plugins' ), true ) ){
+                return;
+            }
+
+            if( get_user_meta( get_current_user_id(), 'ezrwp_dismissed_setup_notice', true ) ){
+                return;
+            }
+
+            $options = get_option( 'ezrwp_professional_reviews_options' );
+            $has_token = is_array( $options ) && ! empty( $options['ezrwp_bridge_token_1'] );
+            $has_zwsid = is_array( $options ) && ! empty( $options['ezrwp_zwsid'] );
+
+            /**
+             * Filters whether the plugin is configured, e.g. Premium can report configured lender reviews.
+             *
+             * @since 1.7.0
+             * @param bool $configured Whether reviews can be displayed.
+             */
+            if( apply_filters( 'ezrwp_is_configured', $has_token ) ){
+                return;
+            }
+
+            $settings_url = admin_url( 'admin.php?page=' . $this->plugin_slug . '&tab=ezrwp_professional_reviews' );
+            $dismiss_url = wp_nonce_url( admin_url( 'admin-post.php?action=ezrwp_dismiss_setup_notice' ), 'ezrwp_dismiss_setup_notice' );
+            $message = $has_zwsid
+                ? __( 'Zillow retired the Zillow Web Services ID (ZWSID), so Easy Zillow Reviews cannot show your reviews until you add a free Bridge API access token.', 'easy-zillow-reviews' )
+                : __( 'Easy Zillow Reviews needs a free Bridge API access token and your Zillow screenname to show your reviews.', 'easy-zillow-reviews' );
+            ?>
+            <div class="notice notice-warning">
+                <p>
+                    <?php echo esc_html( $message ); ?>
+                    <a href="<?php echo esc_url( $settings_url ); ?>" class="button button-primary" style="margin-left: 6px;"><?php esc_html_e( 'Set up now', 'easy-zillow-reviews' ); ?></a>
+                    <a href="<?php echo esc_url( $dismiss_url ); ?>" style="margin-left: 6px;"><?php esc_html_e( 'Dismiss', 'easy-zillow-reviews' ); ?></a>
+                </p>
+            </div>
+            <?php
+        }
+
+        /**
+         * Dismiss the setup notice for the current user.
+         *
+         * @since    1.7.0
+         */
+        public function dismiss_setup_notice() {
+
+            check_admin_referer( 'ezrwp_dismiss_setup_notice' );
+            update_user_meta( get_current_user_id(), 'ezrwp_dismissed_setup_notice', 1 );
+            wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url() );
+            exit;
         }
 
         // Methods
@@ -110,7 +299,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
             
             $action_links = [];
             $action_links = array(
-                'settings' => '<a href="' . admin_url( 'admin.php?page=' . $this->plugin_slug ) . '">' . __( 'Settings', 'domain' ) . '</a>',
+                'settings' => '<a href="' . admin_url( 'admin.php?page=' . $this->plugin_slug ) . '">' . __( 'Settings', 'easy-zillow-reviews' ) . '</a>',
             );
             return array_merge( $action_links, $links );
         }
@@ -122,16 +311,24 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
          */
         public function init_settings(){
 
-            // Register sections in the settings page
-            register_setting(
-                'ezrwp_lender_reviews', // option group
-                'ezrwp_lender_reviews_options' // option name
-            );
-            // Tabs
-            foreach($this->tabs as $tab){
+            // Settings for each tab, including tabs added by Premium.
+            foreach( $this->settings->get_tabs() as $tab ){
+                $option_name = $tab[2];
                 register_setting(
                     $tab[1], // option group
-                    $tab[2] // option name
+                    $option_name, // option name
+                    array(
+                        'sanitize_callback' => function( $value ) use ( $option_name ) {
+
+                            /**
+                             * Filters the submitted value of an Easy Zillow Reviews option before it is saved.
+                             *
+                             * @since 1.7.0
+                             * @param array $value The submitted value.
+                             */
+                            return apply_filters( 'ezrwp_sanitize_' . $option_name, is_array( $value ) ? $value : array() );
+                        },
+                    )
                 );
             }
             // Sections
@@ -139,7 +336,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 add_settings_section(
                     $section['id'], // id
                     $section['title'], // title
-                    $section['id'] . '_cb', // callback
+                    isset( $section['callback'] ) ? $section['callback'] : $section['id'] . '_cb', // callback
                     $section['page'] // page
                 );
             }
@@ -172,6 +369,22 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
             // Professional Reviews Section
             function ezrwp_section_for_zillow_professional_parameters_cb( $args ) {
                 ?>
+                <div class="ezrwp-setup-guide">
+                    <p><strong><?php esc_html_e( 'How to connect your Zillow reviews', 'easy-zillow-reviews' ); ?></strong></p>
+                    <ol>
+                        <li><?php
+                            printf(
+                                /* translators: %s: link to Bridge Interactive's Zillow data page */
+                                esc_html__( 'Create a free Bridge Interactive account, or log in, at %s. Bridge is the company Zillow uses to share its data.', 'easy-zillow-reviews' ),
+                                '<a href="https://bridgedataoutput.com/zgdata" target="_blank" rel="noopener noreferrer">bridgedataoutput.com/zgdata</a>'
+                            );
+                        ?></li>
+                        <li><?php esc_html_e( 'Request access to the Zillow Agent Reviews dataset. Enter this website\'s address when asked where the reviews will appear. Approval can take a few business days.', 'easy-zillow-reviews' ); ?></li>
+                        <li><?php esc_html_e( 'After approval, copy your API access token from your Bridge dashboard and paste it below.', 'easy-zillow-reviews' ); ?></li>
+                        <li><?php esc_html_e( 'Enter your Zillow screenname: the part after "zillow.com/profile/" in your Zillow profile address.', 'easy-zillow-reviews' ); ?></li>
+                        <li><?php esc_html_e( 'Click "Test connection", then "Save Settings".', 'easy-zillow-reviews' ); ?></li>
+                    </ol>
+                </div>
                 <hr />
                 <p id="<?php echo esc_attr( $args['id'] ); ?>-2">
                     <strong style="font-size: 14px">Shortcode</strong><br/>[ez-zillow-reviews]
@@ -196,18 +409,17 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
             }
             function ezrwp_section_for_support_cb( $args ) {
                 
-                $simpleXML_is_loaded = extension_loaded ("SimpleXML") 
-                    ? 'SimpleXML is loaded.'
-                    : 'SimpleXML is not loaded.';
-                $allow_url = ini_get( 'allow_url_fopen' )
-                    ? 'allow_url_fopen is enabled.'
-                    : 'allow_url_fopen is disabled.';
                 ?>
                 <hr />
                 <p>
-                    Your PHP version is <?php echo PHP_VERSION; ?>. 
-                    <?php echo $simpleXML_is_loaded; ?> 
-                    <?php echo $allow_url; ?>
+                    <?php
+                    printf(
+                        /* translators: 1: PHP version, 2: WordPress version */
+                        esc_html__( 'Your PHP version is %1$s. Your WordPress version is %2$s.', 'easy-zillow-reviews' ),
+                        esc_html( PHP_VERSION ),
+                        esc_html( get_bloginfo( 'version' ) )
+                    );
+                    ?>
                 </p>
                 <hr />
                 <?php
@@ -233,30 +445,12 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 ?>
 
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Bridge API Access Token</label>
-                <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
+                <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo esc_attr( $setting ); ?>" />
 
                 <p>To get your free <strong>API Access Token</strong>, <a href="https://bridgedataoutput.com/login" target="_blank">log in to Bridge</a> or <a href="https://bridgedataoutput.com/zgdata" target="_blank">create a new account <span class="dashicons dashicons-external" style="font-size: 14px;"></span></a> and request access to the <strong>Zillow Agent Reviews</strong> dataset.</p>
                 <?php
             }
 
-            // ZWSID callback
-            function ezrwp_zwsid_text_field_cb( $args ) {
-                
-                // Get the value of the setting we've registered with register_setting()
-                $options = get_option('ezrwp_professional_reviews_options');
-                
-                $setting = ''; // Zillow Web Services ID (ZWSID)
-                if( isset( $options[$args['label_for']] ) ){
-                    $setting = $options[$args['label_for']];
-                };
-                ?>
-
-                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Zillow Web Services ID</label>
-                <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
-
-                <?php
-            }
-            
             // Zillow Screenname callback
             function ezrwp_screenname_text_field_cb( $args ) {
 
@@ -269,9 +463,19 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 ?>
 
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Zillow Screenname</label>
-                <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" />
+                <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo esc_attr( $setting ); ?>" />
 
                 <p>The screenname of the user whose reviews you want to display. Use the shortcode options to show reviews for multiple profiles.</p>
+
+                <?php
+                Easy_Zillow_Reviews_Admin::test_connection_button(
+                    'professional',
+                    array(
+                        'token'      => 'ezrwp_bridge_token_1',
+                        'screenname' => 'ezrwp_screenname',
+                    )
+                );
+                ?>
 
                 <?php
             }
@@ -288,7 +492,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 ?>
 
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Review Count</label>
-                <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="1" max="10" required />
+                <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo esc_attr( $setting ); ?>" min="1" max="10" required />
 
                 <p>The amount of reviews you want to show. Choose a number from 1 to 10.</p>
                 <?php
@@ -309,12 +513,12 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                         class="ezrwp-setting ezrwp_layout"
                         data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>"
                         name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]">
-                    <option value="list" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'list', false ) ) : ( '' ); ?>>
-                    <?php esc_html_e( 'List', 'ezrwp' ); ?>
-                    </option>
-                    <option value="grid" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'grid', false ) ) : ( '' ); ?>>
-                    <?php esc_html_e( 'Grid', 'ezrwp' ); ?>
-                    </option>
+                    <?php
+                    $ezrwp_layout_labels = array( 'list' => __( 'List', 'easy-zillow-reviews' ), 'grid' => __( 'Grid', 'easy-zillow-reviews' ), 'carousel' => __( 'Carousel', 'easy-zillow-reviews' ) );
+                    foreach( apply_filters( 'ezrwp_available_layouts', array( 'list', 'grid' ) ) as $ezrwp_layout_option ){
+                        printf( '<option value="%1$s"%2$s>%3$s</option>', esc_attr( $ezrwp_layout_option ), selected( isset( $options[ $args['label_for'] ] ) ? $options[ $args['label_for'] ] : '', $ezrwp_layout_option, false ), esc_html( isset( $ezrwp_layout_labels[ $ezrwp_layout_option ] ) ? $ezrwp_layout_labels[ $ezrwp_layout_option ] : ucfirst( $ezrwp_layout_option ) ) );
+                    }
+                    ?>
                 </select>
 
                 <?php
@@ -332,7 +536,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 ?>
 
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Grid Columns</label>
-                <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="2" max="6" required />
+                <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo esc_attr( $setting ); ?>" min="2" max="6" required />
 
                 <?php
             }
@@ -353,15 +557,15 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                         data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>"
                         name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]">
                     <option value="0" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], '0', false ) ) : ( '' ); ?>>
-                    <?php esc_html_e( 'On', 'ezrwp' ); ?>
+                    <?php esc_html_e( 'On', 'easy-zillow-reviews' ); ?>
                     </option>
                     <option value="1" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], '1', false ) ) : ( '' ); ?>>
-                    <?php esc_html_e( 'Off', 'ezrwp' ); ?>
+                    <?php esc_html_e( 'Off', 'easy-zillow-reviews' ); ?>
                     </option>
                 </select>
 
                 <div id="disclaimer-warning">
-                    <p>Recommended: Consult the <a href="https://www.zillow.com/howto/api/BrandingRequirements.htm" target="_blank">Zillow Branding Requirements</a> <span class="dashicons dashicons-external" style="font-size: 14px;"></span> before you hide the Zillow Disclaimer.
+                    <p>Recommended: Consult the <a href="https://bridgedataoutput.com/zillowterms" target="_blank">Zillow Data Terms of Use</a> <span class="dashicons dashicons-external" style="font-size: 14px;"></span> before you hide the Zillow Disclaimer.
                 </div>
             <?php
             }
@@ -474,7 +678,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 ?>
 
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Review Text Font Size</label>
-                <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="1" />
+                <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo esc_attr( $setting ); ?>" min="1" />
 
                 <p>The font size for the review quote text in pixels. Default is 18px.</p>
 
@@ -493,7 +697,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 ?>
 
                 <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Review Text Font Size</label>
-                <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo $setting ?>" min="1" />
+                <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting ezrwp_cols" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo esc_attr( $setting ); ?>" min="1" />
 
                 <p>The font size for the reviewer description text in pixels. Default is 16px.</p>
 
@@ -503,13 +707,14 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 ?>
                 <p id="<?php echo esc_attr( $args['id'] ); ?>-0">The Premium License unlocks the following features:</p>
                 <ul id="<?php echo esc_attr( $args['id'] ); ?>-1">
-                    <li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Team Reviews</li>
+                    <li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Team Reviews: show your team members' reviews alongside your own</li>
+                    <li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Carousel Layout</li>
                     <li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Lender Reviews</li>
                     <li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Individual Loan Officer Reviews</li>
                     <li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Company Profile Reviews</li>
                 </ul>
                 <p id="<?php echo esc_attr( $args['id'] ); ?>-2">
-                    <a href="<?php echo ezrwp_fs()->get_upgrade_url(); ?>" class="button">Upgrade to Premium</a>
+                    <a href="<?php echo esc_url( ezrwp_fs()->get_upgrade_url() ); ?>" class="button">Upgrade to Premium</a>
                 </p>
                 <?php
             }
@@ -529,7 +734,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
          *
          * @since    1.1.0
          */
-        public function enqueue_styles() {
+        public function enqueue_styles( $hook_suffix = '' ) {
 
             /**
              * This function is provided for demonstration purposes only.
@@ -543,7 +748,11 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
              * class.
              */
 
-            wp_enqueue_style( $this->plugin_slug, plugin_dir_url( __FILE__ ) . 'css/easy-zillow-reviews-admin.css', array(), $this->version, 'all' );
+            if( $hook_suffix !== 'toplevel_page_' . $this->plugin_slug ){
+                return;
+            }
+
+            wp_enqueue_style( $this->plugin_slug . '-admin', plugin_dir_url( __FILE__ ) . 'css/easy-zillow-reviews-admin.css', array(), $this->version, 'all' );
 
         }
 
@@ -552,7 +761,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
          *
          * @since    1.1.0
          */
-        public function enqueue_scripts() {
+        public function enqueue_scripts( $hook_suffix = '' ) {
 
             /**
              * This function is provided for demonstration purposes only.
@@ -566,8 +775,11 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
              * class.
              */
 
-            wp_enqueue_script( $this->plugin_slug, plugin_dir_url( __FILE__ ) . 'js/easy-zillow-reviews-admin.js', array( 'jquery' ), $this->version, false );
-            wp_enqueue_script( $this->plugin_slug, plugins_url( $this->plugin_slug ) . '/gutenberg/build/index.js', null, $this->version, false );
+            if( $hook_suffix !== 'toplevel_page_' . $this->plugin_slug ){
+                return;
+            }
+
+            wp_enqueue_script( $this->plugin_slug . '-admin', plugin_dir_url( __FILE__ ) . 'js/easy-zillow-reviews-admin.js', array( 'jquery' ), $this->version, true );
         }
     }
 }

@@ -13,6 +13,9 @@
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
     
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
 if ( ! class_exists( 'Easy_Zillow_Reviews_Professional_Shortcodes' ) ) {
     
     class Easy_Zillow_Reviews_Professional_Shortcodes{
@@ -54,6 +57,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional_Shortcodes' ) ) {
         // Define a function that extracts the shortcode attributes and returns the HTML reviews output.
         function display_professional_reviews( $shortcode_attributes ){
 
+            $raw_attributes = $shortcode_attributes;
+
             // Initialize variables.
             $reviews = $this->get_zillow_professional_data();
             $reviews_layout = $reviews->get_layout();
@@ -86,7 +91,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional_Shortcodes' ) ) {
             }
 
             // Pass the shortcode parameters and get the reviews from Zillow.
-            $output = $reviews->get_reviews_output( $reviews, $reviews_layout, $number_of_columns, $number_of_reviews, $screenname, $word_limit );
+            $output = $reviews->get_reviews_output( $reviews, $reviews_layout, $number_of_columns, $number_of_reviews, $screenname, $word_limit, is_array( $raw_attributes ) ? $raw_attributes : array() );
 
             // Return the output.
             return $output;

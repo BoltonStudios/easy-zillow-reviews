@@ -1,88 +1,84 @@
-(function( $ ) {
+/**
+ * Easy Zillow Reviews: "More" / "Less" toggles for long reviews.
+ */
+( function () {
 	'use strict';
 
-	/**
-	 * All of the code for your public-facing JavaScript source
-	 * should reside in this file.
-	 *
-	 * Note: It has been assumed you will write jQuery code here, so the
-	 * $ function reference has been prepared for usage within the scope
-	 * of this function.
-	 *
-	 * This enables you to define handlers, for when the DOM is ready:
-	 *
-	 * $(function() {
-	 *
-	 * });
-	 *
-	 * When the window is loaded:
-	 *
-	 * $( window ).load(function() {
-	 *
-	 * });
-	 *
-	 * ...and/or other possibilities.
-	 *
-	 * Ideally, it is not considered best practise to attach more than a
-	 * single DOM-ready or window-load handler for a particular page.
-	 * Although scripts in the WordPress core, Plugins and Themes may be
-	 * practising this, we should strive to set a better example in our own work.
-	 */
+	function setExpanded( button, text, expanded ) {
+		var ellipsis = button.parentNode.querySelector( '.ellipsis' );
 
-    // Check if the document is ready.
-    $( function() {
+		text.hidden = ! expanded;
+		if ( ellipsis ) {
+			ellipsis.hidden = expanded;
+		}
+		button.setAttribute( 'aria-expanded', expanded ? 'true' : 'false' );
+		button.classList.toggle( 'open', expanded );
+		button.textContent = expanded ? 'Less' : 'More';
+	}
 
-        // For each "read more" element, i.e., review...
-        $( ".ezrwp-read-more" ).each( function(){
+	function init() {
+		var buttons = document.querySelectorAll( '[data-ezrwp-toggle]' );
 
-            // Display the Read More button.
-            $( this ).show();
-        });
+		Array.prototype.forEach.call( buttons, function ( button ) {
+			var text = document.getElementById( button.getAttribute( 'data-ezrwp-toggle' ) );
 
-        // For each review (toggle element).
-        $( ".ezrwp-toggle" ).each( function(){
+			if ( text && ! button.hasAttribute( 'data-ezrwp-ready' ) ) {
+				button.setAttribute( 'data-ezrwp-ready', '1' );
+				text.hidden = true;
+				button.parentNode.hidden = false;
+			}
+		} );
 
-            // Hide the non-excerpt text.
-            $( this ).hide();
-        });
-    });
+		// Markup cached before version 1.7.0: show the "More" button and hide the rest of the text.
+		Array.prototype.forEach.call( document.querySelectorAll( '.ezrwp-read-more[id]' ), function ( wrap ) {
+			var text = wrap.previousElementSibling;
 
-})( jQuery );
+			wrap.style.display = '';
+			if ( text && text.classList.contains( 'ezrwp-toggle' ) ) {
+				text.style.display = 'none';
+			}
+		} );
+	}
 
-// Define the onclick action event for the Read More button.
-function ezrwpToggleReadMore( wrapperId, reviewId ){
+	document.addEventListener( 'click', function ( event ) {
+		var button = event.target.closest ? event.target.closest( '[data-ezrwp-toggle]' ) : null;
 
-    // WordPress loads jQuery in no-conflict mode, so $ is not defined globally.
-    var $ = jQuery;
+		if ( ! button ) {
+			return;
+		}
 
-    // Define targets.
-    var textToggle = '#ezrwp-wrapper-' + wrapperId + ' #ezrwp-toggle-' + reviewId;
-    var ellipsis =  $( '#ezrwp-wrapper-' + wrapperId + ' #ezrwp-read-more-' + reviewId ).children( ".ellipsis" );
-    var buttonToggle = $( '#ezrwp-wrapper-' + wrapperId + ' #ezrwp-read-more-' + reviewId ).children( "button" );
-    var buttonToggleText = buttonToggle.html();
+		var text = document.getElementById( button.getAttribute( 'data-ezrwp-toggle' ) );
 
-    // Get the element, i.e., the review text, associated with the clicked button.
-    $( textToggle ).each( function(){
+		if ( text ) {
+			event.preventDefault();
+			setExpanded( button, text, text.hidden );
+		}
+	} );
 
-        // Toggle its visibility.
-        $( this ).toggle();
+	// Support inline onclick handlers in pages cached before version 1.7.0.
+	window.ezrwpToggleReadMore = function ( wrapperId, reviewId ) {
+		var wrapper = document.getElementById( 'ezrwp-wrapper-' + wrapperId );
+		var text = wrapper && wrapper.querySelector( '#ezrwp-toggle-' + reviewId );
+		var readMore = wrapper && wrapper.querySelector( '#ezrwp-read-more-' + reviewId );
+		var button = readMore && readMore.querySelector( 'button' );
+		var ellipsis = readMore && readMore.querySelector( '.ellipsis' );
 
-        // Toggle the ellipsis visibility.
-        ellipsis.toggle();
+		if ( ! text || ! button ) {
+			return;
+		}
 
-        // Toggle the button's "open" class.
-        buttonToggle.toggleClass( 'open' );
-    });
+		var expand = text.style.display === 'none';
+		text.style.display = expand ? '' : 'none';
+		if ( ellipsis ) {
+			ellipsis.style.display = expand ? 'none' : '';
+		}
+		button.textContent = expand ? 'Less' : 'More';
+		button.classList.toggle( 'open', expand );
+	};
 
-    // If the button text says "Continue"...
-    if( buttonToggleText == "More" ){
-
-        // Change the button text to "Less".
-        $( buttonToggle ).html( "Less" )
-    } else{
-
-        // Otherwise, change the button text to "More".
-        $( buttonToggle ).html( "More" )
-    }
-    
-}
+	if ( document.readyState === 'loading' ) {
+		document.addEventListener( 'DOMContentLoaded', init );
+	} else {
+		init();
+	}
+} )();

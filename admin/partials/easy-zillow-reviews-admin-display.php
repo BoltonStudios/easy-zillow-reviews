@@ -12,6 +12,9 @@
  * @subpackage Easy_Zillow_Reviews/admin/partials
  */
 
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
 $tabs = $this->settings->get_tabs();
 ?>
 
@@ -26,7 +29,8 @@ $tabs = $this->settings->get_tabs();
     <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
              
     <?php
-        $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'ezrwp_general';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only selects which tab to display.
+        $active_tab = isset( $_GET[ 'tab' ] ) ? sanitize_key( wp_unslash( $_GET[ 'tab' ] ) ) : 'ezrwp_general';
     ?>
      
     <h2 class="nav-tab-wrapper">
@@ -37,12 +41,12 @@ $tabs = $this->settings->get_tabs();
             $option_group = $tab[1];
             $option_name = $tab[2];
             $active_tab_class = ($active_tab == $option_group) ? 'nav-tab-active' : '';
-            echo '<a href="?page=easy-zillow-reviews&tab='. $option_group .'" id="ezrwp-nav-tab-'. $i .'" class="nav-tab '. $active_tab_class .'">'. $option_display_name .'</a>';
+            echo '<a href="'. esc_url( add_query_arg( array( 'page' => 'easy-zillow-reviews', 'tab' => $option_group ), admin_url( 'admin.php' ) ) ) .'" id="ezrwp-nav-tab-'. absint( $i ) .'" class="nav-tab '. esc_attr( $active_tab_class ) .'">'. esc_html( $option_display_name ) .'</a>';
             $i++;
         }
     ?>
     </h2>
-    <form action="../../wp-admin/options.php" method="post">
+    <form action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>" method="post">
     <?php
     
         // Output settings

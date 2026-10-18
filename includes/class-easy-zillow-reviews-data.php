@@ -13,6 +13,9 @@
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
 
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
 if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
 
     class Easy_Zillow_Reviews_Data{
@@ -75,6 +78,15 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
          * @var      string   $message   The message returned by the Zillow API Network.
          */
         private $message;
+
+        /**
+         * Extra request options, e.g. from shortcode attributes.
+         *
+         * @since    1.7.0
+         * @access   protected
+         * @var      array    $request_args
+         */
+        protected $request_args = array();
         
         /**
          * The user's saved plugin options.
@@ -292,7 +304,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
             $hide_zillow_logo = isset($general_options['ezrwp_hide_zillow_logo']) ? $general_options['ezrwp_hide_zillow_logo'] : 0;
             $quote_font_size = isset($general_options['ezrwp_quote_font_size']) ? $general_options['ezrwp_quote_font_size'] : 18;
             $reviewer_description_font_size = isset($general_options['ezrwp_review_description_font_size']) ? $general_options['ezrwp_review_description_font_size'] : 16;
-            $available_layouts = array( 'list', 'grid' );
+            /**
+             * Filters the available review layouts.
+             *
+             * @since 1.7.0
+             * @param string[] $layouts Layout slugs.
+             */
+            $available_layouts = apply_filters( 'ezrwp_available_layouts', array( 'list', 'grid' ) );
             $available_apis = array( ['professional', 'Professional'] );
 
             // Store options in this class instance
@@ -320,12 +338,20 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
          * @since     1.2.0
          * @return    string    The name of the plugin.
          */
-        public function get_reviews_output( $reviews, $layout, $cols, $number_of_reviews, $screenname = null, $word_limit = null ) {
+        public function get_reviews_output( $reviews, $layout, $cols, $number_of_reviews, $screenname = null, $word_limit = null, $args = array() ) {
+
+            // Load the front-end assets only on pages that display reviews.
+            wp_enqueue_style( 'easy-zillow-reviews' );
+            wp_enqueue_script( 'easy-zillow-reviews' );
+
+            // Extra options from shortcode, widget, or block attributes (e.g., Premium options).
+            $reviews->set_request_args( is_array( $args ) ? $args : array() );
 
             // Sanitize the options, which may come from shortcode attributes, widgets, or blocks.
+            $available_layouts = apply_filters( 'ezrwp_available_layouts', array( 'list', 'grid' ) );
             $layout = sanitize_key( (string) $layout );
-            $layout = in_array( $layout, $this->get_available_layouts(), true ) ? $layout : $this->get_layout();
-            $layout = in_array( $layout, $this->get_available_layouts(), true ) ? $layout : 'list';
+            $layout = in_array( $layout, $available_layouts, true ) ? $layout : $this->get_layout();
+            $layout = in_array( $layout, $available_layouts, true ) ? $layout : 'list';
             $cols = min( max( absint( $cols ), 1 ), 6 );
             $number_of_reviews = min( max( absint( $number_of_reviews ), 1 ), 10 );
             $screenname = ( $screenname === null || $screenname === '' ) ? null : sanitize_text_field( (string) $screenname );
@@ -362,7 +388,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
          * @param     array     $headers    Optional request headers.
          * @return    array     array( 'code' => int, 'data' => mixed, 'error' => string )
          */
-        protected function remote_get_json( $url, $headers = array() ) {
+        public function remote_get_json( $url, $headers = array() ) {
 
             static $responses = array();
 
@@ -435,15 +461,14 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
             $excerpt = rtrim( implode( '', array_slice( $words, 0, $word_limit ) ) );
             $rest = ' ' . implode( '', array_slice( $words, $word_limit ) );
 
-            $wrapper_id = esc_attr( $wrapper_id );
-            $i = absint( $i );
+            $toggle_id = 'ezrwp-toggle-' . sanitize_html_class( $wrapper_id ) . '-' . absint( $i );
 
-            // The Read More link is hidden with CSS so the text degrades gracefully without JavaScript.
-            $read_more_link  = '<span class="ezrwp-read-more" id="ezrwp-read-more-' . $i . '" style="display: none;"><span class="ellipsis">...</span>';
-            $read_more_link .= '<button name="read more" type="button" onclick="ezrwpToggleReadMore( ' . $wrapper_id . ', ' . $i . ' )">More</button>';
+            // The "More" button is hidden until JavaScript runs, so the full text is readable without JavaScript.
+            $read_more_link  = '<span class="ezrwp-read-more" hidden><span class="ellipsis" aria-hidden="true">...</span>';
+            $read_more_link .= '<button type="button" aria-expanded="false" aria-controls="' . esc_attr( $toggle_id ) . '" data-ezrwp-toggle="' . esc_attr( $toggle_id ) . '">' . esc_html__( 'More', 'easy-zillow-reviews' ) . '</button>';
             $read_more_link .= '</span>';
 
-            return esc_html( $excerpt ) . '<span class="ezrwp-toggle" id="ezrwp-toggle-' . $i . '">' . esc_html( $rest ) . '</span>' . $read_more_link;
+            return esc_html( $excerpt ) . '<span class="ezrwp-toggle" id="' . esc_attr( $toggle_id ) . '">' . esc_html( $rest ) . '</span>' . $read_more_link;
         }
         
         /**
@@ -539,6 +564,26 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         /**
          * Get the value of message
          */ 
+        /**
+         * Get the extra request options (e.g., Premium shortcode attributes).
+         *
+         * @since    1.7.0
+         * @return   array
+         */
+        public function get_request_args() {
+            return isset( $this->request_args ) && is_array( $this->request_args ) ? $this->request_args : array();
+        }
+
+        /**
+         * Set the extra request options.
+         *
+         * @since    1.7.0
+         * @param    array    $args    The options.
+         */
+        public function set_request_args( $args ) {
+            $this->request_args = $args;
+        }
+
         public function get_message()
         {
                 return $this->message;

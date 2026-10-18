@@ -13,6 +13,9 @@
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
 
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
 if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
 
     class Easy_Zillow_Reviews_Lender extends Easy_Zillow_Reviews_Data{
@@ -216,7 +219,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                 $review_date = $review->created;
 
                 $loan_summary = $loan_service_provided . " " . $loan_type . " " . $loan_program . " " . $loan_purpose;
-                $date = ( $hide_date == false ) ? '<div class="ezrwp-date">'. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime( $review_date ))) .'</div>' : '';
+                $date = ( $hide_date == false ) ? '<div class="ezrwp-date">'. $template->convert_date_to_time_elapsed(gmdate( "Y-m-d", strtotime( $review_date ))) .'</div>' : '';
                 $reviewer_summary = ( $hide_reviewer_summary == false ) ? '<span class="review-summary">who '. esc_html( $loan_summary ) .' loan.</span>' : '';
                 $stars = '';
                 if( $hide_stars == false ){
@@ -252,9 +255,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                 // Increment the loop counter.
                 $i++;
 
-                // If we have iterated over the loop for as many columns as there are
-                // in the $number_cols parameter...
-                if( $i % $number_cols == 0 ){
+                // In grids, start a new row after each set of columns.
+                if( $layout !== 'carousel' && $i % $number_cols == 0 ){
 
                     // Ensure the reviews wrap to a new line (row).
                     $reviews_output .= '<div style="clear:both"></div>';
@@ -447,7 +449,11 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                 <div class="ezrwp-lender-profile-card">
                     '. $stars .'
                     <div class="ezrwp-lender-activity">
-                        '. esc_html( round( $rating, 2 ) ) .' Stars • '. absint( $review_count ) .' Reviews
+                        '. esc_html( round( $rating, 2 ) ) .' Stars • '. esc_html( sprintf(
+                            /* translators: %s: number of reviews */
+                            _n( '%s Review on Zillow', '%s Reviews on Zillow', absint( $review_count ), 'easy-zillow-reviews' ),
+                            number_format_i18n( absint( $review_count ) )
+                        ) ) .'
                     </div>
                 </div>
             ';
@@ -494,10 +500,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                     $reviews = $this;
 
                     // Parse attributes selected by the user in the Gutenberg block.
-                    $layout = isset( $attributes[ 'reviewsLayout' ] ) ? $attributes[ 'reviewsLayout' ] : $reviews->get_layout();
-                    $cols = isset( $attributes[ 'gridColumns' ] ) ? $attributes[ 'gridColumns' ] : $reviews->get_grid_columns();
-                    $count = isset( $attributes[ 'reviewsCount' ] ) ? $attributes[ 'reviewsCount' ] : $reviews->get_count();
-                    $word_limit = isset( $attributes[ 'wordLimit' ] ) ? $attributes[ 'wordLimit' ] : $reviews->get_word_limit();
+                    $layout = ! empty( $attributes[ 'reviewsLayout' ] ) ? $attributes[ 'reviewsLayout' ] : $reviews->get_layout();
+                    $cols = ! empty( $attributes[ 'gridColumns' ] ) ? $attributes[ 'gridColumns' ] : $reviews->get_grid_columns();
+                    $count = ! empty( $attributes[ 'reviewsCount' ] ) ? $attributes[ 'reviewsCount' ] : $reviews->get_count();
+                    $word_limit = ! empty( $attributes[ 'wordLimit' ] ) ? $attributes[ 'wordLimit' ] : $reviews->get_word_limit();
                     
                     // Overwite the Gutenberg block output with lender reviews from this object instance.
                     $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count, null, $word_limit );

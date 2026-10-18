@@ -1,38 +1,41 @@
 === Easy Zillow Reviews ===
 Contributors: boltonstudios
 Donate link: https://ko-fi.com/boltonstudios
-Tags: zillow, reviews, gutenberg, block, real estate, lender
-Requires at least: 4.0.0
+Tags: zillow, reviews, real estate, testimonials, block
+Requires at least: 6.3
 Tested up to: 7.1
-Requires PHP: 5.6
-Stable tag: 1.6.5
+Requires PHP: 7.4
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Display reviews from Zillow on your website.
+Display your latest Reviews on Zillow with a block, widget, or shortcode.
 
 == Description ==
 
-*Easy Zillow Reviews* helps real estate agents and lenders display their Zillow reviews using the official API.
+*Easy Zillow Reviews* helps real estate agents, teams, and lenders display their Zillow reviews using Zillow's official API.
 
 View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
 = Features (Free) =
-* Display latest reviews for real estate agents and teams.
+* Display the latest reviews for real estate agents.
 * Show reviews from multiple profiles.
 * List and grid layouts.
-* Widget and shortcode options.
-* Gutenberg block (edit review layouts in the new WordPress editor!).
-* Compliant with Zillow's Terms of Use and Branding Requirements.
+* Block with a live preview, plus widget and shortcode options.
+* Guided setup with a "Test connection" button.
+* Follows Zillow's display requirements, including the "Reviews on Zillow" label and links to your Zillow profile.
+* Lightweight: scripts load only on pages that show reviews, and no jQuery is required.
 
 = Premium Features =
-* Lender reviews.
+* Team reviews: team leads can show their team members' reviews alongside their own, with each review linked to the team member's profile.
+* Carousel layout with optional autoplay.
+* Lender, loan officer, and company profile reviews.
 * Priority support.
 * [Get the Premium Version](https://www.boltonstudios.com/easy-zillow-reviews/).
 
 = Requirements =
 
-The free plugin requires a [Bridge API Access Token](https://bridgedataoutput.com/zgdata).
+The free plugin requires a free [Bridge API Access Token](https://bridgedataoutput.com/zgdata) with access to the Zillow Agent Reviews dataset.
 
 The lender reviews require a [Zillow Mortgages Partner ID (ZPID)](https://www.zillow.com/mortgage/api/).
 
@@ -51,20 +54,42 @@ If you found this free plugin helpful, you can support the developer by upgradin
 
     [ez-zillow-reviews layout="grid" columns="2" count="4" screenname="jsmith" excerpt="50"]
 
-* layout..."list" or "grid".
-* columns...A number between 1 and 6.
+* layout..."list" or "grid" ("carousel" in Premium).
+* columns...A number between 1 and 6. In the carousel, the number of reviews visible at once.
 * count...A number between 1 and 10.
 * screenname...The screenname that appears in your Zillow profile link.
 * excerpt...A number between 20 and 750. The maximum length of each review (word limit).
+* team...(Premium) "true" or "false". Include your team members' reviews.
 
 == Installation ==
 
-1. Upload "easy-zillow-reviews" to the /wp-content/plugins/ directory.
-2. Activate the plugin through the **Plugins** menu in WordPress.
-3. Add your Bridge Access Token and Zillow Screenname to the **Settings** page.
-4. Adjust the Default Plugin Settings on the Settings page (optional).
-4. Add an *Easy Zillow Reviews* widget or **[ez-zillow-reviews]** shortcode to your page or post.
-5. Save Changes.
+1. In your WordPress dashboard, go to **Plugins › Add New Plugin**, search for "Easy Zillow Reviews", then install and activate it.
+2. Go to **Zillow Reviews › Settings › Zillow Professional Profile** and follow the setup steps to get a free Bridge API access token.
+3. Enter your token and Zillow screenname, click **Test connection**, then **Save Settings**.
+4. Optional: adjust the default layout and display settings on the **General** tab.
+5. Add the **Zillow Reviews** block, an *Easy Zillow Reviews* widget, or the **[ez-zillow-reviews]** shortcode to your page or post.
+
+== Frequently Asked Questions ==
+
+= Where do I get a Bridge API access token? =
+
+Zillow shares its reviews data through Bridge Interactive. Create a free account at [bridgedataoutput.com/zgdata](https://bridgedataoutput.com/zgdata), request access to the Zillow Agent Reviews dataset, and copy your API access token after Bridge approves your request.
+
+= Where do I find my Zillow screenname? =
+
+It's the part after "zillow.com/profile/" in the address of your Zillow profile page.
+
+= I used a Zillow Web Services ID (ZWSID). Does it still work? =
+
+No. Zillow retired the ZWSID. Please add a Bridge API access token instead.
+
+= Why don't my reviews update right away? =
+
+Reviews are requested from Zillow each time the page loads (Zillow's terms don't allow storing reviews). If your site uses a page cache, new reviews appear when the cache refreshes.
+
+= Can I show only my best reviews? =
+
+No. Zillow's terms require that reviews are not selected by rating; the plugin always shows your most recent reviews.
 
 == Screenshots ==
 
@@ -74,6 +99,24 @@ If you found this free plugin helpful, you can support the developer by upgradin
 4. Settings
 
 == Changelog ==
+
+= 1.7.0 =
+* Date Released: 2026-10-18
+* New Feature: Guided setup with a "Test connection" button for Bridge and lender credentials.
+* New Feature: The block shows a live preview of your reviews, and can set a screenname.
+* New Feature (Premium): Team reviews for team leads, with each review linked to the team member's Zillow profile.
+* New Feature (Premium): Carousel layout with optional autoplay.
+* Improvement: Added the "Reviews on Zillow" label required by Zillow's terms, and updated the Zillow disclaimer.
+* Improvement: Scripts and styles load only on pages that show reviews; jQuery is no longer required.
+* Improvement: The "More" button is accessible to keyboard and screen reader users, and long reviews are fully readable without JavaScript.
+* Improvement: Reviews show the city and state without the street address.
+* Improvement: Updated the block to the current block API.
+* Bug fix: The Zillow logo image no longer appears broken.
+* Bug fix: The settings page now works on sites installed in a subdirectory.
+* Bug fix: Some reviews showed "who 2023" instead of the service provided.
+* Settings are now sanitized when saved.
+* Removed the retired Zillow Web Services ID (ZWSID) setting. Sites that only have a ZWSID see a notice explaining how to switch to Bridge.
+* Requires WordPress 6.3 and PHP 7.4 or later.
 
 = 1.6.5 =
 * Date Released: 2026-10-18

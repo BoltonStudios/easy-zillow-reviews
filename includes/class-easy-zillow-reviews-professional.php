@@ -13,6 +13,9 @@
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
 
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
 include 'class-easy-zillow-reviews-review.php';
 
 if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
@@ -66,14 +69,6 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
          */
         private $screenname;
 
-        /**
-         * The option to fetch reviews for individual team members in team profiles.
-         *
-         * @since    1.1.0
-         * @access   private
-         * @var      bool   $show_team_members 
-         */
-        private $show_team_members;
 
         /**
          * The review text word limit set by the user.
@@ -104,6 +99,62 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $this->set_zwsid( $zwsid );
             $this->set_screenname( $screenname );
             $this->set_word_limit( $word_limit );
+
+            add_filter( 'ezrwp_test_connection', array( $this, 'test_connection' ), 10, 3 );
+        }
+
+        /**
+         * Test a Bridge API token and Zillow screenname from the settings page.
+         *
+         * @since    1.7.0
+         * @param    array|null    $result    The result from other handlers.
+         * @param    string        $type      The connection type.
+         * @param    array         $fields    The values entered on the settings page.
+         * @return   array|null
+         */
+        public function test_connection( $result, $type, $fields ){
+
+            if( $type !== 'professional' ){
+                return $result;
+            }
+
+            $token = isset( $fields['token'] ) ? trim( $fields['token'] ) : '';
+            $screenname = isset( $fields['screenname'] ) ? trim( $fields['screenname'] ) : '';
+
+            if( $token === '' ){
+                return array( 'success' => false, 'message' => __( 'Enter your Bridge API access token first.', 'easy-zillow-reviews' ) );
+            }
+
+            if( $screenname === '' ){
+                return array( 'success' => false, 'message' => __( 'Enter your Zillow screenname first.', 'easy-zillow-reviews' ) );
+            }
+
+            $message = '';
+            $account = $this->fetch_bridge_reviewee( $screenname, array( 'Authorization' => 'Bearer ' . $token ), $message, $code );
+
+            if( $account ){
+                return array(
+                    'success' => true,
+                    'message' => sprintf(
+                        /* translators: 1: the professional's name, 2: number of reviews */
+                        _n( 'Connected! Found %1$s on Zillow with %2$s review. Remember to save your settings.', 'Connected! Found %1$s on Zillow with %2$s reviews. Remember to save your settings.', absint( $account->ReviewCount ), 'easy-zillow-reviews' ),
+                        isset( $account->RevieweeFullName ) ? $account->RevieweeFullName : $screenname,
+                        number_format_i18n( absint( $account->ReviewCount ) )
+                    ),
+                );
+            }
+
+            if( $code === 401 || $code === 403 ){
+                $message = __( 'Bridge did not accept this access token. Make sure you copied the whole token and that Bridge has approved your access to the Zillow Agent Reviews dataset.', 'easy-zillow-reviews' ) . ' (' . $message . ')';
+            } elseif( $code === 200 ){
+                $message = sprintf(
+                    /* translators: %s: the screenname */
+                    __( 'Your token works, but Zillow has no reviews profile for the screenname "%s". Copy the screenname from your Zillow profile address (zillow.com/profile/SCREENNAME).', 'easy-zillow-reviews' ),
+                    $screenname
+                );
+            }
+
+            return array( 'success' => false, 'message' => $message );
         }
 
         // Methods
@@ -150,9 +201,19 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
                     // Request the most recent reviews. Chronology is the only selection
                     // permitted by Zillow's terms for showing a subset of reviews.
+                    /**
+                     * Filters the OData filter used to request reviews, e.g. to include a team's reviews.
+                     *
+                     * @since 1.7.0
+                     * @param string $filter  The OData $filter expression.
+                     * @param object $account The reviewee account from Bridge.
+                     * @param array  $args    Extra request options (e.g., shortcode attributes).
+                     */
+                    $filter = apply_filters( 'ezrwp_bridge_reviews_filter', "AccountIdReviewee eq '" . $account->AccountIdReviewee . "'", $account, $this->get_request_args() );
+
                     $reviews_url = add_query_arg(
                         array(
-                            '$filter'  => rawurlencode( "AccountIdReviewee eq '" . $account->AccountIdReviewee . "'" ),
+                            '$filter'  => rawurlencode( $filter ),
                             '$orderby' => rawurlencode( 'ReviewDate desc' ),
                             '$top'     => $count,
                         ),
@@ -172,6 +233,18 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                         foreach( $result['data']->value as $item ){
                             $reviews[] = $this->create_review_from_bridge( $item, $profile_url );
                         }
+
+                        /**
+                         * Filters the reviews fetched from Bridge, e.g. to attribute team reviews.
+                         *
+                         * @since 1.7.0
+                         * @param Easy_Zillow_Reviews_Review[] $reviews The reviews.
+                         * @param object[]                     $items   The review records, in the same order.
+                         * @param object                       $account The reviewee account.
+                         * @param array                        $headers Request headers for further API calls.
+                         * @param Easy_Zillow_Reviews_Professional $data This object.
+                         */
+                        $reviews = apply_filters( 'ezrwp_bridge_reviews', $reviews, $result['data']->value, $account, $headers, $this );
 
                         // Sort reviews by date, newest first.
                         usort( $reviews, function( $a, $b ){
@@ -208,7 +281,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
          * @param    string    $message       Updated with an error message if the lookup fails.
          * @return   object|null              The reviewee account, or null.
          */
-        private function fetch_bridge_reviewee( $screenname, $headers, &$message ){
+        private function fetch_bridge_reviewee( $screenname, $headers, &$message, &$code = 0 ){
 
             $candidates = array( $screenname );
 
@@ -226,6 +299,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 );
 
                 $result = $this->remote_get_json( $url, $headers );
+                $code = $result['code'];
 
                 if( $result['code'] !== 200 ){
                     $message = $this->get_bridge_error_message( $result );
@@ -252,21 +326,58 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
          */
         private function create_review_from_bridge( $item, $profile_url ){
 
-            $location = isset( $item->FreeFormLocation ) ? array_map( 'trim', explode( ',', $item->FreeFormLocation ) ) : array();
-            $city = isset( $location[1] ) ? mb_convert_case( $location[1], MB_CASE_TITLE, 'UTF-8' ) : '';
-            $state = isset( $location[2] ) ? ', ' . strtoupper( $location[2] ) : '';
+            $location = isset( $item->FreeFormLocation ) ? trim( (string) $item->FreeFormLocation ) : '';
+            $service = isset( $item->ServiceProviderDesc ) ? trim( (string) $item->ServiceProviderDesc ) : '';
 
-            // If the "city" is *not* empty but the "state" is empty, assume the "city" is the two-letter state code.
-            $city = ( $city !== '' && $state === '' ) ? strtoupper( $city ) : $city . $state;
+            // Some records have shifted columns: the service description is in FreeFormLocation and the service year in ServiceProviderDesc.
+            if( preg_match( '/^\d{4}$/', $service ) && ! preg_match( '/\d/', $location ) ){
+                $service = $location;
+                $location = '';
+            }
 
             return new Easy_Zillow_Reviews_Review(
                 isset( $item->Description ) ? (string) $item->Description : '',
-                isset( $item->ServiceProviderDesc ) ? lcfirst( (string) $item->ServiceProviderDesc ) : '',
+                lcfirst( $service ),
                 trailingslashit( $profile_url ) . '#reviews',
                 isset( $item->ReviewDate ) ? (string) $item->ReviewDate : '',
                 isset( $item->Rating ) ? floatval( $item->Rating ) : 0,
-                $city
+                $this->get_review_city( $location, $item )
             );
+        }
+
+        /**
+         * Get a "City, ST" description of where the reviewed service took place, without the street address.
+         *
+         * @since    1.7.0
+         * @param    string    $location    The free-form location, e.g. "123 Main St Springfield, IL 62701".
+         * @param    object    $item        The review record.
+         * @return   string
+         */
+        private function get_review_city( $location, $item ){
+
+            $state = preg_match( '/,\s*([A-Za-z]{2})\b(?:\s+\d{5}(?:-\d{4})?)?\s*$/', $location, $matches ) ? strtoupper( $matches[1] ) : '';
+            $city = '';
+
+            // "Neighborhood,ZIP,City,County,State"
+            if( ! empty( $item->PropertyLocationNames ) ){
+                $parts = array_map( 'trim', explode( ',', $item->PropertyLocationNames ) );
+                $city = isset( $parts[2] ) ? $parts[2] : '';
+            }
+
+            // "City,County,State"
+            if( $city === '' && ! empty( $item->RegionLocationNames ) ){
+                $parts = array_map( 'trim', explode( ',', $item->RegionLocationNames ) );
+                $city = isset( $parts[0] ) ? $parts[0] : '';
+                if( $state === '' && isset( $parts[2] ) ){
+                    $state = $parts[2];
+                }
+            }
+
+            if( $city !== '' && $state !== '' ){
+                return $city . ', ' . $state;
+            }
+
+            return $city !== '' ? $city : $state;
         }
 
         /**
@@ -337,12 +448,23 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
                 // Update local variables.
                 $url = $review->get_url();
-                $date = ( !$hide_date ) ? '<div class="ezrwp-date">'. $template->convert_date_to_time_elapsed(date( "Y-m-d", strtotime( $review->get_date() ) ) ) .'</div>' : '';
+                $date = ( !$hide_date ) ? '<div class="ezrwp-date">'. $template->convert_date_to_time_elapsed(gmdate( "Y-m-d", strtotime( $review->get_date() ) ) ) .'</div>' : '';
                 $stars = 0;
                 $star_rating_html = "";
                 $summary = lcfirst( $review->get_summary() );
                 $reviewer_summary = ( !$hide_reviewer_summary ) ? '<span class="review-summary">who '. esc_html( $summary ) .'</span>' : '';
                 $word_limit = $this->get_word_limit();
+                $reviewee = '';
+
+                // For team reviews, show which team member was reviewed.
+                if( $review->get_reviewee_name() !== '' ){
+                    $reviewee = '<br /><span class="ezrwp-reviewee">' . sprintf(
+                        /* translators: %s: the team member's name, linked to their Zillow profile */
+                        esc_html__( 'Review of %s', 'easy-zillow-reviews' ),
+                        '<a href="' . esc_url( $review->get_reviewee_url() ) . '" target="_blank" rel="nofollow">' . esc_html( $review->get_reviewee_name() ) . '</a>'
+                    ) . '</span>';
+                }
+
                 $before_review = '<div class="col ezrwp-col">';
                 $after_review = '</div>';
 
@@ -378,7 +500,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 // Construct the HTML string for the reviewer element.
                 $reviewer = '
                     <div class="ezrwp-reviewer">
-                        <p> &mdash;<a href="'. esc_url( $url ) .'" target="_blank" rel="nofollow">Zillow Reviewer</a> '. $reviewer_summary .'
+                        <p> &mdash;<a href="'. esc_url( $url ) .'" target="_blank" rel="nofollow">Zillow Reviewer</a> '. $reviewer_summary . $reviewee .'
                         </p>
                     </div>
                 ';
@@ -394,8 +516,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 // Increment the counter.
                 $i++;
 
-                // If the counter in the current loop iteration is divisible by the users' chosen number of columns...
-                if( $i % $number_cols == 0 ){
+                // In grids, start a new row after each set of columns.
+                if( $layout !== 'carousel' && $i % $number_cols == 0 ){
 
                     // Add an element to create a line break.
                     $reviews_output .= '<div style="clear:both"></div>';
@@ -476,7 +598,11 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                             <div class="ezrwp-activity-reviews">
                                 <div class="ezrwp-rating-reviews">
                                     <span class="ezrwp-avg-rating">'. $star_average . esc_html( round( floatval( $rating ), 2 ) ) .'</span>/<span class="ezrwp-max-rating">5</span>
-                                    <a href="'. esc_url( $url . '#reviews' ) . '" class="ezrwp-reviews-count">'. absint( $review_count ) .' Reviews</a>
+                                    <a href="'. esc_url( $url . '#reviews' ) . '" class="ezrwp-reviews-count">'. esc_html( sprintf(
+                                        /* translators: %s: number of reviews */
+                                        _n( '%s Review on Zillow', '%s Reviews on Zillow', absint( $review_count ), 'easy-zillow-reviews' ),
+                                        number_format_i18n( absint( $review_count ) )
+                                    ) ) .'</a>
                                 </div>
                             </div>
                             '. $recent_sales .'
@@ -499,17 +625,24 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
          */
         function update_reviews_in_block( $output, $attributes ){
             
+            // Other review types (e.g., lender reviews) are rendered by their own handlers.
+            if( ! empty( $attributes[ 'reviewsType' ] ) && $attributes[ 'reviewsType' ] !== 'professional' ){
+                return $output;
+            }
+
             // Get this Eazy_Zillow_Reviews_Professional object instance.
             $reviews = $this;
 
             // Parse attributes selected by the user in the Gutenberg block.
-            $layout = isset( $attributes[ 'reviewsLayout' ] ) ? $attributes[ 'reviewsLayout' ] : $reviews->get_layout();
-            $cols = isset( $attributes[ 'gridColumns' ] ) ? $attributes[ 'gridColumns' ] : $reviews->get_grid_columns();
-            $count = isset( $attributes[ 'reviewsCount' ] ) ? $attributes[ 'reviewsCount' ] : $reviews->get_count();
-            $word_limit = isset( $attributes[ 'wordLimit' ] ) ? $attributes[ 'wordLimit' ] : $reviews->get_word_limit();
-            
+            $layout = ! empty( $attributes[ 'reviewsLayout' ] ) ? $attributes[ 'reviewsLayout' ] : $reviews->get_layout();
+            $cols = ! empty( $attributes[ 'gridColumns' ] ) ? $attributes[ 'gridColumns' ] : $reviews->get_grid_columns();
+            $count = ! empty( $attributes[ 'reviewsCount' ] ) ? $attributes[ 'reviewsCount' ] : $reviews->get_count();
+            $word_limit = ! empty( $attributes[ 'wordLimit' ] ) ? $attributes[ 'wordLimit' ] : $reviews->get_word_limit();
+            $screenname = ! empty( $attributes[ 'screenname' ] ) ? $attributes[ 'screenname' ] : null;
+            $args = isset( $attributes[ 'includeTeam' ] ) ? array( 'team' => $attributes[ 'includeTeam' ] ? 'true' : 'false' ) : array();
+
             // Overwite the Gutenberg block output with professional reviews from this object instance.
-            $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count, null, $word_limit );
+            $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count, $screenname, $word_limit, $args );
 
             // Return the updated output.
             return $output;
@@ -579,26 +712,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             return $this;
         }
         
-        /**
-         * Get the value of show_team_members
-         *
-         * @since    1.1.0
-         */
-        public function get_show_team_members(){
 
-            return $this->show_team_members;
-        }
-
-        /**
-         * Set the value of show_team_members
-         *
-         * @return  self
-         */ 
-        public function set_show_team_members($show_team_members){
-
-            $this->show_team_members = $show_team_members;
-            return $this;
-        }
         
         /**
          * Get the value of zillow_api_url

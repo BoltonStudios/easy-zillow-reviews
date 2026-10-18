@@ -13,6 +13,9 @@
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
 
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
 if ( ! class_exists( 'Easy_Zillow_Reviews_Lender_Shortcodes' ) ) {
     
     class Easy_Zillow_Reviews_Lender_Shortcodes{
@@ -45,6 +48,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender_Shortcodes' ) ) {
             
             // Get attributes from shortcode
             if( isset( $atts ) ){
+                $raw_atts = $atts;
                 $atts = shortcode_atts( array(
                     // Defaults passed from admin settings above.
                     'layout' => $reviews->get_layout(),
@@ -55,7 +59,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender_Shortcodes' ) ) {
                 $cols = $atts[ 'columns' ];
                 $count = $atts[ 'count' ];
             }
-            return $reviews->get_reviews_output( $reviews, $layout, $cols, $count );
+            return $reviews->get_reviews_output( $reviews, $layout, $cols, $count, null, null, ( isset( $raw_atts ) && is_array( $raw_atts ) ) ? $raw_atts : array() );
         }
         
         /**

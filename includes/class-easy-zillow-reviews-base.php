@@ -13,6 +13,9 @@
  * @subpackage Easy_Zillow_Reviews/includes
  */
 
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * The core plugin class.
  *
@@ -219,8 +222,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Base' ) ) {
 
             $plugin_public = new Easy_Zillow_Reviews_Public( $this->get_plugin_slug(), $this->get_version() );
 
-            $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-            $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+            $this->loader->add_action( 'init', $plugin_public, 'enqueue_styles' );
+            $this->loader->add_action( 'init', $plugin_public, 'enqueue_scripts' );
 
         }
 

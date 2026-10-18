@@ -11,6 +11,9 @@
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
 
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
 if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
     
     class Easy_Zillow_Reviews_Admin_Settings {
@@ -107,18 +110,18 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
             // General
             $sections[] = array(
                 'id'  => 'ezrwp_section_for_defaults', // id
-                'title'  => __( 'Default Plugin Settings', 'ezrwp_general' ), // title
+                'title'  => __( 'Default Plugin Settings', 'easy-zillow-reviews' ), // title
                 'page'  => 'ezrwp_general' // page
             );
             $sections[] = array(
                 'id'  => 'ezrwp_section_for_support', // id
-                'title'  => __( 'Debugging Information', 'ezrwp_general' ), // title
+                'title'  => __( 'Debugging Information', 'easy-zillow-reviews' ), // title
                 'page'  => 'ezrwp_general' // page
             );
             // Professional Reviews
             $sections[] = array(
                 'id'  => 'ezrwp_section_for_zillow_professional_parameters', //id
-                'title'  => __( 'Zillow Professional Profile', 'ezrwp_professional_reviews' ), //title
+                'title'  => __( 'Zillow Professional Profile', 'easy-zillow-reviews' ), //title
                 'page'  => 'ezrwp_professional_reviews' //page
             );
 
@@ -134,70 +137,70 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
             // General Tab
             $settings[] = array(
                 'id'        => 'ezrwp_count', // id. Used only internally
-                'title'     => __( 'Review Count', 'ezrwp_general' ), // title
+                'title'     => __( 'Review Count', 'easy-zillow-reviews' ), // title
                 'callback'  => 'ezrwp_count_number_field_cb', // callback
                 'tab'       => 'ezrwp_general', // page
                 'section'   => 'ezrwp_section_for_defaults'
             );
             $settings[] = array(
                 'id'        => 'ezrwp_layout', // id. Used only internally
-                'title'     => __( 'Reviews Layout', 'ezrwp_general' ), // title
+                'title'     => __( 'Reviews Layout', 'easy-zillow-reviews' ), // title
                 'callback'  => 'ezrwp_layout_select_field_cb', // callback
                 'tab'       => 'ezrwp_general', // page
                 'section'   => 'ezrwp_section_for_defaults'
             );
             $settings[] = array(
                 'id'        => 'ezrwp_cols', // id. Used only internally
-                'title'     => __( 'Grid Columns', 'ezrwp_general' ), // title
+                'title'     => __( 'Grid Columns', 'easy-zillow-reviews' ), // title
                 'callback'  => 'ezrwp_cols_number_field_cb', // callback
                 'tab'       => 'ezrwp_general', // page
                 'section'   => 'ezrwp_section_for_defaults'
             );
             $settings[] = array(
                 'id'        => 'ezrwp_disclaimer', // id. Used only internally
-                'title'     => __( 'Zillow Disclaimer', 'ezrwp_general' ), // title
+                'title'     => __( 'Zillow Disclaimer', 'easy-zillow-reviews' ), // title
                 'callback'  => 'ezrwp_disclaimer_pill_field_cb', // callback
                 'tab'       => 'ezrwp_general', // page
                 'section'   => 'ezrwp_section_for_defaults'
             );
             $settings[] = array(
                 'id'        => 'ezrwp_hide_date', // id. Used only internally
-                'title'     => __( 'Hide Review Date', 'ezrwp_general' ), // title
+                'title'     => __( 'Hide Review Date', 'easy-zillow-reviews' ), // title
                 'callback'  => 'ezrwp_hide_date_field_cb', // callback
                 'tab'       => 'ezrwp_general', // page
                 'section'   => 'ezrwp_section_for_defaults'
             );
             $settings[] = array(
                 'id'        => 'ezrwp_hide_stars', // id. Used only internally
-                'title'     => __( 'Hide Review Stars', 'ezrwp_general' ), // title
+                'title'     => __( 'Hide Review Stars', 'easy-zillow-reviews' ), // title
                 'callback'  => 'ezrwp_hide_stars_field_cb', // callback
                 'tab'       => 'ezrwp_general', // page
                 'section'   => 'ezrwp_section_for_defaults'
             );
             $settings[] = array(
                 'id'        => 'ezrwp_hide_reviewer_summary', // id. Used only internally
-                'title'     => __( 'Hide Reviewer Description', 'ezrwp_general' ), // title
+                'title'     => __( 'Hide Reviewer Description', 'easy-zillow-reviews' ), // title
                 'callback'  => 'ezrwp_hide_reviewer_summary_field_cb', // callback
                 'tab'       => 'ezrwp_general', // page
                 'section'   => 'ezrwp_section_for_defaults'
             );
             $settings[] = array(
                 'id'        => 'ezrwp_hide_profile_card', // id. Used only internally
-                'title'     => __( 'Hide Reviews Summary', 'ezrwp_general' ), // title
+                'title'     => __( 'Hide Reviews Summary', 'easy-zillow-reviews' ), // title
                 'callback'  => 'ezrwp_hide_profile_card_field_cb', // callback
                 'tab'       => 'ezrwp_general', // page
                 'section'   => 'ezrwp_section_for_defaults'
             );
             $settings[] = array(
                 'id'        => 'ezrwp_hide_view_all_link', // id. Used only internally
-                'title'     => __( 'Hide "View All" Link', 'ezrwp_general' ), // title
+                'title'     => __( 'Hide "View All" Link', 'easy-zillow-reviews' ), // title
                 'callback'  => 'ezrwp_hide_view_all_link_field_cb', // callback
                 'tab'       => 'ezrwp_general', // page
                 'section'   => 'ezrwp_section_for_defaults'
             );
             $settings[] = array(
                 'id'        => 'ezrwp_hide_zillow_logo', // id. Used only internally
-                'title'     => __( 'Hide Zillow Logo', 'ezrwp_general' ), // title
+                'title'     => __( 'Hide Zillow Logo', 'easy-zillow-reviews' ), // title
                 'callback'  => 'ezrwp_hide_zillow_logo_field_cb', // callback
                 'tab'       => 'ezrwp_general', // page
                 'section'   => 'ezrwp_section_for_defaults'
@@ -206,22 +209,15 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
             // Professional Reviews
             $settings[] = array(
                 'id'        => 'ezrwp_bridge_token_1', // id. Used only internally
-                'title'     => __( 'Bridge API Access Token', 'ezrwp_professional_reviews' ), // title
+                'title'     => __( 'Bridge API Access Token', 'easy-zillow-reviews' ), // title
                 'callback'  => 'ezrwp_bridge_token_text_field_cb', // callback
                 'tab'       => 'ezrwp_professional_reviews', // page
                 'section'   => 'ezrwp_section_for_zillow_professional_parameters'
             );
             $settings[] = array(
                 'id'        => 'ezrwp_screenname', // id. Used only internally
-                'title'     => __( 'Zillow Screenname', 'ezrwp_professional_reviews' ), // title
+                'title'     => __( 'Zillow Screenname', 'easy-zillow-reviews' ), // title
                 'callback'  => 'ezrwp_screenname_text_field_cb', // callback
-                'tab'       => 'ezrwp_professional_reviews', // page
-                'section'   => 'ezrwp_section_for_zillow_professional_parameters'
-            );
-            $settings[] = array(
-                'id'        => 'ezrwp_zwsid', // id. Used only internally
-                'title'     => __( 'Zillow Web Services ID (Deprecated)', 'ezrwp_professional_reviews' ), // title
-                'callback'  => 'ezrwp_zwsid_text_field_cb', // callback
                 'tab'       => 'ezrwp_professional_reviews', // page
                 'section'   => 'ezrwp_section_for_zillow_professional_parameters'
             );

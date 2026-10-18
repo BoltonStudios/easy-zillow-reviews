@@ -11,6 +11,9 @@
  * @package    Easy_Zillow_Reviews
  * @subpackage Easy_Zillow_Reviews/public/partials
  */
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->

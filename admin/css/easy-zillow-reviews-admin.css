@@ -8,3 +8,20 @@
 #disclaimer-warning {
   display: none;
 }
+.ezrwp-test-connection-result {
+  display: inline-block;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.ezrwp-test-connection-result.is-success {
+  color: #008a20;
+}
+.ezrwp-test-connection-result.is-error {
+  color: #d63638;
+}
+.ezrwp-setup-guide {
+  max-width: 760px;
+  padding: 4px 16px;
+  background: #fff;
+  border-left: 4px solid #72aee6;
+}

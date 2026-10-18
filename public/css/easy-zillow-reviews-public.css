@@ -387,3 +387,26 @@ body .entry-content .ezrwp-wrapper .ezrwp-content blockquote {
   margin-right: 0;
   margin-left: 0;
 }
+
+/* Added in 1.7.0 */
+.ezrwp-wrapper .ezrwp-label {
+  margin: 0 0 0.75em;
+  font-size: 0.8em;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+.ezrwp-wrapper .ezrwp-reviewee {
+  display: inline-block;
+  margin-top: 0.25em;
+  font-size: 0.9em;
+}
+.ezrwp-wrapper .ezrwp-read-more[hidden],
+.ezrwp-wrapper .ezrwp-toggle[hidden] {
+  display: none;
+}
+.ezrwp-wrapper .ezrwp-attribution img {
+  max-width: 100%;
+  height: auto;
+}

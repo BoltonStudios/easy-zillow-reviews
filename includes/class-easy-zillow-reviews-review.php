@@ -13,6 +13,9 @@
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
 
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
 if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
 
     class Easy_Zillow_Reviews_Review{
@@ -82,23 +85,27 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
             $this->rating = $rating;
             $this->city = $city;
             
-            // Adjust the summary parameter value.
-            switch ( strtolower( $summary ) ){
-                
-                case "helped me buy home" :
-                    
-                    $summary = "bought a home";
-                    break;
+            // Rephrase the service description from the reviewer's point of view.
+            $phrases = array(
+                'helped me buy home'               => 'bought a home',
+                'helped me buy a home'             => 'bought a home',
+                'helped me sell home'              => 'sold a home',
+                'helped me sell a home'            => 'sold a home',
+                'helped me buy and sell homes'     => 'bought and sold homes',
+                'showed me homes'                  => 'shopped for a new home',
+                'listed and sold a home'           => 'listed and sold a home',
+                'helped me find a home to rent'    => 'rented a home',
+                'helped me find tenant for rental' => 'found a tenant for a rental',
+            );
 
-                case "showed me homes" :
-                    
-                    $summary = "shopped for a new home";
-                    break;
+            $key = strtolower( trim( (string) $summary ) );
 
-                default:
-                
-                    // Do not adjust the summary parameter value.
-                    break;
+            if( isset( $phrases[ $key ] ) ){
+                $summary = $phrases[ $key ];
+            } elseif( $key === '' || strpos( $key, 'helped me' ) === 0 || preg_match( '/^\d+$/', $key ) ){
+
+                // Skip descriptions that would not read well after "who".
+                $summary = 'worked with this agent';
             }
 
             // If the city property is not blank...
@@ -114,6 +121,55 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Review' ) ) {
 
         // Methods
         public function init(){
+        }
+
+        /**
+         * The name of the reviewed team member, for team reviews.
+         *
+         * @since    1.7.0
+         * @var      string
+         */
+        private $reviewee_name = '';
+
+        /**
+         * The Zillow profile URL of the reviewed team member, for team reviews.
+         *
+         * @since    1.7.0
+         * @var      string
+         */
+        private $reviewee_url = '';
+
+        /**
+         * Get the reviewed team member's name.
+         *
+         * @since    1.7.0
+         * @return   string
+         */
+        public function get_reviewee_name(){
+            return $this->reviewee_name;
+        }
+
+        /**
+         * Get the reviewed team member's Zillow profile URL.
+         *
+         * @since    1.7.0
+         * @return   string
+         */
+        public function get_reviewee_url(){
+            return $this->reviewee_url;
+        }
+
+        /**
+         * Set the reviewed team member. The review links to their profile.
+         *
+         * @since    1.7.0
+         * @param    string    $name    The team member's name.
+         * @param    string    $url     The team member's Zillow profile URL.
+         */
+        public function set_reviewee( $name, $url ){
+            $this->reviewee_name = (string) $name;
+            $this->reviewee_url = (string) $url;
+            $this->url = trailingslashit( $url ) . '#reviews';
         }
 
         /**

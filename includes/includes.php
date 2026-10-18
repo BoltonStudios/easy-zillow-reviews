@@ -3,6 +3,9 @@
  * The class responsible for orchestrating the actions and filters of the
  * core plugin.
  */
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-easy-zillow-reviews-loader.php';
 
 /**

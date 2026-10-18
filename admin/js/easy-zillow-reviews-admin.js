@@ -59,3 +59,45 @@ function ezrwp_admin_scripts(){
 		});   
 	}
 }
+// Test the API connection with the values currently entered on the settings page.
+document.addEventListener( 'click', function ( event ) {
+	var button = event.target.closest ? event.target.closest( '.ezrwp-test-connection button' ) : null;
+
+	if ( ! button ) {
+		return;
+	}
+
+	var container = button.parentNode;
+	var result = container.querySelector( '.ezrwp-test-connection-result' );
+	var fields = JSON.parse( container.getAttribute( 'data-fields' ) || '{}' );
+	var body = new URLSearchParams();
+
+	body.append( 'action', 'ezrwp_test_connection' );
+	body.append( '_ajax_nonce', container.getAttribute( 'data-nonce' ) );
+	body.append( 'type', container.getAttribute( 'data-type' ) );
+
+	Object.keys( fields ).forEach( function ( key ) {
+		var input = document.getElementById( fields[ key ] );
+		body.append( 'fields[' + key + ']', input ? input.value : '' );
+	} );
+
+	button.disabled = true;
+	result.className = 'ezrwp-test-connection-result';
+	result.textContent = 'Testing…';
+
+	fetch( window.ajaxurl, { method: 'POST', credentials: 'same-origin', body: body } )
+		.then( function ( response ) {
+			return response.json();
+		} )
+		.then( function ( response ) {
+			result.className = 'ezrwp-test-connection-result ' + ( response.success ? 'is-success' : 'is-error' );
+			result.textContent = response.data && response.data.message ? response.data.message : 'Unexpected response.';
+		} )
+		.catch( function () {
+			result.className = 'ezrwp-test-connection-result is-error';
+			result.textContent = 'The test could not be completed. Please try again.';
+		} )
+		.then( function () {
+			button.disabled = false;
+		} );
+} );

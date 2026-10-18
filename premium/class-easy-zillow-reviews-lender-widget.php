@@ -13,6 +13,9 @@
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
     
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
 if ( ! class_exists( 'Easy_Zillow_Reviews_Lender_Widget_Init' ) ) {
 
     class Easy_Zillow_Reviews_Lender_Widget_Init extends Easy_Zillow_Reviews_Lender{
@@ -126,15 +129,15 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender_Widget' ) ) {
             $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count );
 
             // Output content
-            echo $args['before_widget'];
+            echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Markup provided by the theme.
 
             // Widget title
             if ( ! empty( $instance['title'] ) ){
-                echo $args['before_title'] . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $args['after_title'];
+                echo $args['before_title'] . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Markup provided by the theme.
             }
 
-            echo $output;
-            echo $args['after_widget'];
+            echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped when the reviews HTML is built.
+            echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Markup provided by the theme.
         }
         
         /**
@@ -144,44 +147,44 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender_Widget' ) ) {
          */
         public function form( $instance ) {
             // outputs the options form on admin
-            $title = ! empty( $instance['title'] ) ? $instance['title'] : esc_html__( '', 'text_domain' );
-            $count = ! empty( $instance['count'] ) ? $instance['count'] : esc_html__( '', 'text_domain' );
-            $layout = ! empty( $instance['layout'] ) ? $instance['layout'] : esc_html__( '', 'text_domain' );
-            $cols = ! empty( $instance['cols'] ) ? $instance['cols'] : esc_html__( '', 'text_domain' );
+            $title = ! empty( $instance['title'] ) ? $instance['title'] : '';
+            $count = ! empty( $instance['count'] ) ? $instance['count'] : '';
+            $layout = ! empty( $instance['layout'] ) ? $instance['layout'] : '';
+            $cols = ! empty( $instance['cols'] ) ? $instance['cols'] : '';
             ?>
             <p>Add your Zillow Mortgages Partner ID, NMLS#, and Company Name if applicable in Settings -> Zillow Reviews -> Lender Reviews.</p>
             <p>
                 <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>">
-                    <?php esc_attr_e( 'Title:', 'text_domain' ); ?>
+                    <?php esc_attr_e( 'Title:', 'easy-zillow-reviews' ); ?>
                 </label> 
                 <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
             </p>
             <p>
                 <label for="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>">
-                    <?php esc_attr_e( 'Number of reviews to show:', 'text_domain' ); ?>
+                    <?php esc_attr_e( 'Number of reviews to show:', 'easy-zillow-reviews' ); ?>
                 </label> 
                 <input id="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>" style="width:45px;" name="<?php echo esc_attr( $this->get_field_name( 'count' ) ); ?>" type="number" value="<?php echo esc_attr( $count ); ?>" min="1" max="10">
             </p>
             <p>
                 <label for="<?php echo esc_attr( $this->get_field_id( 'layout' ) ); ?>">
-                    <?php esc_attr_e( 'Reviews Layout:', 'text_domain' ); ?>
+                    <?php esc_attr_e( 'Reviews Layout:', 'easy-zillow-reviews' ); ?>
                 </label> 
                 
                 <select id="<?php echo esc_attr( $this->get_field_id( 'layout' ) ); ?>"
                 class="widefat ezrwp_layout"
                 name="<?php echo esc_attr( $this->get_field_name( 'layout' ) ); ?>]"
                         onchange="ezrwpToggleGridCols(this)">
-                    <option value="list" <?php echo (esc_attr( $layout ) == 'list') ? 'selected' : '' ; ?>>
-                    <?php esc_html_e( 'List', 'ezrwp' ); ?>
-                    </option>
-                    <option value="grid" <?php echo (esc_attr( $layout ) == 'grid') ? 'selected' : '' ; ?>>
-                    <?php esc_html_e( 'Grid', 'ezrwp' ); ?>
-                    </option>
+                    <?php
+                    $ezrwp_layout_labels = array( 'list' => __( 'List', 'easy-zillow-reviews' ), 'grid' => __( 'Grid', 'easy-zillow-reviews' ), 'carousel' => __( 'Carousel', 'easy-zillow-reviews' ) );
+                    foreach( apply_filters( 'ezrwp_available_layouts', array( 'list', 'grid' ) ) as $ezrwp_layout_option ){
+                        printf( '<option value="%1$s"%2$s>%3$s</option>', esc_attr( $ezrwp_layout_option ), selected( $layout, $ezrwp_layout_option, false ), esc_html( isset( $ezrwp_layout_labels[ $ezrwp_layout_option ] ) ? $ezrwp_layout_labels[ $ezrwp_layout_option ] : ucfirst( $ezrwp_layout_option ) ) );
+                    }
+                    ?>
                 </select>
             </p>
             <p>
                 <label for="<?php echo esc_attr( $this->get_field_id( 'cols' ) ); ?>">
-                    <?php esc_attr_e( 'Review Grid Columns:', 'text_domain' ); ?>
+                    <?php esc_attr_e( 'Review Grid Columns:', 'easy-zillow-reviews' ); ?>
                 </label> 
                 <input id="<?php echo esc_attr( $this->get_field_id( 'cols' ) ); ?>" class="ezrwp_cols" style="width:45px;" name="<?php echo esc_attr( $this->get_field_name( 'cols' ) ); ?>" type="number" value="<?php echo esc_attr( $cols ); ?>" min="2" max="6">
             </p>

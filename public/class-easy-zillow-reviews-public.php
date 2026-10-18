@@ -14,6 +14,9 @@
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
     
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
 if ( ! class_exists( 'Easy_Zillow_Reviews_Public' ) ) {
         
     class Easy_Zillow_Reviews_Public {
@@ -68,7 +71,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Public' ) ) {
              * class.
              */
 
-            wp_enqueue_style( $this->plugin_slug, plugin_dir_url( __FILE__ ) . 'css/easy-zillow-reviews-public.css', array(), $this->version, 'all' );
+            // Registered here and enqueued only when reviews are displayed.
+            wp_register_style( $this->plugin_slug, plugin_dir_url( __FILE__ ) . 'css/easy-zillow-reviews-public.css', array(), $this->version, 'all' );
             //wp_add_inline_style( $this->plugin_slug, $this->generate_inline_styles() );
         }
 
@@ -91,7 +95,17 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Public' ) ) {
              * class.
              */
 
-            wp_enqueue_script( $this->plugin_slug, plugin_dir_url( __FILE__ ) . 'js/easy-zillow-reviews-public.js', array( 'jquery' ), $this->version, false );
+            // Registered here and enqueued only when reviews are displayed.
+            wp_register_script(
+                $this->plugin_slug,
+                plugin_dir_url( __FILE__ ) . 'js/easy-zillow-reviews-public.js',
+                array(),
+                $this->version,
+                array(
+                    'in_footer' => true,
+                    'strategy'  => 'defer',
+                )
+            );
 
         }
     }

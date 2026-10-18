@@ -13,6 +13,9 @@
  * @author     Aaron Bolton <aaron@boltonstudios.com>
  */
     
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
 if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
 
     class Easy_Zillow_Reviews_Template_Loader{
@@ -141,7 +144,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
         public function init(){
 
             // Create an identifier for this HTML wrapper.
-            $this->wrapper_id = rand();
+            $this->wrapper_id = function_exists( 'wp_unique_id' ) ? wp_unique_id() : (string) wp_rand();
         }
 
         /**
@@ -173,7 +176,11 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
                 $view_all_link = '
                     <p class="ezrwp-call-to-action">
                         <a href="'. esc_url( $profile_url . '#reviews' ) . '" class="z-profile-link" target="_blank" rel="nofollow">
-                            View all '. absint( $review_count ) .' reviews.
+                            '. esc_html( sprintf(
+                                /* translators: %s: number of reviews */
+                                _n( 'View %s Review on Zillow', 'View all %s Reviews on Zillow', absint( $review_count ), 'easy-zillow-reviews' ),
+                                number_format_i18n( absint( $review_count ) )
+                            ) ) .'
                         </a>
                     </p>';
             }
@@ -183,7 +190,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
                 $zillow_logo = '
                     <p class="ezrwp-attribution">
                         <a href="'. esc_url( $profile_url ) . '" class="z-profile-link" target="_blank" rel="nofollow">
-                            <img src="//www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" width="150" height="38" alt="Real Estate on Zillow">
+                            <img src="https://www.zillowstatic.com/static/logos/Zillowlogo_200x50.gif" width="200" height="50" alt="Real Estate on Zillow">
                         </a>
                     </p>';
             }
@@ -192,16 +199,30 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
             if( $hide_disclaimer == false ){
                 $mandatory_disclaimer = '
                     <p class="ezrwp-mandatory-disclaimer">
-                        © Zillow, Inc., 2006-2016. Use is subject to 
-                        <a href="https://www.zillow.com/corp/Terms.htm" target="_blank">Terms of Use</a><br />
-                        <a href="https://www.zillow.com/wikipages/What-is-a-Zestimate/" target="_blank">What\'s a Zestimate?</a>
+                        © Zillow, Inc., 2006-'. esc_html( gmdate( 'Y' ) ) .'. Use is subject to the
+                        <a href="https://www.zillow.com/corp/Terms.htm" target="_blank" rel="noopener">Zillow Terms of Use</a>.
                     </p>';
             }
             
+            /**
+             * Filters the HTML of the list of reviews, e.g. to display them in a carousel.
+             *
+             * @since 1.7.0
+             * @param string $reviews_output The reviews HTML, wrapped in div.ezrwp-reviews.
+             * @param string $layout         The layout slug.
+             * @param int    $grid_columns   The number of columns.
+             * @param string $wrapper_id     The unique ID of this set of reviews.
+             * @param string $reviews_html   The reviews HTML without the wrapper.
+             */
+            $reviews_output = apply_filters( 'ezrwp_reviews_output', '<div class="ezrwp-reviews">' . $reviews_output . '</div>', $layout, $grid_columns, $wrapper_id, $reviews_output );
+
+            // Zillow requires the label "Reviews on Zillow" for any display of reviews from its API.
+            $label = '<p class="ezrwp-label">' . esc_html__( 'Reviews on Zillow', 'easy-zillow-reviews' ) . '</p>';
+
             $output = sprintf(
                 '<div id="ezrwp-wrapper-%8$s" class="ezrwp-wrapper ezrwp-%1$s %2$s">
                     <div class="ezrwp-content">
-                        %3$s %4$s %5$s %6$s %7$s
+                        %9$s %3$s %4$s %5$s %6$s %7$s
                     </div>
                 </div>',
                 esc_attr( $layout ),
@@ -211,7 +232,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
                 $view_all_link,
                 $zillow_logo,
                 $mandatory_disclaimer,
-                esc_attr( $wrapper_id )
+                esc_attr( $wrapper_id ),
+                $label
             );
 
             return $output;

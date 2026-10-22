@@ -102,6 +102,7 @@ No. Zillow's terms require that reviews are not selected by rating; the plugin a
 
 = 1.7.0 =
 * Date Released: 2026-10-18
+* Security: Updated Freemius SDK to version 2.13.5.
 * New Feature: Guided setup with a "Test connection" button for Bridge and lender credentials.
 * New Feature: The block shows a live preview of your reviews, and can set a screenname.
 * New Feature (Premium): Team reviews for team leads, with each review linked to the team member's Zillow profile.

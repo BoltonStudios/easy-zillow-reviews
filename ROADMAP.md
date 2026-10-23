@@ -165,6 +165,7 @@ rather than the main reason to buy.
 
 - Premium settings callbacks are still nested functions in `add_premium_settings()` (same pattern Read More WP fixed); convert to methods.
 - Remaining Plugin Check warnings: naming-prefix and nonce-recommendation warnings in admin partials.
+- Grid layout: switch from floats to CSS Grid. At tablet widths a 3-column grid drops to 2 columns, but the plugin still clears after every third review, so rows read 2+1, 2+1. Remove the clearing `<div style="clear:both">` from `layout_reviews()` (professional and lender) when switching.
 
 ## Bridge API notes
 

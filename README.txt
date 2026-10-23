@@ -18,7 +18,7 @@ Display Zillow reviews for agents, teams, and lenders.
 = How it works =
 * Agent and team reviews come from Zillow's Reviews API, through Bridge Interactive. The plugin does not scrape Zillow pages.
 * Lender reviews (Premium) come from Zillow's Mortgages API.
-* Each site owner needs their own credentials. Zillow's terms tie access to the applicant and the websites in their application.
+* You need your own credentials. Zillow's terms forbid sharing them.
 * Reviews are fetched when a page shows them. The plugin never stores them.
 
 View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).

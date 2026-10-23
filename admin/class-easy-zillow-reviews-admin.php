@@ -514,7 +514,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                         data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>"
                         name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]">
                     <?php
-                    $ezrwp_layout_labels = array( 'list' => __( 'List', 'easy-zillow-reviews' ), 'grid' => __( 'Grid', 'easy-zillow-reviews' ), 'carousel' => __( 'Carousel', 'easy-zillow-reviews' ) );
+                    $ezrwp_layout_labels = array( 'list' => __( 'List', 'easy-zillow-reviews' ), 'grid' => __( 'Grid', 'easy-zillow-reviews' ), 'carousel' => __( 'Slider', 'easy-zillow-reviews' ) );
                     foreach( apply_filters( 'ezrwp_available_layouts', array( 'list', 'grid' ) ) as $ezrwp_layout_option ){
                         printf( '<option value="%1$s"%2$s>%3$s</option>', esc_attr( $ezrwp_layout_option ), selected( isset( $options[ $args['label_for'] ] ) ? $options[ $args['label_for'] ] : '', $ezrwp_layout_option, false ), esc_html( isset( $ezrwp_layout_labels[ $ezrwp_layout_option ] ) ? $ezrwp_layout_labels[ $ezrwp_layout_option ] : ucfirst( $ezrwp_layout_option ) ) );
                     }
@@ -708,7 +708,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 <p id="<?php echo esc_attr( $args['id'] ); ?>-0">The Premium License unlocks the following features:</p>
                 <ul id="<?php echo esc_attr( $args['id'] ); ?>-1">
                     <li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Team Reviews: show your team members' reviews alongside your own</li>
-                    <li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Carousel Layout</li>
+                    <li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Slider Layout</li>
                     <li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Lender Reviews</li>
                     <li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Individual Loan Officer Reviews</li>
                     <li><span class="dashicons dashicons-yes" style="font-size: 14px;"></span> Company Profile Reviews</li>

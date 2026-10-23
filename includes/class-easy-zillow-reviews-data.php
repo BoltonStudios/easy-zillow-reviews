@@ -350,6 +350,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
             // Sanitize the options, which may come from shortcode attributes, widgets, or blocks.
             $available_layouts = apply_filters( 'ezrwp_available_layouts', array( 'list', 'grid' ) );
             $layout = sanitize_key( (string) $layout );
+
+            // "Slider" is the user-facing name of the carousel layout.
+            $layout = ( $layout === 'slider' ) ? 'carousel' : $layout;
             $layout = in_array( $layout, $available_layouts, true ) ? $layout : $this->get_layout();
             $layout = in_array( $layout, $available_layouts, true ) ? $layout : 'list';
             $cols = min( max( absint( $cols ), 1 ), 6 );

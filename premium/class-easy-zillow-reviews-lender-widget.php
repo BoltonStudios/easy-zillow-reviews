@@ -175,7 +175,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender_Widget' ) ) {
                 name="<?php echo esc_attr( $this->get_field_name( 'layout' ) ); ?>]"
                         onchange="ezrwpToggleGridCols(this)">
                     <?php
-                    $ezrwp_layout_labels = array( 'list' => __( 'List', 'easy-zillow-reviews' ), 'grid' => __( 'Grid', 'easy-zillow-reviews' ), 'carousel' => __( 'Carousel', 'easy-zillow-reviews' ) );
+                    $ezrwp_layout_labels = array( 'list' => __( 'List', 'easy-zillow-reviews' ), 'grid' => __( 'Grid', 'easy-zillow-reviews' ), 'carousel' => __( 'Slider', 'easy-zillow-reviews' ) );
                     foreach( apply_filters( 'ezrwp_available_layouts', array( 'list', 'grid' ) ) as $ezrwp_layout_option ){
                         printf( '<option value="%1$s"%2$s>%3$s</option>', esc_attr( $ezrwp_layout_option ), selected( $layout, $ezrwp_layout_option, false ), esc_html( isset( $ezrwp_layout_labels[ $ezrwp_layout_option ] ) ? $ezrwp_layout_labels[ $ezrwp_layout_option ] : ucfirst( $ezrwp_layout_option ) ) );
                     }

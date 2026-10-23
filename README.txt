@@ -1,7 +1,7 @@
 === Easy Zillow Reviews ===
 Contributors: boltonstudios
 Donate link: https://ko-fi.com/boltonstudios
-Tags: zillow, reviews, real estate, testimonials, block
+Tags: zillow, reviews, real estate, testimonials, slider
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -28,7 +28,7 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
 = Premium Features =
 * Team reviews: team leads can show their team members' reviews alongside their own, with each review linked to the team member's profile.
-* Carousel layout with optional autoplay.
+* Slider layout with optional autoplay.
 * Lender, loan officer, and company profile reviews.
 * Priority support.
 * [Get the Premium Version](https://www.boltonstudios.com/easy-zillow-reviews/).
@@ -54,8 +54,8 @@ If you found this free plugin helpful, you can support the developer by upgradin
 
     [ez-zillow-reviews layout="grid" columns="2" count="4" screenname="jsmith" excerpt="50"]
 
-* layout..."list" or "grid" ("carousel" in Premium).
-* columns...A number between 1 and 6. In the carousel, the number of reviews visible at once.
+* layout..."list" or "grid" ("slider" in Premium).
+* columns...A number between 1 and 6. In the slider, the number of reviews visible at once.
 * count...A number between 1 and 10.
 * screenname...The screenname that appears in your Zillow profile link.
 * excerpt...A number between 20 and 750. The maximum length of each review (word limit).
@@ -108,7 +108,7 @@ No. Zillow's terms require that reviews are not selected by rating; the plugin a
 * New Feature: Guided setup with a "Test connection" button for Bridge and lender credentials.
 * New Feature: The block shows a live preview of your reviews, and can set a screenname.
 * New Feature (Premium): Team reviews for team leads, with each review linked to the team member's Zillow profile.
-* New Feature (Premium): Carousel layout with optional autoplay.
+* New Feature (Premium): Slider layout with optional autoplay.
 * Improvement: Added the "Reviews on Zillow" label required by Zillow's terms, and updated the Zillow disclaimer.
 * Improvement: Agents with more than 10 reviews now see their newest reviews (previously, a random set of 10 was sorted by date).
 * Improvement: Scripts and styles load only on pages that show reviews; jQuery is no longer required.

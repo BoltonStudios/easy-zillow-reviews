@@ -103,7 +103,9 @@ if ( function_exists( 'ezrwp_fs' ) ) {
                     'has_addons'          => false,
                     'has_paid_plans'      => true,
                     'menu'                => array(
-                        'slug'           => 'easy-zillow-reviews'
+                        'slug'           => 'easy-zillow-reviews',
+                        // After the opt-in screen, go straight to the Bridge setup guide.
+                        'first-path'     => 'admin.php?page=easy-zillow-reviews&tab=ezrwp_professional_reviews',
                     ),
                 ));
             }
@@ -116,6 +118,70 @@ if ( function_exists( 'ezrwp_fs' ) ) {
 
         // Signal that SDK was initiated.
         do_action( 'ezrwp_fs_loaded' );
+
+        /**
+         * The Freemius opt-in message for new installs.
+         *
+         * @since 1.7.0
+         */
+        function ezrwp_fs_connect_message( $message, $user_first_name, $product_title ) {
+            return sprintf(
+                /* translators: %s: plugin name */
+                esc_html__( 'Opt in to get an email about important updates to %s, like changes to Zillow\'s API and security fixes, plus occasional tips and offers. You\'ll also share some basic WordPress environment info, which helps us keep the plugin compatible with your site.', 'easy-zillow-reviews' ),
+                '<b>' . esc_html( $product_title ) . '</b>'
+            );
+        }
+
+        /**
+         * The Freemius opt-in message for sites updating from an earlier version.
+         *
+         * @since 1.7.0
+         */
+        function ezrwp_fs_connect_message_on_update( $message, $user_first_name, $product_title ) {
+            return ezrwp_fs_connect_message( $message, $user_first_name, $product_title )
+                . '<br><br>'
+                . sprintf(
+                    /* translators: %s: plugin name */
+                    esc_html__( 'If you skip this, that\'s okay! %s will still work just fine.', 'easy-zillow-reviews' ),
+                    '<b>' . esc_html( $product_title ) . '</b>'
+                );
+        }
+
+        /**
+         * Make the deactivation survey specific to setting up Zillow reviews, so it shows where new users get stuck.
+         * Only the wording changes; Freemius's reason IDs stay the same so the answers are reported normally.
+         *
+         * @since 1.7.0
+         */
+        function ezrwp_fs_uninstall_reasons( $reasons ) {
+
+            $custom = array(
+                Freemius::REASON_COULDNT_MAKE_IT_WORK => array(
+                    'text'              => __( 'I couldn\'t get it set up (for example, the Bridge API access token)', 'easy-zillow-reviews' ),
+                    'input_type'        => 'textarea',
+                    'input_placeholder' => __( 'Which step was the problem?', 'easy-zillow-reviews' ),
+                ),
+                Freemius::REASON_NOT_WORKING => array(
+                    'text'              => __( 'My reviews didn\'t show up', 'easy-zillow-reviews' ),
+                    'input_type'        => 'textarea',
+                    'input_placeholder' => __( 'What did you see instead? Any error message helps.', 'easy-zillow-reviews' ),
+                ),
+            );
+
+            foreach ( $reasons as $user_type => $list ) {
+                foreach ( $list as $i => $reason ) {
+                    if ( isset( $reason['id'], $custom[ $reason['id'] ] ) ) {
+                        $reasons[ $user_type ][ $i ] = array_merge( $reason, $custom[ $reason['id'] ] );
+                    }
+                }
+            }
+
+            return $reasons;
+        }
+
+        ezrwp_fs()->add_filter( 'connect_message', 'ezrwp_fs_connect_message', 10, 3 );
+        ezrwp_fs()->add_filter( 'connect_message_on_update', 'ezrwp_fs_connect_message_on_update', 10, 3 );
+        ezrwp_fs()->add_filter( 'uninstall_reasons', 'ezrwp_fs_uninstall_reasons' );
 
         /**
          * Easy_Zillow_Reviews Class

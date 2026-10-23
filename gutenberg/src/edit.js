@@ -16,7 +16,7 @@ const defaults = settings.defaults || {};
 const LAYOUT_LABELS = {
 	list: __( 'List', 'easy-zillow-reviews' ),
 	grid: __( 'Grid', 'easy-zillow-reviews' ),
-	carousel: __( 'Carousel', 'easy-zillow-reviews' ),
+	carousel: __( 'Slider', 'easy-zillow-reviews' ),
 };
 
 export default function Edit( { attributes, setAttributes } ) {

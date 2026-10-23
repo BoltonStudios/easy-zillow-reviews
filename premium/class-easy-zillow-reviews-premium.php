@@ -454,7 +454,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Premium' ) ) {
             ?>
             <input type="number" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="small-text" name="ezrwp_general_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo esc_attr( $setting ); ?>" min="0" max="60" />
             <?php esc_html_e( 'seconds', 'easy-zillow-reviews' ); ?>
-            <p class="description"><?php esc_html_e( 'For the carousel layout: advance automatically every few seconds. 0 turns autoplay off. Visitors can pause it, and it never moves for visitors who prefer reduced motion.', 'easy-zillow-reviews' ); ?></p>
+            <p class="description"><?php esc_html_e( 'For the slider layout: advance automatically every few seconds. 0 turns autoplay off. Visitors can pause it, and it never moves for visitors who prefer reduced motion.', 'easy-zillow-reviews' ); ?></p>
             <?php
         }
 
@@ -609,7 +609,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Premium' ) ) {
             );
             $premium_settings_fields[] = array(
                 'id'        => 'ezrwp_carousel_autoplay',
-                'title'     => __( 'Carousel Autoplay', 'easy-zillow-reviews' ),
+                'title'     => __( 'Slider Autoplay', 'easy-zillow-reviews' ),
                 'callback'  => array( $this, 'carousel_autoplay_field_cb' ),
                 'tab'       => 'ezrwp_general',
                 'section'   => 'ezrwp_section_for_defaults'

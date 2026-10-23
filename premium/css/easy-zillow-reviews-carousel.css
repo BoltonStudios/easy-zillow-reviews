@@ -43,44 +43,83 @@
   margin: 0;
   scroll-snap-align: start;
 }
+/* On phones, show part of the next review as a hint to swipe. */
+@media (max-width: 600px) {
+  .ezrwp-wrapper .ezrwp-carousel-track > .ezrwp-col {
+    flex-basis: calc(85% - var(--ezrwp-carousel-gap));
+  }
+}
 .ezrwp-carousel-controls {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  margin: 1rem 0;
+  gap: 0.5rem;
+  margin: 1.25rem 0 1rem;
 }
 .ezrwp-carousel-controls[hidden] {
   display: none;
 }
 .ezrwp-carousel-controls button {
-  min-width: 2.5rem;
-  min-height: 2.5rem;
-  padding: 0 0.75rem;
-  border: 1px solid currentColor;
-  border-radius: 999px;
-  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.06);
+  background: color-mix(in srgb, currentColor 8%, transparent);
   color: inherit;
-  font-size: 1rem;
+  font: inherit;
+  font-size: 0.8125rem;
   line-height: 1;
   cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease, opacity 0.15s ease;
+}
+.ezrwp-carousel-controls button:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.12);
+  background: color-mix(in srgb, currentColor 16%, transparent);
+}
+.ezrwp-carousel-controls button:active:not(:disabled) {
+  transform: scale(0.94);
+}
+.ezrwp-carousel-controls button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 .ezrwp-carousel-controls button:disabled {
-  opacity: 0.35;
+  opacity: 0.3;
   cursor: default;
 }
-.ezrwp-carousel-controls .ezrwp-carousel-prev span,
-.ezrwp-carousel-controls .ezrwp-carousel-next span {
-  font-size: 1.5rem;
+.ezrwp-carousel-controls svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+.ezrwp-carousel-controls .ezrwp-carousel-pause {
+  width: auto;
+  padding: 0 1rem;
+  border-radius: 999px;
 }
 .ezrwp-carousel-status {
-  font-size: 0.875em;
-  min-width: 3.5em;
+  min-width: 3em;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
   text-align: center;
+  opacity: 0.7;
 }
 @media (prefers-reduced-motion: reduce) {
   .ezrwp-carousel-track {
     scroll-behavior: auto;
+  }
+  .ezrwp-carousel-controls button {
+    transition: none;
+  }
+  .ezrwp-carousel-controls button:active:not(:disabled) {
+    transform: none;
   }
   .ezrwp-carousel-track.ezrwp-adaptive-height {
     transition: none;

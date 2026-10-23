@@ -203,10 +203,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Premium' ) ) {
                 '<div class="ezrwp-carousel-container" data-autoplay="%1$d" style="--ezrwp-carousel-columns: %2$d">
                     <div class="ezrwp-reviews ezrwp-carousel-track" id="%3$s" tabindex="0" role="region" aria-roledescription="%4$s" aria-label="%5$s">%6$s</div>
                     <div class="ezrwp-carousel-controls" hidden>
-                        <button type="button" class="ezrwp-carousel-prev" aria-controls="%3$s" aria-label="%7$s"><span aria-hidden="true">&lsaquo;</span></button>
+                        <button type="button" class="ezrwp-carousel-prev" aria-controls="%3$s" aria-label="%7$s"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 18l-6-6 6-6"/></svg></button>
                         <span class="ezrwp-carousel-status"></span>
                         %8$s
-                        <button type="button" class="ezrwp-carousel-next" aria-controls="%3$s" aria-label="%9$s"><span aria-hidden="true">&rsaquo;</span></button>
+                        <button type="button" class="ezrwp-carousel-next" aria-controls="%3$s" aria-label="%9$s"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 18l6-6-6-6"/></svg></button>
                     </div>
                 </div>',
                 $autoplay,

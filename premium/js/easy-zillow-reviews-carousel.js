@@ -25,14 +25,28 @@
 		container.setAttribute( 'data-ezrwp-ready', '1' );
 
 		// The distance between pages: the visible width plus the gap between reviews.
+		function gap() {
+			return parseFloat( window.getComputedStyle( track ).columnGap ) || 0;
+		}
+
+		// The distance from one review to the next.
+		function step() {
+			var first = track.children[ 0 ];
+			return first ? first.offsetWidth + gap() : track.clientWidth + gap();
+		}
+
+		// How many whole reviews fit in view (part of the next one may also show on phones).
+		function perPage() {
+			return Math.max( 1, Math.floor( ( track.clientWidth + gap() + 1 ) / step() ) );
+		}
+
+		// The distance between pages.
 		function pageWidth() {
-			var gap = parseFloat( window.getComputedStyle( track ).columnGap ) || 0;
-			return track.clientWidth + gap;
+			return perPage() * step();
 		}
 
 		function pages() {
-			var gap = pageWidth() - track.clientWidth;
-			return Math.max( 1, Math.ceil( ( track.scrollWidth + gap ) / pageWidth() - 0.01 ) );
+			return Math.max( 1, Math.ceil( track.children.length / perPage() ) );
 		}
 
 		function atStart() {

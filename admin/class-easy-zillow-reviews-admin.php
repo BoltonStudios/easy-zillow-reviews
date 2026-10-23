@@ -378,7 +378,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                                 '<a href="https://bridgedataoutput.com/zgdata" target="_blank" rel="noopener noreferrer">bridgedataoutput.com/zgdata</a>'
                             );
                         ?></li>
-                        <li><?php esc_html_e( 'Request access to the Zillow Agent Reviews dataset. Enter this website\'s address when asked where the reviews will appear. Approval can take a few business days.', 'easy-zillow-reviews' ); ?></li>
+                        <li><?php
+                            printf(
+                                /* translators: %s: the dataset name, "Zillow Agent Reviews" */
+                                esc_html__( 'Request access to the %s dataset. Enter this website\'s address when asked where the reviews will appear. Approval can take a few business days.', 'easy-zillow-reviews' ),
+                                '<strong>' . esc_html__( 'Zillow Agent Reviews', 'easy-zillow-reviews' ) . '</strong>'
+                            );
+                        ?></li>
                         <li><?php esc_html_e( 'After approval, copy your API access token from your Bridge dashboard and paste it below.', 'easy-zillow-reviews' ); ?></li>
                         <li><?php esc_html_e( 'Enter your Zillow screenname: the part after "zillow.com/profile/" in your Zillow profile address.', 'easy-zillow-reviews' ); ?></li>
                         <li><?php esc_html_e( 'Click "Test connection", then "Save Settings".', 'easy-zillow-reviews' ); ?></li>

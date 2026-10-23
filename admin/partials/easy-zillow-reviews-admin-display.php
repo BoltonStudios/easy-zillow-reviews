@@ -27,6 +27,11 @@ $tabs = $this->settings->get_tabs();
 ?>
 <div class="wrap">
     <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+
+    <?php
+        // Top-level admin pages don't show the "Settings saved" notice automatically.
+        settings_errors();
+    ?>
              
     <?php
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only selects which tab to display.

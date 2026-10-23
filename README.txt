@@ -13,7 +13,13 @@ Display your latest Reviews on Zillow with a block, widget, or shortcode.
 
 == Description ==
 
-*Easy Zillow Reviews* helps real estate agents, teams, and lenders display their Zillow reviews using Zillow's official API.
+Display Zillow reviews for agents, teams, and lenders.
+
+= How it works =
+* Agent and team reviews come from Zillow's Reviews API, through Bridge Interactive. The plugin does not scrape Zillow pages.
+* Lender reviews (Premium) come from Zillow's Mortgages API.
+* Each site owner needs their own credentials. Zillow's terms tie access to the applicant and the websites in their application.
+* Reviews are fetched when a page shows them. The plugin never stores them.
 
 View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
@@ -23,7 +29,7 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 * List and grid layouts.
 * Block with a live preview, plus widget and shortcode options.
 * Guided setup with a "Test connection" button.
-* Follows Zillow's display requirements, including the "Reviews on Zillow" label and links to your Zillow profile.
+* Shows the "Reviews on Zillow" label and profile links Zillow requires.
 * Lightweight: scripts load only on pages that show reviews, and no jQuery is required.
 
 = Premium Features =
@@ -35,9 +41,8 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
 = Requirements =
 
-The free plugin requires a free [Bridge API Access Token](https://bridgedataoutput.com/zgdata) with access to the Zillow Agent Reviews dataset.
-
-The lender reviews require a [Zillow Mortgages Partner ID (ZPID)](https://www.zillow.com/mortgage/api/).
+* Agent reviews: a free [Bridge API access token](https://bridgedataoutput.com/zgdata) with access to the Zillow Agent Reviews dataset.
+* Lender reviews (Premium): a [Zillow Mortgages Partner ID](https://www.zillow.com/mortgage/api/).
 
 = Supporting Easy Zillow Reviews =
 
@@ -90,6 +95,24 @@ Reviews are requested from Zillow each time the page loads (Zillow's terms don't
 = Can I show only my best reviews? =
 
 No. Zillow's terms require that reviews are not selected by rating; the plugin always shows your most recent reviews.
+
+== External services ==
+
+**Zillow Reviews API (Bridge Interactive)** fetches agent reviews.
+* Sends your Bridge access token and Zillow screenname when a page shows reviews or you click "Test connection".
+* [Zillow API Terms of Use](https://bridgedataoutput.com/zillowterms), [Zillow Group Privacy Notice](https://www.zillowgroup.com/zg-privacy-policy/)
+
+**Zillow Mortgages API** (Premium) fetches lender reviews.
+* Sends your Partner ID, NMLS#, and company name (if set) when a page shows lender reviews or you click "Test connection".
+* [Zillow Terms of Use](https://www.zillow.com/z/corp/terms/), [Zillow Group Privacy Notice](https://www.zillowgroup.com/zg-privacy-policy/)
+
+**Zillow logo.** Visitors' browsers load the logo from zillowstatic.com on pages that show it, which shares their IP address with Zillow. Turn it off in Settings › General.
+* [Zillow Terms of Use](https://www.zillow.com/z/corp/terms/), [Zillow Group Privacy Notice](https://www.zillowgroup.com/zg-privacy-policy/)
+
+**Freemius** handles licensing, updates, and optional usage data.
+* If you opt in: sends your name, email, site address, and WordPress environment info (such as WordPress, PHP, and plugin versions). Opting in is optional.
+* Premium: sends your license key and site address to activate the license and check for updates.
+* [Freemius Terms](https://freemius.com/terms/), [Freemius Privacy Policy](https://freemius.com/privacy/)
 
 == Screenshots ==
 

@@ -200,7 +200,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
                 $mandatory_disclaimer = '
                     <p class="ezrwp-mandatory-disclaimer">
                         © Zillow, Inc., 2006-'. esc_html( gmdate( 'Y' ) ) .'. Use is subject to the
-                        <a href="https://www.zillow.com/corp/Terms.htm" target="_blank" rel="noopener">Zillow Terms of Use</a>.
+                        <a href="https://www.zillow.com/z/corp/terms/" target="_blank" rel="noopener">Zillow Terms of Use</a>.
                     </p>';
             }
             

@@ -188,6 +188,7 @@ body .ezrwp-wrapper.ezrwp-grid {
   margin: 0 -15px;
 }
 body .ezrwp-wrapper.ezrwp-grid .ezrwp-col {
+  box-sizing: border-box;
   padding: 0 15px;
   float: left;
 }

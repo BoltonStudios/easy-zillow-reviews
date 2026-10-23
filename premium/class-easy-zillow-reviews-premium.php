@@ -68,15 +68,24 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Premium' ) ) {
             $this->base_plugin = $base_plugin;
             $this->base_plugin_settings = $base_plugin->get_plugin_settings();
             $this->base_plugin_admin = $base_plugin->get_plugin_admin();
-            $this->premium_settings = $this->add_premium_settings();
 
             $this->init();
         }
+
+        /**
+         * Add the Premium settings. Runs on init because the labels are translated.
+         *
+         * @since    1.7.0
+         */
+        function setup_settings(){
+
+            $this->premium_settings = $this->add_premium_settings();
+            $this->get_base_plugin()->set_plugin_settings( $this->premium_settings );
+        }
+
         function init(){
-            
-            $this->get_base_plugin()->set_plugin_settings(
-                $this->get_premium_settings()
-            );
+
+            add_action( 'init', array( $this, 'setup_settings' ), 5 );
 
             // Carousel layout.
             add_filter( 'ezrwp_available_layouts', array( $this, 'add_carousel_layout' ) );

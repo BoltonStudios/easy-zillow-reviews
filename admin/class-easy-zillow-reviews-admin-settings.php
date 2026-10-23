@@ -26,6 +26,14 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
          * @var      string    $plugin_name    The title of this plugin.
          */
         private $plugin_name;
+
+        /**
+         * Whether the tabs, sections, and fields have been built.
+         *
+         * @since    1.7.0
+         * @var      bool
+         */
+        private $built = false;
         
         /**
          * The ID of this plugin.
@@ -78,6 +86,21 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
             $this->plugin_name = $plugin_name;
             $this->plugin_slug = $plugin_slug;
             $this->version = $version;
+        }
+
+        /**
+         * Build the tabs, sections, and fields on first use. They contain translated labels,
+         * so they must not be built before the init action (WordPress 6.7+ warns otherwise).
+         *
+         * @since    1.7.0
+         */
+        private function maybe_build() {
+
+            if ( $this->built ) {
+                return;
+            }
+
+            $this->built = true;
             $this->tabs = $this->create_tabs();
             $this->sections = $this->create_sections();
             $this->settings = $this->create_settings();
@@ -231,6 +254,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
          */ 
         public function set_tabs($tabs)
         {
+            $this->maybe_build();
+
             $this->tabs = $tabs;
 
             return $this;
@@ -241,6 +266,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
          */ 
         public function get_tabs()
         {
+            $this->maybe_build();
+
             return $this->tabs;
         }
 
@@ -249,6 +276,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
          */ 
         public function get_settings()
         {
+            $this->maybe_build();
+
             return $this->settings;
         }
 
@@ -259,6 +288,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
          */ 
         public function set_settings(array $settings)
         {
+            $this->maybe_build();
+
             $this->settings = $settings;
 
             return $this;
@@ -271,6 +302,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
          */ 
         public function get_sections()
         {
+            $this->maybe_build();
+
             return $this->sections;
         }
 
@@ -283,6 +316,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
          */ 
         public function set_sections(array $sections)
         {
+            $this->maybe_build();
+
             $this->sections = $sections;
 
             return $this;

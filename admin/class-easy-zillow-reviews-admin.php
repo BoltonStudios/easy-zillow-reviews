@@ -82,7 +82,6 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
             $this->plugin_slug = $plugin_slug;
             $this->version = $version;
             $this->settings = $settings;
-            $this->tabs = $settings->get_tabs();
 
             add_filter( 'ezrwp_sanitize_ezrwp_general_options', array( $this, 'sanitize_general_options' ) );
             add_filter( 'ezrwp_sanitize_ezrwp_professional_reviews_options', array( $this, 'sanitize_professional_reviews_options' ) );

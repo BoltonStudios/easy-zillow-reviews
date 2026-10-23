@@ -20,7 +20,7 @@ Display Zillow reviews for agents, teams, and lenders.
 2. Pick a layout: list, grid, or slider (Premium).
 3. Add reviews with a block, widget, or shortcode.
 
-Reviews come from Zillow's official APIs: the Reviews API (through Bridge Interactive) for agents and teams, and the Mortgages API for lenders (Premium; requires a [Zillow Mortgages Partner ID](https://www.zillow.com/mortgage/api/)). The plugin does not scrape Zillow pages and does not save review data to your WordPress database.
+Reviews come from Zillow's official APIs: the **Reviews API** (through Bridge Interactive) for agents and teams, and the **Mortgages API** for lenders (Premium; requires a [Zillow Mortgages Partner ID](https://www.zillow.com/mortgage/api/)). The plugin does not scrape Zillow pages and does not save review data to your WordPress database.
 
 View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 

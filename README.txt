@@ -16,10 +16,11 @@ Display your latest Reviews on Zillow with a block, widget, or shortcode.
 Display Zillow reviews for agents, teams, and lenders.
 
 = How it works =
-* Agent and team reviews come from Zillow's Reviews API, through Bridge Interactive. The plugin does not scrape Zillow pages.
-* Lender reviews (Premium) come from Zillow's Mortgages API.
-* You need your own credentials. Zillow's terms forbid sharing them.
-* Reviews are fetched when a page shows them. The plugin never stores them.
+1. Connect your Zillow profile. A setup guide walks you through getting a free [Bridge API access token](https://bridgedataoutput.com/zgdata), then tests it.
+2. Pick a layout: list, grid, or slider (Premium).
+3. Add reviews with a block, widget, or shortcode.
+
+Reviews come from Zillow's official APIs: the Reviews API (through Bridge Interactive) for agents and teams, and the Mortgages API for lenders (Premium; requires a [Zillow Mortgages Partner ID](https://www.zillow.com/mortgage/api/)). The plugin does not scrape Zillow pages and does not save review data to your WordPress database.
 
 View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
@@ -28,7 +29,6 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 * Show reviews from multiple profiles.
 * List and grid layouts.
 * Block with a live preview, plus widget and shortcode options.
-* Guided setup with a "Test connection" button.
 * Shows the "Reviews on Zillow" label and profile links Zillow requires.
 * Lightweight: scripts load only on pages that show reviews, and no jQuery is required.
 
@@ -38,11 +38,6 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 * Lender, loan officer, and company profile reviews.
 * Priority support.
 * [Get the Premium Version](https://www.boltonstudios.com/easy-zillow-reviews/).
-
-= Requirements =
-
-* Agent reviews: a free [Bridge API access token](https://bridgedataoutput.com/zgdata) with access to the Zillow Agent Reviews dataset.
-* Lender reviews (Premium): a [Zillow Mortgages Partner ID](https://www.zillow.com/mortgage/api/).
 
 = Supporting Easy Zillow Reviews =
 

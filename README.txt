@@ -101,37 +101,33 @@ No. Zillow's terms require that reviews are not selected by rating; the plugin a
 == Changelog ==
 
 = 1.7.0 =
-* Date Released: 2026-10-18
+* Date Released: 2026-10-23
 * Security: Updated Freemius SDK to version 2.13.5.
+* Security: Escaped review content and sanitized shortcode attributes.
+* Security: The Bridge API token is now sent in a request header instead of the URL.
 * New Feature: Guided setup with a "Test connection" button for Bridge and lender credentials.
 * New Feature: The block shows a live preview of your reviews, and can set a screenname.
 * New Feature (Premium): Team reviews for team leads, with each review linked to the team member's Zillow profile.
 * New Feature (Premium): Carousel layout with optional autoplay.
 * Improvement: Added the "Reviews on Zillow" label required by Zillow's terms, and updated the Zillow disclaimer.
+* Improvement: Agents with more than 10 reviews now see their newest reviews (previously, a random set of 10 was sorted by date).
 * Improvement: Scripts and styles load only on pages that show reviews; jQuery is no longer required.
 * Improvement: The "More" button is accessible to keyboard and screen reader users, and long reviews are fully readable without JavaScript.
 * Improvement: Reviews show the city and state without the street address.
 * Improvement: Updated the block to the current block API.
-* Bug fix: The Zillow logo image no longer appears broken.
-* Bug fix: The settings page now works on sites installed in a subdirectory.
-* Bug fix: Some reviews showed "who 2023" instead of the service provided.
-* Settings are now sanitized when saved.
-* Removed the retired Zillow Web Services ID (ZWSID) setting. Sites that only have a ZWSID see a notice explaining how to switch to Bridge.
-* Requires WordPress 6.3 and PHP 7.4 or later.
-
-= 1.6.5 =
-* Date Released: 2026-10-18
-* Bug fix: Agents with more than 10 reviews now see their newest reviews (previously, a random set of 10 was sorted by date).
+* Reliability: API requests now time out after 8 seconds instead of potentially hanging the page.
+* Reliability: Identical API requests on the same page are only made once.
 * Bug fix: The "More" button on long reviews works again.
+* Bug fix: The Zillow logo image no longer appears broken.
 * Bug fix: Screennames containing hyphens are now supported.
 * Bug fix: Invalid shortcode values (e.g., columns="two") no longer cause a fatal error.
 * Bug fix: Widget titles now appear inside the widget.
-* Security: Escaped review content and sanitized shortcode attributes.
-* Security: The Bridge API token is now sent in a request header instead of the URL.
-* Reliability: API requests now time out after 8 seconds instead of potentially hanging the page.
-* Reliability: Identical API requests on the same page are only made once.
+* Bug fix: The settings page now works on sites installed in a subdirectory.
+* Bug fix: Some reviews showed "who 2023" instead of the service provided.
 * API error messages are now only shown to site administrators.
-* Removed requests to Zillow's retired ZWSID API. Sites still using a ZWSID should add a Bridge API Access Token.
+* Settings are now sanitized when saved.
+* Removed support for Zillow's retired Zillow Web Services ID (ZWSID). Sites that only have a ZWSID see a notice explaining how to add a Bridge API access token.
+* Requires WordPress 6.3 and PHP 7.4 or later.
 
 = 1.6.4 =
 * Date Released: 2026-10-18

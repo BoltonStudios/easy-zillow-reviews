@@ -15,12 +15,18 @@
 }
 .ezrwp-carousel-track {
   display: flex;
+  align-items: flex-start;
   gap: var(--ezrwp-carousel-gap);
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   scrollbar-width: none;
+}
+/* With JavaScript, the track's height follows the reviews currently in view (see the carousel script). */
+.ezrwp-carousel-track.ezrwp-adaptive-height {
+  overflow-y: hidden;
+  transition: height 0.3s ease;
 }
 .ezrwp-carousel-track::-webkit-scrollbar {
   display: none;
@@ -75,5 +81,8 @@
 @media (prefers-reduced-motion: reduce) {
   .ezrwp-carousel-track {
     scroll-behavior: auto;
+  }
+  .ezrwp-carousel-track.ezrwp-adaptive-height {
+    transition: none;
   }
 }

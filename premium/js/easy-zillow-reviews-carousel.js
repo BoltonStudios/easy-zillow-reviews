@@ -43,7 +43,27 @@
 			return track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
 		}
 
+		// Size the track to the tallest review in view, so short reviews don't leave a gap
+		// below them when a long review elsewhere in the carousel is much taller.
+		function fitHeight() {
+			var view = track.getBoundingClientRect();
+			var tallest = 0;
+
+			Array.prototype.forEach.call( track.children, function ( slide ) {
+				var rect = slide.getBoundingClientRect();
+				if ( rect.right > view.left + 1 && rect.left < view.right - 1 ) {
+					tallest = Math.max( tallest, slide.offsetHeight );
+				}
+			} );
+
+			if ( tallest > 0 ) {
+				track.style.height = tallest + 'px';
+			}
+		}
+
 		function update() {
+			fitHeight();
+
 			var total = pages();
 			var current = atEnd() ? total : Math.min( total, Math.round( track.scrollLeft / pageWidth() ) + 1 );
 
@@ -78,6 +98,23 @@
 		} );
 
 		window.addEventListener( 'resize', update );
+
+		track.classList.add( 'ezrwp-adaptive-height' );
+
+		// Re-fit when a review changes height, e.g. "More" expands it or an image loads.
+		if ( typeof ResizeObserver === 'function' ) {
+			var observer = new ResizeObserver( function () {
+				cancelAnimationFrame( frame );
+				frame = requestAnimationFrame( update );
+			} );
+			Array.prototype.forEach.call( track.children, function ( slide ) {
+				observer.observe( slide );
+			} );
+		} else {
+			track.addEventListener( 'click', function () {
+				setTimeout( update, 50 );
+			} );
+		}
 
 		// Autoplay pauses on hover and keyboard focus, and never runs for visitors who prefer reduced motion.
 		if ( autoplay > 0 && ! reduceMotion ) {

@@ -5,7 +5,7 @@ Tags: zillow, reviews, real estate, testimonials, slider
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,7 +29,7 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 * Show reviews from multiple profiles.
 * List and grid layouts.
 * Block with a live preview, plus widget and shortcode options.
-* Shows the "Reviews on Zillow" label and profile links Zillow requires.
+* Shows the "Reviews on Zillow" attribution and profile links Zillow requires.
 * Lightweight: scripts load only on pages that show reviews, and no jQuery is required.
 
 = Premium Features =
@@ -121,6 +121,10 @@ No. Zillow's terms require that reviews are not selected by rating; the plugin a
 4. Settings
 
 == Changelog ==
+
+= 1.7.1 =
+* Date Released: Unreleased
+* Improvement: Removed the "Reviews on Zillow" heading above reviews. The profile card and "View all" link already say "Reviews on Zillow"; if both are hidden, the label appears as small print above the Zillow disclaimer.
 
 = 1.7.0 =
 * Date Released: 2026-10-23

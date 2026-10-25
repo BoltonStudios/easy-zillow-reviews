@@ -46,7 +46,7 @@
 /* On phones, show part of the next review as a hint to swipe. */
 @media (max-width: 600px) {
   .ezrwp-wrapper .ezrwp-carousel-track > .ezrwp-col {
-    flex-basis: calc(85% - var(--ezrwp-carousel-gap));
+    flex-basis: calc((85% - var(--ezrwp-carousel-visible) * var(--ezrwp-carousel-gap)) / var(--ezrwp-carousel-visible));
   }
 }
 .ezrwp-carousel-controls {

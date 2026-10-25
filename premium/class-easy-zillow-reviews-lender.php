@@ -504,9 +504,12 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Lender' ) ) {
                     $cols = ! empty( $attributes[ 'gridColumns' ] ) ? $attributes[ 'gridColumns' ] : $reviews->get_grid_columns();
                     $count = ! empty( $attributes[ 'reviewsCount' ] ) ? $attributes[ 'reviewsCount' ] : $reviews->get_count();
                     $word_limit = ! empty( $attributes[ 'wordLimit' ] ) ? $attributes[ 'wordLimit' ] : $reviews->get_word_limit();
+
+                    // Show/hide choices for this display, e.g. from the Elementor widget.
+                    $args = ( isset( $attributes[ 'display' ] ) && is_array( $attributes[ 'display' ] ) ) ? array( 'display' => $attributes[ 'display' ] ) : array();
                     
                     // Overwite the Gutenberg block output with lender reviews from this object instance.
-                    $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count, null, $word_limit );
+                    $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count, null, $word_limit, $args );
                 }
             }
 

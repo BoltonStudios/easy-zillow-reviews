@@ -641,6 +641,11 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             $screenname = ! empty( $attributes[ 'screenname' ] ) ? $attributes[ 'screenname' ] : null;
             $args = isset( $attributes[ 'includeTeam' ] ) ? array( 'team' => $attributes[ 'includeTeam' ] ? 'true' : 'false' ) : array();
 
+            // Show/hide choices for this display, e.g. from the Elementor widget.
+            if( isset( $attributes[ 'display' ] ) && is_array( $attributes[ 'display' ] ) ){
+                $args[ 'display' ] = $attributes[ 'display' ];
+            }
+
             // Overwite the Gutenberg block output with professional reviews from this object instance.
             $output = $reviews->get_reviews_output( $reviews, $layout, $cols, $count, $screenname, $word_limit, $args );
 

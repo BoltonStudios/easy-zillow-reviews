@@ -1,15 +1,15 @@
 === Easy Zillow Reviews ===
 Contributors: boltonstudios
 Donate link: https://ko-fi.com/boltonstudios
-Tags: zillow, reviews, real estate, testimonials, slider
+Tags: zillow, reviews, real estate, elementor, slider
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.1
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Display your latest Reviews on Zillow with a block, Elementor widget, widget, or shortcode.
+Show your Zillow reviews on WordPress with a block, an Elementor widget, a widget, or a shortcode. For agents, teams, and lenders.
 
 == Description ==
 
@@ -24,12 +24,25 @@ Reviews come from Zillow's official APIs: the **Reviews API** (through Bridge In
 
 View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
+= Elementor widget =
+
+Easy Zillow Reviews includes a native **Zillow Reviews** widget for Elementor. You don't need a shortcode, and Elementor Pro is not required.
+
+* Search for "Zillow" in the Elementor panel and drag the widget onto your page.
+* See your actual Zillow reviews in the editor as you change settings.
+* Choose the layout, number of reviews, excerpt length, and columns, with separate column counts for tablets and phones.
+* Show or hide the date, stars, reviewer summary, profile card, "View all" link, Zillow logo, and disclaimer for each widget.
+* Style the review text, quote marks, stars, reviewer, and date on the Style tab, using your Elementor global colors and fonts.
+* Use a dynamic tag for the Zillow screenname, for example to show each agent's reviews from a custom field.
+* Premium options (slider, team reviews, and lender reviews) appear in the same widget.
+* Works with Elementor 3.5 or later. Reviews are never stored in Elementor's element cache, as Zillow's terms require.
+
 = Features (Free) =
 * Display the latest reviews for real estate agents.
 * Show reviews from multiple profiles.
 * List and grid layouts.
 * Block with a live preview, plus widget and shortcode options.
-* Elementor widget with a live preview and style controls for the review text, stars, reviewer, and date.
+* Elementor widget with a live preview, show/hide options, responsive columns, and style controls.
 * Shows the "Reviews on Zillow" attribution and profile links Zillow requires.
 * Lightweight: scripts load only on pages that show reviews, and no jQuery is required.
 
@@ -68,7 +81,7 @@ If you found this free plugin helpful, you can support the developer by upgradin
 2. Go to **Zillow Reviews › Settings › Zillow Professional Profile** and follow the setup steps to get a free Bridge API access token.
 3. Enter your token and Zillow screenname, click **Test connection**, then **Save Settings**.
 4. Optional: adjust the default layout and display settings on the **General** tab.
-5. Add the **Zillow Reviews** block or Elementor widget, an *Easy Zillow Reviews* widget, or the **[ez-zillow-reviews]** shortcode to your page or post.
+5. Add the **Zillow Reviews** block, the **Zillow Reviews** Elementor widget, an *Easy Zillow Reviews* widget, or the **[ez-zillow-reviews]** shortcode to your page or post.
 
 == Frequently Asked Questions ==
 
@@ -87,6 +100,26 @@ No. Zillow retired the ZWSID. Please add a Bridge API access token instead.
 = Why don't my reviews update right away? =
 
 Reviews are requested from Zillow each time the page loads (Zillow's terms don't allow storing reviews). If your site uses a page cache, new reviews appear when the cache refreshes.
+
+= Does it work with Elementor? =
+
+Yes. The plugin adds a native **Zillow Reviews** widget to Elementor, with a live preview, layout and show/hide options, responsive columns, and style controls. It works with the free version of Elementor (3.5 or later); Elementor Pro is not required. Premium options, such as the slider, appear in the same widget.
+
+= How do I add Zillow reviews to an Elementor page? =
+
+1. Install Easy Zillow Reviews and connect your Zillow profile under **Zillow Reviews › Settings**.
+2. Edit your page with Elementor and search for "Zillow" in the widgets panel.
+3. Drag the **Zillow Reviews** widget onto the page, then choose the layout and number of reviews.
+
+To show a different agent's reviews, enter their Zillow screenname in the widget.
+
+= Why are my reviews squeezed into a narrow column in Elementor? =
+
+Block themes such as Twenty Twenty-Three limit page content to a narrow width, and that includes Elementor layouts. In Elementor, open **Page Settings** and set **Page Layout** to **Elementor Full Width**, or set it for all pages under **Elementor › Site Settings › Layout**.
+
+= Does it work with other page builders? =
+
+The **[ez-zillow-reviews]** shortcode works in any page builder that supports shortcodes, such as Divi or Beaver Builder. The block works in the WordPress block editor.
 
 = Can I show only my best reviews? =
 
@@ -120,12 +153,15 @@ No. Zillow's terms require that reviews are not selected by rating; the plugin a
 2. Shortcode output for `[ez-zillow-reviews layout="grid" columns="2" count="2" screenname="pstalker"]`
 3. Widget
 4. Settings
+5. Zillow Reviews widget in the Elementor editor
 
 == Changelog ==
 
 = 1.8.0 =
 * Date Released: Unreleased
-* New Feature: Zillow Reviews widget for Elementor, with a live preview and style controls. Supports the slider, team reviews, and lender reviews in Premium.
+* New Feature: Zillow Reviews widget for Elementor, with a live preview, style controls, and a dynamic tag option for the screenname. Supports the slider, team reviews, and lender reviews in Premium.
+* New Feature: Show or hide the date, stars, reviewer summary, profile card, "View all" link, Zillow logo, and disclaimer for each Elementor widget.
+* New Feature: Separate column counts for tablets and phones in the Elementor widget.
 * Improvement: Reviews and sliders added after the page loads (e.g., by page builders) now work.
 
 = 1.7.1 =

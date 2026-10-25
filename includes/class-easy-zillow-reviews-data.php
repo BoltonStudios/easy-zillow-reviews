@@ -366,8 +366,14 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
             // Render output
             if( $reviews -> get_has_reviews() ){
 
-                // Success
-                return $reviews -> layout_reviews( $layout, $cols );
+                // Per-display show/hide choices (e.g., from a page builder widget) override the General settings for
+                // this set of reviews only. The data object is shared, so the settings are restored afterward.
+                $display = ( is_array( $args ) && isset( $args['display'] ) && is_array( $args['display'] ) ) ? $args['display'] : array();
+                $previous = $reviews->set_display_options( $display );
+                $output = $reviews -> layout_reviews( $layout, $cols );
+                $reviews->set_display_options( $previous );
+
+                return $output;
             }
 
             // Only show API error details to site administrators.
@@ -377,6 +383,41 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
             }
 
             return '';
+        }
+
+        /**
+         * The parts of a display that can be shown or hidden. Each has get_hide_* and set_hide_* methods.
+         *
+         * @since    1.8.0
+         * @return   string[]
+         */
+        public static function get_display_parts(){
+
+            return array( 'date', 'stars', 'reviewer_summary', 'profile_card', 'view_all_link', 'zillow_logo', 'disclaimer' );
+        }
+
+        /**
+         * Show or hide parts of the display, overriding the General settings.
+         *
+         * @since    1.8.0
+         * @param    array    $display    Part => true to show, false to hide. Other parts are unchanged.
+         * @return   array                The previous values of the changed parts, to restore them.
+         */
+        public function set_display_options( $display ){
+
+            $previous = array();
+
+            foreach( self::get_display_parts() as $part ){
+
+                if( ! array_key_exists( $part, (array) $display ) ){
+                    continue;
+                }
+
+                $previous[ $part ] = ! call_user_func( array( $this, 'get_hide_' . $part ) );
+                call_user_func( array( $this, 'set_hide_' . $part ), ! $display[ $part ] );
+            }
+
+            return $previous;
         }
 
         /**

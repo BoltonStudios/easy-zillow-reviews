@@ -41,6 +41,27 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Elementor' ) ) {
             // These actions only fire when Elementor is active.
             add_action( 'elementor/widgets/register', array( $this, 'register_widgets' ) );
             add_action( 'elementor/frontend/after_register_scripts', array( $this, 'register_scripts' ) );
+            add_action( 'elementor/editor/after_enqueue_scripts', array( $this, 'enqueue_editor_scripts' ) );
+        }
+
+        /**
+         * Editor-only tweaks to the widget's panel.
+         *
+         * @since    1.8.0
+         */
+        public function enqueue_editor_scripts(){
+
+            if( ! $this->is_compatible() ){
+                return;
+            }
+
+            wp_enqueue_script(
+                'easy-zillow-reviews-elementor-editor',
+                plugin_dir_url( __FILE__ ) . 'js/easy-zillow-reviews-elementor-editor.js',
+                array( 'jquery', 'elementor-editor' ),
+                defined( 'EASY_ZILLOW_REVIEWS_VERSION' ) ? EASY_ZILLOW_REVIEWS_VERSION : false,
+                true
+            );
         }
 
         /**

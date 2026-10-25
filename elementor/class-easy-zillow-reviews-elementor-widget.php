@@ -182,6 +182,27 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Elementor_Widget' ) ) {
             );
         }
 
+        /**
+         * CSS for the number of columns on tablets or phones. Elementor only outputs it when a value is set.
+         *
+         * @since    1.8.0
+         * @param    string    $device    'tablet' or 'mobile'.
+         * @return   array
+         */
+        private function get_device_column_selectors( $device ){
+
+            $prefix = '(' . $device . '){{WRAPPER}} ';
+
+            // On phones, the slider's stylesheet sizes slides from --ezrwp-carousel-visible, keeping the swipe hint.
+            return array(
+                // The grid floats its columns and adds a row break after each desktop row; use a CSS grid instead.
+                $prefix . '.ezrwp-grid .ezrwp-reviews'                    => 'display: grid; grid-template-columns: repeat({{VALUE}}, minmax(0, 1fr));',
+                $prefix . '.ezrwp-grid .ezrwp-reviews > .ezrwp-col'       => 'width: auto; float: none;',
+                $prefix . '.ezrwp-grid .ezrwp-reviews > :not(.ezrwp-col)' => 'display: none;',
+                $prefix . '.ezrwp-carousel-container'                     => '--ezrwp-carousel-visible: {{VALUE}};',
+            );
+        }
+
         private function get_layout_label( $layout ){
 
             $labels = array(
@@ -228,7 +249,94 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Elementor_Widget' ) ) {
             $carousel_layouts = $defaults['layout'] === 'carousel' ? array( 'carousel', '' ) : array( 'carousel' );
 
             $this->register_content_controls( $settings, $defaults, $layouts, $has_carousel, $columns_layouts );
+            $this->register_display_controls();
+
+            if( empty( $settings['isPremium'] ) ){
+                $this->register_premium_controls();
+            }
+
             $this->register_style_controls( $has_carousel, $carousel_layouts );
+        }
+
+        /**
+         * On the free version, what Premium adds, at the end of the Content tab.
+         *
+         * @since    1.8.0
+         */
+        private function register_premium_controls(){
+
+            $upgrade_url = function_exists( 'ezrwp_fs' ) ? ezrwp_fs()->get_upgrade_url() : '';
+
+            $this->start_controls_section(
+                'section_premium',
+                array( 'label' => esc_html__( 'Premium', 'easy-zillow-reviews' ) )
+            );
+
+            $this->add_control(
+                'premium_note',
+                array(
+                    'type' => \Elementor\Controls_Manager::RAW_HTML,
+                    'raw'  => '<p>' . esc_html__( 'Easy Zillow Reviews Premium adds a slider layout, team members\' reviews, and lender and loan officer reviews.', 'easy-zillow-reviews' ) . '</p>'
+                        . '<p><a href="' . esc_url( $upgrade_url ? $upgrade_url : 'https://www.boltonstudios.com/easy-zillow-reviews/' ) . '" target="_blank" rel="noopener">' . esc_html__( 'Learn about Premium', 'easy-zillow-reviews' ) . '</a></p>',
+                )
+            );
+
+            $this->end_controls_section();
+        }
+
+        /**
+         * Show or hide parts of the reviews for this widget only. "Default" follows Zillow Reviews › Settings › General.
+         *
+         * @since    1.8.0
+         */
+        private function register_display_controls(){
+
+            $this->start_controls_section(
+                'section_display',
+                array( 'label' => esc_html__( 'Show / Hide', 'easy-zillow-reviews' ) )
+            );
+
+            $labels = array(
+                'date'             => __( 'Review date', 'easy-zillow-reviews' ),
+                'stars'            => __( 'Star rating', 'easy-zillow-reviews' ),
+                'reviewer_summary' => __( 'Reviewer summary', 'easy-zillow-reviews' ),
+                'profile_card'     => __( 'Profile card', 'easy-zillow-reviews' ),
+                'view_all_link'    => __( '"View all" link', 'easy-zillow-reviews' ),
+                'zillow_logo'      => __( 'Zillow logo', 'easy-zillow-reviews' ),
+                'disclaimer'       => __( 'Zillow disclaimer', 'easy-zillow-reviews' ),
+            );
+
+            foreach( Easy_Zillow_Reviews_Data::get_display_parts() as $part ){
+
+                $hidden = self::$zillow_data ? (bool) call_user_func( array( self::$zillow_data, 'get_hide_' . $part ) ) : false;
+
+                $this->add_control(
+                    'show_' . $part,
+                    array(
+                        'label'   => isset( $labels[ $part ] ) ? $labels[ $part ] : $part,
+                        'type'    => \Elementor\Controls_Manager::SELECT,
+                        'options' => array(
+                            /* translators: %s: "Show" or "Hide", the current choice in the plugin settings */
+                            ''     => sprintf( __( 'Default (%s)', 'easy-zillow-reviews' ), $hidden ? __( 'Hide', 'easy-zillow-reviews' ) : __( 'Show', 'easy-zillow-reviews' ) ),
+                            'show' => __( 'Show', 'easy-zillow-reviews' ),
+                            'hide' => __( 'Hide', 'easy-zillow-reviews' ),
+                        ),
+                        'default' => '',
+                    )
+                );
+            }
+
+            $this->add_control(
+                'display_note',
+                array(
+                    'type'            => \Elementor\Controls_Manager::RAW_HTML,
+                    'raw'             => esc_html__( 'Zillow requires the label "Reviews on Zillow". It\'s part of the profile card and the "View all" link; if both are hidden, it appears in small print instead.', 'easy-zillow-reviews' ),
+                    'content_classes' => 'elementor-descriptor',
+                    'separator'       => 'before',
+                )
+            );
+
+            $this->end_controls_section();
         }
 
         private function register_content_controls( $settings, $defaults, $layouts, $has_carousel, $columns_layouts ){
@@ -351,6 +459,24 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Elementor_Widget' ) ) {
                     'condition'   => array( 'reviewsLayout' => $columns_layouts ),
                 )
             );
+
+            // Smaller screens. Empty keeps the built-in behavior (fewer columns as the screen narrows).
+            foreach( array( 'tablet' => esc_html__( 'Columns on tablets', 'easy-zillow-reviews' ), 'mobile' => esc_html__( 'Columns on phones', 'easy-zillow-reviews' ) ) as $device => $label ){
+
+                $this->add_control(
+                    'columns_' . $device,
+                    array(
+                        'label'       => $label,
+                        'type'        => \Elementor\Controls_Manager::NUMBER,
+                        'min'         => 1,
+                        'max'         => 6,
+                        'step'        => 1,
+                        'description' => $device === 'mobile' ? esc_html__( 'Leave empty to adjust automatically. Phones use the tablet value if only that is set.', 'easy-zillow-reviews' ) : '',
+                        'condition'   => array( 'reviewsLayout' => $columns_layouts ),
+                        'selectors'   => $this->get_device_column_selectors( $device ),
+                    )
+                );
+            }
 
             $this->add_control(
                 'defaults_note',
@@ -551,6 +677,17 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Elementor_Widget' ) ) {
 
             if( isset( $settings['includeTeam'] ) ){
                 $attributes['includeTeam'] = $settings['includeTeam'] === 'yes';
+            }
+
+            $display = array();
+            foreach( Easy_Zillow_Reviews_Data::get_display_parts() as $part ){
+                $choice = isset( $settings[ 'show_' . $part ] ) ? $settings[ 'show_' . $part ] : '';
+                if( $choice === 'show' || $choice === 'hide' ){
+                    $display[ $part ] = $choice === 'show';
+                }
+            }
+            if( $display ){
+                $attributes['display'] = $display;
             }
 
             $output = apply_filters( 'ezrwp_render_block', null, $attributes );

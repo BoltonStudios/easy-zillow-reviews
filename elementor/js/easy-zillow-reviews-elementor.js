@@ -18,7 +18,19 @@
 		}
 	}
 
-	window.addEventListener( 'elementor/frontend/init', function () {
+	var registered = false;
+
+	// Elementor 4 dispatches a native event; older versions trigger it through jQuery.
+	function register() {
+		if ( registered || ! window.elementorFrontend || ! window.elementorFrontend.hooks ) {
+			return;
+		}
+		registered = true;
 		window.elementorFrontend.hooks.addAction( 'frontend/element_ready/easy-zillow-reviews.default', ready );
-	} );
+	}
+
+	window.addEventListener( 'elementor/frontend/init', register );
+	if ( window.jQuery ) {
+		window.jQuery( window ).on( 'elementor/frontend/init', register );
+	}
 } )();

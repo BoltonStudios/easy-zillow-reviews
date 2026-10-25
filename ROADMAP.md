@@ -10,7 +10,9 @@ _Last updated: 2026-10-22_
 | Version | Status | Highlights |
 |---|---|---|
 | 1.6.5 | Committed, not released | Security/escaping fixes, newest-first reviews (`$orderby`/`$top`), `wp_remote_get` with 8s timeout, admin-only errors, fixed "More" button |
-| 1.7.0 | Committed, not released | Setup guide + "Test connection", "Reviews on Zillow" label, fixed Zillow logo, block apiVersion 3 + live preview, Premium team reviews + carousel, WP 6.3 / PHP 7.4 minimums |
+| 1.7.0 | Released 2026-10-23 | Setup guide + "Test connection", "Reviews on Zillow" label, fixed Zillow logo, block apiVersion 3 + live preview, Premium team reviews + carousel, WP 6.3 / PHP 7.4 minimums |
+| 1.7.1 | Released 2026-10-25 | Removed the "Reviews on Zillow" heading (fine print only when the profile card and "View all" link are both hidden) |
+| 1.8.0 | Branch `feature/elementor-widget`, not released | Elementor widget (free) with per-widget show/hide, tablet/phone columns, style controls, Premium section for free users |
 
 Before releasing 1.7.0 (1.6.5 was never released, so its fixes ship with 1.7.0; wordpress.org sites update
 from 1.6.4 straight to 1.7.0, so test both versions' changes):
@@ -153,10 +155,13 @@ rather than the main reason to buy.
 5. **Page builder module (2.0.0)** — native module with live preview and style controls. Choose Divi or Elementor first
    based on data, e.g., active plugins reported by Freemius opt-ins. Bolton Studios already makes Divi plugins, so
    Divi may be cheaper to start. The shortcode already works in both builders; the module adds controls and preview.
-   - **Elementor: built** on branch `feature/elementor-widget` (`elementor/`). Renders through the same
-     `ezrwp_render_block` filter as the block, so Premium options appear automatically. Ships in the free version;
-     to make it Premium-only, wrap `new Easy_Zillow_Reviews_Elementor()` in the Premium check. Style controls cover
-     text, stars, reviewer/date, and slider buttons; card styles wait for the presets (item 4).
+   - **Elementor: built for 1.8.0** on branch `feature/elementor-widget` (`elementor/`). Renders through the same
+     `ezrwp_render_block` filter as the block, so Premium options appear automatically. Free, with a "Premium"
+     panel section for free users (Elementor 4 no longer shows `get_upsale_data()` boxes). Per-widget show/hide
+     (`display` arg → `Easy_Zillow_Reviews_Data::set_display_options()`), tablet/phone columns (CSS only when set),
+     style controls for text, stars, reviewer/date, and slider buttons; card styles wait for the presets (item 4).
+     Tested on Elementor 3.5.6, 3.35.9, and 4.3.5 (2026-10-25). Not yet: per-display show/hide in the block and
+     shortcode (the `display` arg is ready for them), agent page templates with dynamic tags.
 6. **Lender compliance helpers** — show NMLS# and company name on the lender card; optional Equal Housing Opportunity
    line. (Lenders confirm their own requirements.) Small, and lenders are existing paying customers who generally
    must show an NMLS# in ads; don't defer indefinitely.

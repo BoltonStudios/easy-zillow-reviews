@@ -58,6 +58,17 @@ Source: https://bridgedataoutput.com/zillowterms (my reading — not legal advic
 - **Required display:** the label "Reviews on Zillow", and a link to the professional's profile using the URL from the API (§31.2).
   Met by the profile card ("79 Reviews on Zillow") and the "View all … Reviews on Zillow" link; a fine-print label
   appears only when both are hidden (1.7.1 removed the heading 1.7.0 added above the reviews).
+  - Placement: §31.2 sets no position for this label. Where the terms want placement they say so: "above any display"
+    for the Zestimate, Economic Data, and Public Records labels (§26.1.1, §27.1.1, §28.2.1) and for "Provided by Zillow"
+    on Directory API data (§31.2). The Reviews label has no such wording.
+  - "Any use of the words 'ratings' or 'reviews'" must use the label. Team reviews show "Review of [member]"; the
+    display as a whole still carries the label.
+- **Star graphics** (§31.2): ratings must use "the 'star' graphics provided therein" and no other graphic. The Bridge
+  Reviews API provides none (checked 2026-10-25 against a live response and the OData `$metadata`: the only rating
+  fields are the numbers `Rating` and `AverageReviewRating`; no image fields on `Reviews` or `Reviewees`). The clause
+  appears to date from Zillow's legacy API, which returned rating images. Best effort: draw the numeric rating as
+  plain stars, with no other badge or graphic. Bridge support has said a reasonable best effort on compliance
+  "should be fine." Builder style controls (star color/size) only restyle those stars.
 - **Rate limit:** 5,000 Reviews API calls/hour per token (§31.3). Each display uses 2 calls (3 with team reviews).
 - Keep Zillow data clearly attributed to Zillow (§5.5): don't mix it with other review sources in one feed.
 

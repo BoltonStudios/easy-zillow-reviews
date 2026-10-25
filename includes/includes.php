@@ -65,3 +65,8 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-easy-zillo
  *
  */
 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'gutenberg/class-easy-zillow-reviews-gutenberg.php';
+
+/**
+ * The class responsible for the Elementor widget. Only active when Elementor is.
+ */
+require_once plugin_dir_path( dirname( __FILE__ ) ) . 'elementor/class-easy-zillow-reviews-elementor.php';

@@ -82,39 +82,9 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Gutenberg' ) ) {
         private function get_editor_settings(){
 
             $data = $this->get_zillow_data();
-            $types = array();
 
-            if( $data ){
-                $data = apply_filters( 'ezrwp_block_options', $data );
-                foreach( (array) $data->get_available_apis() as $api ){
-                    $types[] = array( 'value' => $api[0], 'label' => $api[1] );
-                }
-            }
-
-            $professional_options = get_option( 'ezrwp_professional_reviews_options' );
-
-            /**
-             * Filters the settings passed to the Zillow Reviews block editor.
-             *
-             * @since 1.7.0
-             * @param array $settings The settings.
-             */
-            return apply_filters(
-                'ezrwp_block_editor_settings',
-                array(
-                    'types'     => $types,
-                    'layouts'   => array_values( apply_filters( 'ezrwp_available_layouts', array( 'list', 'grid' ) ) ),
-                    'isPremium' => false,
-                    'defaults'  => array(
-                        'layout'      => $data ? $data->get_layout() : 'list',
-                        'columns'     => $data ? absint( $data->get_grid_columns() ) : 3,
-                        'count'       => $data ? absint( $data->get_count() ) : 3,
-                        'wordLimit'   => ( $data && method_exists( $data, 'get_word_limit' ) && $data->get_word_limit() ) ? absint( $data->get_word_limit() ) : 750,
-                        'screenname'  => is_array( $professional_options ) && isset( $professional_options['ezrwp_screenname'] ) ? $professional_options['ezrwp_screenname'] : '',
-                        'includeTeam' => is_array( $professional_options ) && ! empty( $professional_options['ezrwp_include_team'] ),
-                    ),
-                )
-            );
+            // The block falls back to its own defaults when settings are missing.
+            return $data ? $data->get_editor_settings( 'block' ) : array();
         }
 
         public function get_zillow_data()

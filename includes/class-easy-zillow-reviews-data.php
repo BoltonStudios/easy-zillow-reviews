@@ -380,6 +380,53 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Data' ) ) {
         }
 
         /**
+         * The review types, layouts, and defaults shown in editors (the block and page builder widgets).
+         *
+         * @since    1.8.0
+         * @param    string    $context    Which editor is asking: 'block' or 'elementor'.
+         * @return   array
+         */
+        public function get_editor_settings( $context = 'block' ){
+
+            $data = apply_filters( 'ezrwp_block_options', $this );
+            $types = array();
+
+            // Keyed by value: the filter adds types to this shared object each time it runs.
+            foreach( (array) $data->get_available_apis() as $api ){
+                $types[ $api[0] ] = array( 'value' => $api[0], 'label' => $api[1] );
+            }
+
+            $professional_options = get_option( 'ezrwp_professional_reviews_options' );
+            $word_limit = method_exists( $data, 'get_word_limit' ) ? absint( $data->get_word_limit() ) : 0;
+
+            /**
+             * Filters the settings passed to the Zillow Reviews block and page builder widgets.
+             *
+             * @since 1.7.0
+             * @since 1.8.0 Added the `$context` parameter.
+             * @param array  $settings The settings.
+             * @param string $context  Which editor is asking: 'block' or 'elementor'.
+             */
+            return apply_filters(
+                'ezrwp_block_editor_settings',
+                array(
+                    'types'     => array_values( $types ),
+                    'layouts'   => array_values( apply_filters( 'ezrwp_available_layouts', array( 'list', 'grid' ) ) ),
+                    'isPremium' => false,
+                    'defaults'  => array(
+                        'layout'      => $data->get_layout(),
+                        'columns'     => absint( $data->get_grid_columns() ),
+                        'count'       => absint( $data->get_count() ),
+                        'wordLimit'   => $word_limit ? $word_limit : 750,
+                        'screenname'  => is_array( $professional_options ) && isset( $professional_options['ezrwp_screenname'] ) ? $professional_options['ezrwp_screenname'] : '',
+                        'includeTeam' => is_array( $professional_options ) && ! empty( $professional_options['ezrwp_include_team'] ),
+                    ),
+                ),
+                $context
+            );
+        }
+
+        /**
          * Send a GET request to a reviews API and decode the JSON response.
          *
          * Identical requests within the same page load share a single response,

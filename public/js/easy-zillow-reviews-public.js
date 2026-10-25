@@ -16,8 +16,8 @@
 		button.textContent = expanded ? 'Less' : 'More';
 	}
 
-	function init() {
-		var buttons = document.querySelectorAll( '[data-ezrwp-toggle]' );
+	function init( root ) {
+		var buttons = ( root || document ).querySelectorAll( '[data-ezrwp-toggle]' );
 
 		Array.prototype.forEach.call( buttons, function ( button ) {
 			var text = document.getElementById( button.getAttribute( 'data-ezrwp-toggle' ) );
@@ -30,7 +30,7 @@
 		} );
 
 		// Markup cached before version 1.7.0: show the "More" button and hide the rest of the text.
-		Array.prototype.forEach.call( document.querySelectorAll( '.ezrwp-read-more[id]' ), function ( wrap ) {
+		Array.prototype.forEach.call( ( root || document ).querySelectorAll( '.ezrwp-read-more[id]' ), function ( wrap ) {
 			var text = wrap.previousElementSibling;
 
 			wrap.style.display = '';
@@ -76,8 +76,13 @@
 		button.classList.toggle( 'open', expand );
 	};
 
+	// For reviews added after the page loads, e.g. in page builders.
+	window.ezrwpReadMoreInit = init;
+
 	if ( document.readyState === 'loading' ) {
-		document.addEventListener( 'DOMContentLoaded', init );
+		document.addEventListener( 'DOMContentLoaded', function () {
+			init();
+		} );
 	} else {
 		init();
 	}

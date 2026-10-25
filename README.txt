@@ -9,7 +9,7 @@ Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Display your latest Reviews on Zillow with a block, widget, or shortcode.
+Display your latest Reviews on Zillow with a block, Elementor widget, widget, or shortcode.
 
 == Description ==
 
@@ -18,7 +18,7 @@ Display Zillow reviews for agents, teams, and lenders.
 = How it works =
 1. Connect your Zillow profile. A setup guide walks you through getting a free [Bridge API access token](https://bridgedataoutput.com/zgdata), then tests it.
 2. Pick a layout: list, grid, or slider (Premium).
-3. Add reviews with a block, widget, or shortcode.
+3. Add reviews with a block, Elementor widget, widget, or shortcode.
 
 Reviews come from Zillow's official APIs: the **Reviews API** (through Bridge Interactive) for agents and teams, and the **Mortgages API** for lenders (Premium; requires a [Zillow Mortgages Partner ID](https://www.zillow.com/mortgage/api/)). The plugin does not scrape Zillow pages and does not save review data to your WordPress database.
 
@@ -29,6 +29,7 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 * Show reviews from multiple profiles.
 * List and grid layouts.
 * Block with a live preview, plus widget and shortcode options.
+* Elementor widget with a live preview and style controls for the review text, stars, reviewer, and date.
 * Shows the "Reviews on Zillow" label and profile links Zillow requires.
 * Lightweight: scripts load only on pages that show reviews, and no jQuery is required.
 
@@ -67,7 +68,7 @@ If you found this free plugin helpful, you can support the developer by upgradin
 2. Go to **Zillow Reviews › Settings › Zillow Professional Profile** and follow the setup steps to get a free Bridge API access token.
 3. Enter your token and Zillow screenname, click **Test connection**, then **Save Settings**.
 4. Optional: adjust the default layout and display settings on the **General** tab.
-5. Add the **Zillow Reviews** block, an *Easy Zillow Reviews* widget, or the **[ez-zillow-reviews]** shortcode to your page or post.
+5. Add the **Zillow Reviews** block or Elementor widget, an *Easy Zillow Reviews* widget, or the **[ez-zillow-reviews]** shortcode to your page or post.
 
 == Frequently Asked Questions ==
 
@@ -121,6 +122,11 @@ No. Zillow's terms require that reviews are not selected by rating; the plugin a
 4. Settings
 
 == Changelog ==
+
+= 1.8.0 =
+* Date Released: Unreleased
+* New Feature: Zillow Reviews widget for Elementor, with a live preview and style controls. Supports the slider, team reviews, and lender reviews in Premium.
+* Improvement: Reviews and sliders added after the page loads (e.g., by page builders) now work.
 
 = 1.7.0 =
 * Date Released: 2026-10-23

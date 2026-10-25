@@ -23,6 +23,7 @@
  * Version:           1.7.0
  * Requires at least: 6.3
  * Requires PHP:      7.4
+ * Elementor tested up to: 4.3.5
  * Author:            Aaron Bolton
  * Author URI:        https://www.boltonstudios.com
  * License:           GPL-2.0+
@@ -222,6 +223,9 @@ if ( function_exists( 'ezrwp_fs' ) ) {
 
                 // Add Zillow Professional reviews to Gutenberg block
                 $plugin->loader->add_filter( 'ezrwp_render_block', $zillow_professional_reviews, 'update_reviews_in_block', 10, 2 );
+
+                // Define Elementor widget (renders through the same filters as the block)
+                new Easy_Zillow_Reviews_Elementor( $zillow_professional_reviews );
                 
                 // This IF block will be auto removed from the Free version.
                 if ( ezrwp_fs()->is__premium_only() ) {

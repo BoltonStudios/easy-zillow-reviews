@@ -140,6 +140,10 @@ rather than the main reason to buy.
 5. **Page builder module (2.0.0)** — native module with live preview and style controls. Choose Divi or Elementor first
    based on data, e.g., active plugins reported by Freemius opt-ins. Bolton Studios already makes Divi plugins, so
    Divi may be cheaper to start. The shortcode already works in both builders; the module adds controls and preview.
+   - **Elementor: built** on branch `feature/elementor-widget` (`elementor/`). Renders through the same
+     `ezrwp_render_block` filter as the block, so Premium options appear automatically. Ships in the free version;
+     to make it Premium-only, wrap `new Easy_Zillow_Reviews_Elementor()` in the Premium check. Style controls cover
+     text, stars, reviewer/date, and slider buttons; card styles wait for the presets (item 4).
 6. **Lender compliance helpers** — show NMLS# and company name on the lender card; optional Equal Housing Opportunity
    line. (Lenders confirm their own requirements.) Small, and lenders are existing paying customers who generally
    must show an NMLS# in ads; don't defer indefinitely.

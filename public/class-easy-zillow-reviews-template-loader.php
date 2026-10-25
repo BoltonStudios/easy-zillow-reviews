@@ -145,6 +145,12 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
 
             // Create an identifier for this HTML wrapper.
             $this->wrapper_id = function_exists( 'wp_unique_id' ) ? wp_unique_id() : (string) wp_rand();
+
+            // AJAX and REST requests render reviews on their own (e.g., page builder and block editor previews), where the
+            // counter restarts and could repeat an ID that's already on the page.
+            if( wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ){
+                $this->wrapper_id = substr( md5( (string) wp_rand() ), 0, 6 ) . '-' . $this->wrapper_id;
+            }
         }
 
         /**

@@ -18,11 +18,32 @@
 		var hovering = false;
 		var focused = false;
 		var frame = 0;
+		var timer = 0;
+		var observer = null;
 
 		if ( ! track || container.hasAttribute( 'data-ezrwp-ready' ) ) {
 			return;
 		}
 		container.setAttribute( 'data-ezrwp-ready', '1' );
+
+		// Page builders can replace the reviews; stop the timer and listeners when they're gone.
+		function removed() {
+			if ( document.documentElement.contains( container ) ) {
+				return false;
+			}
+			window.removeEventListener( 'resize', onResize );
+			clearInterval( timer );
+			if ( observer ) {
+				observer.disconnect();
+			}
+			return true;
+		}
+
+		function onResize() {
+			if ( ! removed() ) {
+				update();
+			}
+		}
 
 		// The distance between pages: the visible width plus the gap between reviews.
 		function gap() {
@@ -111,13 +132,13 @@
 			frame = requestAnimationFrame( update );
 		} );
 
-		window.addEventListener( 'resize', update );
+		window.addEventListener( 'resize', onResize );
 
 		track.classList.add( 'ezrwp-adaptive-height' );
 
 		// Re-fit when a review changes height, e.g. "More" expands it or an image loads.
 		if ( typeof ResizeObserver === 'function' ) {
-			var observer = new ResizeObserver( function () {
+			observer = new ResizeObserver( function () {
 				cancelAnimationFrame( frame );
 				frame = requestAnimationFrame( update );
 			} );
@@ -155,8 +176,8 @@
 				} );
 			}
 
-			setInterval( function () {
-				if ( paused || hovering || focused || document.hidden ) {
+			timer = setInterval( function () {
+				if ( removed() || paused || hovering || focused || document.hidden ) {
 					return;
 				}
 				if ( atEnd() ) {
@@ -175,14 +196,21 @@
 		update();
 	}
 
-	function init() {
-		Array.prototype.forEach.call( document.querySelectorAll( '.ezrwp-carousel-container' ), setup );
+	function init( root ) {
+		Array.prototype.forEach.call( ( root || document ).querySelectorAll( '.ezrwp-carousel-container' ), setup );
 	}
 
-	if ( document.readyState === 'loading' ) {
-		document.addEventListener( 'DOMContentLoaded', init );
-	} else {
+	function initPage() {
 		init();
 	}
-	window.addEventListener( 'load', init );
+
+	// For reviews added after the page loads, e.g. in page builders.
+	window.ezrwpCarouselInit = init;
+
+	if ( document.readyState === 'loading' ) {
+		document.addEventListener( 'DOMContentLoaded', initPage );
+	} else {
+		initPage();
+	}
+	window.addEventListener( 'load', initPage );
 } )();

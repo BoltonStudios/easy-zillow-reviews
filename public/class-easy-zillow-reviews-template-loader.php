@@ -222,13 +222,17 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
              */
             $reviews_output = apply_filters( 'ezrwp_reviews_output', '<div class="ezrwp-reviews">' . $reviews_output . '</div>', $layout, $grid_columns, $wrapper_id, $reviews_output );
 
-            // Zillow requires the label "Reviews on Zillow" for any display of reviews from its API.
-            $label = '<p class="ezrwp-label">' . esc_html__( 'Reviews on Zillow', 'easy-zillow-reviews' ) . '</p>';
+            // Zillow requires the label "Reviews on Zillow" with its reviews. The profile card and the "View all" link
+            // already include it, so the fine-print label is only needed when both are hidden.
+            $label = '';
+            if( trim( $profile_card ) === '' && trim( $view_all_link ) === '' ){
+                $label = '<p class="ezrwp-label">' . esc_html__( 'Reviews on Zillow', 'easy-zillow-reviews' ) . '</p>';
+            }
 
             $output = sprintf(
                 '<div id="ezrwp-wrapper-%8$s" class="ezrwp-wrapper ezrwp-%1$s %2$s">
                     <div class="ezrwp-content">
-                        %9$s %3$s %4$s %5$s %6$s %7$s
+                        %3$s %4$s %5$s %6$s %9$s %7$s
                     </div>
                 </div>',
                 esc_attr( $layout ),

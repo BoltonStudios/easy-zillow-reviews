@@ -56,6 +56,8 @@ Source: https://bridgedataoutput.com/zillowterms (my reading — not legal advic
 - **No shared API key** (§5.1, §31.1, non-sublicensable license). Each site owner needs their own Bridge token. A partner exception would need Zillow's written approval (contact: api@bridgeinteractive.com).
 - **Chronology is the only allowed selection** when showing a subset (§31.2). No filtering by rating, city, or service type.
 - **Required display:** the label "Reviews on Zillow", and a link to the professional's profile using the URL from the API (§31.2).
+  Met by the profile card ("79 Reviews on Zillow") and the "View all … Reviews on Zillow" link; a fine-print label
+  appears only when both are hidden (1.7.1 removed the heading 1.7.0 added above the reviews).
 - **Rate limit:** 5,000 Reviews API calls/hour per token (§31.3). Each display uses 2 calls (3 with team reviews).
 - Keep Zillow data clearly attributed to Zillow (§5.5): don't mix it with other review sources in one feed.
 

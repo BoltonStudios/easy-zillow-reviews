@@ -129,7 +129,7 @@ No. Zillow's terms require that reviews are not selected by rating; the plugin a
 * Improvement: Reviews and sliders added after the page loads (e.g., by page builders) now work.
 
 = 1.7.1 =
-* Date Released: Unreleased
+* Date Released: 2026-10-25
 * Improvement: Removed the "Reviews on Zillow" heading above reviews. The profile card and "View all" link already say "Reviews on Zillow"; if both are hidden, the label appears as small print above the Zillow disclaimer.
 
 = 1.7.0 =

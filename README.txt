@@ -55,12 +55,12 @@ If you found this free plugin helpful, you can support the developer by upgradin
 
     [ez-zillow-reviews layout="grid" columns="2" count="4" screenname="jsmith" excerpt="50"]
 
-* layout..."list" or "grid" ("slider" in Premium).
+* layout...`"list"` or `"grid"` (`"slider"` in Premium).
 * columns...A number between 1 and 6. In the slider, the number of reviews visible at once.
 * count...A number between 1 and 10.
 * screenname...The screenname that appears in your Zillow profile link.
 * excerpt...A number between 20 and 750. The maximum length of each review (word limit).
-* team...(Premium) "true" or "false". Include your team members' reviews.
+* team...(Premium) `"true"` or `"false"`. Include your team members' reviews.
 
 == Installation ==
 
@@ -117,7 +117,7 @@ No. Zillow's terms require that reviews are not selected by rating; the plugin a
 == Screenshots ==
 
 1. Zillow Reviews block editor
-2. Shortcode output for [ez-zillow-reviews layout="grid" columns="2" count="2" screenname="pstalker"]
+2. Shortcode output for `[ez-zillow-reviews layout="grid" columns="2" count="2" screenname="pstalker"]`
 3. Widget
 4. Settings
 
@@ -152,7 +152,7 @@ No. Zillow's terms require that reviews are not selected by rating; the plugin a
 * Bug fix: The "More" button on long reviews works again.
 * Bug fix: The Zillow logo image no longer appears broken.
 * Bug fix: Screennames containing hyphens are now supported.
-* Bug fix: Invalid shortcode values (e.g., columns="two") no longer cause a fatal error.
+* Bug fix: Invalid shortcode values (e.g., `columns="two"`) no longer cause a fatal error.
 * Bug fix: Widget titles now appear inside the widget.
 * Bug fix: The settings page now works on sites installed in a subdirectory.
 * Bug fix: Some reviews showed "who 2023" instead of the service provided.

@@ -10,3 +10,5 @@ node_modules/
 ######################
 .DS_Store
 .DS_Store?
+# Local-only notes, emails, screenshots, API samples (see AGENTS.md)
+.private/

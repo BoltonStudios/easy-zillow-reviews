@@ -119,10 +119,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             }
 
             $token = isset( $fields['token'] ) ? trim( $fields['token'] ) : '';
-            $screenname = isset( $fields['screenname'] ) ? trim( $fields['screenname'] ) : '';
+            $screenname = isset( $fields['screenname'] ) ? self::normalize_screenname( $fields['screenname'] ) : '';
 
             if( $token === '' ){
-                return array( 'success' => false, 'message' => __( 'Enter your Bridge API access token first.', 'easy-zillow-reviews' ) );
+                return array( 'success' => false, 'message' => __( 'Enter your Bridge Server Token first.', 'easy-zillow-reviews' ) );
             }
 
             if( $screenname === '' ){
@@ -144,8 +144,13 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
                 );
             }
 
-            if( $code === 401 || $code === 403 ){
-                $message = __( 'Bridge did not accept this access token. Make sure you copied the whole token and that Bridge has approved your access to the Zillow Agent Reviews dataset.', 'easy-zillow-reviews' ) . ' (' . $message . ')';
+            if( ( $code === 401 || $code === 403 ) && stripos( $message, 'Invalid access_token format' ) !== false ){
+                // Bridge's response when the Client ID or Client Secret is pasted instead of a token.
+                $message = __( 'That isn\'t your Server Token. In your Bridge dashboard, open API Access and click "Show Token" next to Server Token, then copy the whole token.', 'easy-zillow-reviews' );
+            } elseif( $code === 401 || $code === 403 ){
+                $message = __( 'Bridge did not accept this token. Copy the Server Token again from API Access in your Bridge dashboard, and check that Zillow Agent Reviews is listed under Data Access › Approved Datasets.', 'easy-zillow-reviews' ) . ' (' . $message . ')';
+            } elseif( $code === 429 ){
+                $message = __( 'Bridge is limiting requests from this token because it made too many. Try again in a few minutes.', 'easy-zillow-reviews' );
             } elseif( $code === 200 ){
                 $message = sprintf(
                     /* translators: %s: the screenname */
@@ -155,6 +160,24 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             }
 
             return array( 'success' => false, 'message' => $message );
+        }
+
+        /**
+         * Get the screenname from a screenname or a pasted Zillow profile address.
+         *
+         * @since    1.8.1
+         * @param    string    $value    E.g. "jsmith" or "https://www.zillow.com/profile/jsmith/".
+         * @return   string
+         */
+        public static function normalize_screenname( $value ){
+
+            $value = trim( (string) $value );
+
+            if( preg_match( '#zillow\.com/profile/([^/?\#]+)#i', $value, $matches ) ){
+                $value = trim( rawurldecode( $matches[1] ) );
+            }
+
+            return $value;
         }
 
         // Methods
@@ -171,7 +194,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
             // Initialize variables.
             $bridge_token = $this->get_bridge_token();
             $count = min( max( absint( $count ), 1 ), 10 );
-            $screenname = trim( (string) ( ( $screenname === null || $screenname === '' ) ? $this->get_screenname() : $screenname ) );
+            $screenname = self::normalize_screenname( ( $screenname === null || $screenname === '' ) ? $this->get_screenname() : $screenname );
             $message = '';
             $has_reviews = false;
             $reviews = array();
@@ -183,12 +206,12 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
                 // Zillow retired the ZWSID-based API in favor of Bridge Interactive.
                 $message = $this->get_zwsid()
-                    ? 'Zillow no longer supports the Zillow Web Services ID (ZWSID). Please add a Bridge API Access Token on the plugin Settings page'
-                    : 'Please add a Bridge API Access Token on the plugin Settings page';
+                    ? __( 'Zillow no longer supports the Zillow Web Services ID (ZWSID). Please add a Bridge Server Token on the plugin Settings page', 'easy-zillow-reviews' )
+                    : __( 'Please add a Bridge Server Token on the plugin Settings page', 'easy-zillow-reviews' );
 
             } elseif( $screenname === '' ){
 
-                $message = 'Please add a Zillow Screenname on the plugin Settings page';
+                $message = __( 'Please add a Zillow Screenname on the plugin Settings page', 'easy-zillow-reviews' );
 
             } else{
 

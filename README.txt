@@ -16,7 +16,7 @@ Show your Zillow reviews on WordPress with a block, an Elementor widget, a widge
 Display Zillow reviews for agents, teams, and lenders.
 
 = How it works =
-1. Connect your Zillow profile. A setup guide walks you through getting a free [Bridge API access token](https://bridgedataoutput.com/zgdata), then tests it.
+1. Connect your Zillow profile. Get a free [Bridge](https://bridgedataoutput.com/zgdata) token in about five minutes; the setup guide shows each step and tests the connection.
 2. Pick a layout: list, grid, or slider (Premium).
 3. Add reviews with a block, Elementor widget, widget, or shortcode.
 
@@ -73,24 +73,42 @@ If you found this free plugin helpful, you can support the developer by upgradin
 == Installation ==
 
 1. In your WordPress dashboard, go to **Plugins › Add New Plugin**, search for "Easy Zillow Reviews", then install and activate it.
-2. Go to **Zillow Reviews › Settings › Zillow Professional Profile** and follow the setup steps to get a free Bridge API access token.
-3. Enter your token and Zillow screenname, click **Test connection**, then **Save Settings**.
+2. Go to **Zillow Reviews › Settings › Zillow Professional Profile** and follow the setup guide to get a free Bridge Server Token (about five minutes).
+3. Enter your Server Token and Zillow screenname, click **Test connection**, then **Save Settings**.
 4. Optional: adjust the default layout and display settings on the **General** tab.
 5. Add the **Zillow Reviews** block, the **Zillow Reviews** Elementor widget, an *Easy Zillow Reviews* widget, or the **[ez-zillow-reviews]** shortcode to your page or post.
 
 == Frequently Asked Questions ==
 
-= Where do I get a Bridge API access token? =
+= Where do I get a Bridge token? =
 
-Zillow shares its reviews data through Bridge Interactive. Create a free account at [bridgedataoutput.com/zgdata](https://bridgedataoutput.com/zgdata), request access to the Zillow Agent Reviews dataset, and copy your API access token after Bridge approves your request.
+Zillow shares its reviews data through Bridge Interactive. It's free and usually takes about five minutes:
+
+1. Fill out the registration form at [bridgedataoutput.com/zgdata](https://bridgedataoutput.com/zgdata). For **Website**, enter the site where your reviews will appear. For **Product Name**, enter your business name, and for **Product Type**, enter "Website". Check **Zillow Agent Reviews**.
+2. Click the link in Bridge's verification email (check your spam folder), then log in.
+3. Open **API Access** and click **Show Token** next to **Server Token**.
+
+The form says requests can take 10+ days, but Zillow Agent Reviews is usually approved right away.
+
+= Which Bridge token do I use? =
+
+The **Server Token**. Bridge's API Access page also lists a Client ID, Client Secret, and Browser Token; the plugin doesn't use those, and "Test connection" tells you if you've pasted the wrong one.
+
+= I have more than one website. =
+
+Zillow's terms allow reviews only on the websites named in your Bridge application. For each additional site, log in to Bridge, choose **Create New Application** from the account menu, and request **Zillow Agent Reviews** under **Data Access**. Each site then has its own Server Token.
+
+= I shared my token by mistake. What should I do? =
+
+In Bridge, open **API Access › Application Settings** and click **Regenerate Tokens**. Then paste the new Server Token into the plugin settings and save.
 
 = Where do I find my Zillow screenname? =
 
-It's the part after "zillow.com/profile/" in the address of your Zillow profile page.
+It's the part after "zillow.com/profile/" in the address of your Zillow profile page. You can also paste the whole profile address into the screenname field.
 
 = I used a Zillow Web Services ID (ZWSID). Does it still work? =
 
-No. Zillow retired the ZWSID. Please add a Bridge API access token instead.
+No. Zillow retired the ZWSID. Please add a Bridge Server Token instead.
 
 = Why don't my reviews update right away? =
 
@@ -124,7 +142,7 @@ No. Zillow's terms require that reviews are not selected by rating; the plugin a
 
 **Zillow** provides the reviews and the logo:
 
-* **Reviews API** (through Bridge Interactive) fetches agent reviews. Sends your Bridge access token and Zillow screenname when a page shows reviews or you click "Test connection".
+* **Reviews API** (through Bridge Interactive) fetches agent reviews. Sends your Bridge Server Token and Zillow screenname when a page shows reviews or you click "Test connection".
 * **Mortgages API** (Premium) fetches lender reviews. Sends your Partner ID, NMLS#, and company name (if set) when a page shows lender reviews or you click "Test connection".
 * **Zillow logo.** Visitors' browsers load the logo from zillowstatic.com on pages that show it, which shares their IP address with Zillow. Turn it off in Settings › General.
 
@@ -145,6 +163,11 @@ Terms: [Zillow API Terms of Use](https://bridgedataoutput.com/zillowterms) (Revi
 5. Zillow Reviews widget in the Elementor editor
 
 == Changelog ==
+
+= 1.8.1 =
+* Improvement: Clearer setup guide that matches Bridge's current sign-up: one form, email verification, and the Server Token, usually in about five minutes.
+* Improvement: "Test connection" explains when you've pasted a Bridge Client ID or Client Secret instead of the Server Token, and when Bridge is limiting requests.
+* Improvement: The screenname field accepts a full Zillow profile address.
 
 = 1.8.0 =
 * Date Released: 2026-10-26

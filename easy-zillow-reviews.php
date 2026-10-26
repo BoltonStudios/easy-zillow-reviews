@@ -158,7 +158,7 @@ if ( function_exists( 'ezrwp_fs' ) ) {
 
             $custom = array(
                 Freemius::REASON_COULDNT_MAKE_IT_WORK => array(
-                    'text'              => __( 'I couldn\'t get it set up (for example, the Bridge API access token)', 'easy-zillow-reviews' ),
+                    'text'              => __( 'I couldn\'t get it set up (for example, the Bridge Server Token)', 'easy-zillow-reviews' ),
                     'input_type'        => 'textarea',
                     'input_placeholder' => __( 'Which step was the problem?', 'easy-zillow-reviews' ),
                 ),

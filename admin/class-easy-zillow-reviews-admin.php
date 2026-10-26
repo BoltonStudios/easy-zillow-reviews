@@ -136,7 +136,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
             $saved = get_option( 'ezrwp_professional_reviews_options' );
             $output = array(
                 'ezrwp_bridge_token_1' => isset( $input['ezrwp_bridge_token_1'] ) ? preg_replace( '/[^A-Za-z0-9_\-]/', '', $input['ezrwp_bridge_token_1'] ) : '',
-                'ezrwp_screenname'     => isset( $input['ezrwp_screenname'] ) ? sanitize_text_field( $input['ezrwp_screenname'] ) : '',
+                'ezrwp_screenname'     => isset( $input['ezrwp_screenname'] ) ? sanitize_text_field( Easy_Zillow_Reviews_Professional::normalize_screenname( $input['ezrwp_screenname'] ) ) : '',
             );
 
             // Keep a retired ZWSID so the plugin can explain that it is no longer supported.
@@ -244,8 +244,8 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
             $settings_url = admin_url( 'admin.php?page=' . $this->plugin_slug . '&tab=ezrwp_professional_reviews' );
             $dismiss_url = wp_nonce_url( admin_url( 'admin-post.php?action=ezrwp_dismiss_setup_notice' ), 'ezrwp_dismiss_setup_notice' );
             $message = $has_zwsid
-                ? __( 'Zillow retired the Zillow Web Services ID (ZWSID), so Easy Zillow Reviews cannot show your reviews until you add a free Bridge API access token.', 'easy-zillow-reviews' )
-                : __( 'Easy Zillow Reviews needs a free Bridge API access token and your Zillow screenname to show your reviews.', 'easy-zillow-reviews' );
+                ? __( 'Zillow retired the Zillow Web Services ID (ZWSID), so Easy Zillow Reviews cannot show your reviews until you add a free Bridge Server Token. Getting one takes about 5 minutes.', 'easy-zillow-reviews' )
+                : __( 'Easy Zillow Reviews needs a free Bridge Server Token and your Zillow screenname to show your reviews. Getting the token takes about 5 minutes.', 'easy-zillow-reviews' );
             ?>
             <div class="notice notice-warning">
                 <p>
@@ -369,26 +369,66 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
             function ezrwp_section_for_zillow_professional_parameters_cb( $args ) {
                 ?>
                 <div class="ezrwp-setup-guide">
-                    <p><strong><?php esc_html_e( 'How to connect your Zillow reviews', 'easy-zillow-reviews' ); ?></strong></p>
+                    <p><strong><?php esc_html_e( 'How to connect your Zillow reviews', 'easy-zillow-reviews' ); ?></strong> <?php esc_html_e( '(about 5 minutes)', 'easy-zillow-reviews' ); ?></p>
                     <ol>
                         <li><?php
                             printf(
-                                /* translators: %s: link to Bridge Interactive's Zillow data page */
-                                esc_html__( 'Create a free Bridge Interactive account, or log in, at %s. Bridge is the company Zillow uses to share its data.', 'easy-zillow-reviews' ),
+                                /* translators: %s: link to Bridge Interactive's Zillow data registration form */
+                                esc_html__( 'Fill out Bridge\'s free registration form at %s. Bridge is the company Zillow uses to share its data. On the form:', 'easy-zillow-reviews' ),
                                 '<a href="https://bridgedataoutput.com/zgdata" target="_blank" rel="noopener noreferrer">bridgedataoutput.com/zgdata</a>'
                             );
-                        ?></li>
+                            ?>
+                            <ul>
+                                <li><?php
+                                    printf(
+                                        /* translators: 1: the form field name "Website", 2: this site's address */
+                                        esc_html__( '%1$s: the site where your reviews will appear, e.g. %2$s', 'easy-zillow-reviews' ),
+                                        '<strong>Website</strong>',
+                                        '<code>' . esc_html( home_url() ) . '</code>'
+                                    );
+                                ?></li>
+                                <li><?php
+                                    printf(
+                                        /* translators: 1: the form field name "Product Name", 2: the form field name "Product Type", 3: the value "Website" */
+                                        esc_html__( '%1$s: your business name. %2$s: %3$s', 'easy-zillow-reviews' ),
+                                        '<strong>Product Name</strong>',
+                                        '<strong>Product Type</strong>',
+                                        'Website'
+                                    );
+                                ?></li>
+                                <li><?php
+                                    printf(
+                                        /* translators: %s: the dataset name, "Zillow Agent Reviews" */
+                                        esc_html__( 'Datasets: check %s', 'easy-zillow-reviews' ),
+                                        '<strong>Zillow Agent Reviews</strong>'
+                                    );
+                                ?></li>
+                            </ul>
+                            <?php esc_html_e( 'The form says requests can take 10+ days, but Zillow Agent Reviews is usually approved right away.', 'easy-zillow-reviews' ); ?>
+                        </li>
+                        <li><?php esc_html_e( 'Click the link in Bridge\'s verification email (check your spam folder), then log in.', 'easy-zillow-reviews' ); ?></li>
                         <li><?php
                             printf(
-                                /* translators: %s: the dataset name, "Zillow Agent Reviews" */
-                                esc_html__( 'Request access to the %s dataset. Enter this website\'s address when asked where the reviews will appear. Approval can take a few business days.', 'easy-zillow-reviews' ),
-                                '<strong>' . esc_html__( 'Zillow Agent Reviews', 'easy-zillow-reviews' ) . '</strong>'
+                                /* translators: 1: "API Access", 2: "Show Token", 3: "Server Token" (labels in the Bridge dashboard) */
+                                esc_html__( 'Open %1$s and click %2$s next to %3$s. Paste it below. (Not the Client ID, Client Secret, or Browser Token.)', 'easy-zillow-reviews' ),
+                                '<strong>API Access</strong>',
+                                '<strong>Show Token</strong>',
+                                '<strong>Server Token</strong>'
                             );
                         ?></li>
-                        <li><?php esc_html_e( 'After approval, copy your API access token from your Bridge dashboard and paste it below.', 'easy-zillow-reviews' ); ?></li>
-                        <li><?php esc_html_e( 'Enter your Zillow screenname: the part after "zillow.com/profile/" in your Zillow profile address.', 'easy-zillow-reviews' ); ?></li>
+                        <li><?php esc_html_e( 'Enter your Zillow screenname (the part after "zillow.com/profile/"), or paste your Zillow profile address.', 'easy-zillow-reviews' ); ?></li>
                         <li><?php esc_html_e( 'Click "Test connection", then "Save Settings".', 'easy-zillow-reviews' ); ?></li>
                     </ol>
+                    <p><?php
+                        printf(
+                            /* translators: 1: "Log in" link to Bridge, 2: "Create New Application", 3: "Zillow Agent Reviews", 4: "Data Access" (labels in the Bridge dashboard) */
+                            esc_html__( 'Already have a Bridge account? %1$s, choose %2$s from the account menu, then request %3$s under %4$s.', 'easy-zillow-reviews' ),
+                            '<a href="https://bridgedataoutput.com/login" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Log in', 'easy-zillow-reviews' ) . '</a>',
+                            '<strong>Create New Application</strong>',
+                            '<strong>Zillow Agent Reviews</strong>',
+                            '<strong>Data Access</strong>'
+                        );
+                    ?></p>
                 </div>
                 <hr />
                 <p id="<?php echo esc_attr( $args['id'] ); ?>-2">
@@ -449,10 +489,18 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 };
                 ?>
 
-                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Bridge API Access Token</label>
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text"><?php esc_html_e( 'Bridge Server Token', 'easy-zillow-reviews' ); ?></label>
                 <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo esc_attr( $setting ); ?>" />
 
-                <p>To get your free <strong>API Access Token</strong>, <a href="https://bridgedataoutput.com/login" target="_blank">log in to Bridge</a> or <a href="https://bridgedataoutput.com/zgdata" target="_blank">create a new account <span class="dashicons dashicons-external" style="font-size: 14px;"></span></a> and request access to the <strong>Zillow Agent Reviews</strong> dataset.</p>
+                <p><?php
+                    printf(
+                        /* translators: 1: "API Access", 2: "Show Token", 3: "Server Token" (labels in the Bridge dashboard) */
+                        esc_html__( 'In your Bridge dashboard, open %1$s and click %2$s next to %3$s. No Bridge account yet? Follow the steps above.', 'easy-zillow-reviews' ),
+                        '<strong>API Access</strong>',
+                        '<strong>Show Token</strong>',
+                        '<strong>Server Token</strong>'
+                    );
+                ?></p>
                 <?php
             }
 
@@ -467,10 +515,10 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin' ) ) {
                 };
                 ?>
 
-                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text">Zillow Screenname</label>
+                <label for="<?php echo esc_attr( $args['label_for'] ); ?>" class="screen-reader-text"><?php esc_html_e( 'Zillow Screenname', 'easy-zillow-reviews' ); ?></label>
                 <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" class="ezrwp-setting" data-custom="<?php echo esc_attr( $args['ezrwp_custom_data'] ); ?>" name="ezrwp_professional_reviews_options[<?php echo esc_attr( $args['label_for'] ); ?>]" value="<?php echo esc_attr( $setting ); ?>" />
 
-                <p>The screenname of the user whose reviews you want to display. Use the shortcode options to show reviews for multiple profiles.</p>
+                <p><?php esc_html_e( 'The screenname of the user whose reviews you want to display. You can also paste their Zillow profile address. Use the shortcode options to show reviews for multiple profiles.', 'easy-zillow-reviews' ); ?></p>
 
                 <?php
                 Easy_Zillow_Reviews_Admin::test_connection_button(

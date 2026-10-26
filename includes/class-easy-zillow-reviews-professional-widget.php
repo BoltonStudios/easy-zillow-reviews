@@ -150,7 +150,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional_Widget' ) ) {
             $layout = ! empty( $instance['layout'] ) ? $instance['layout'] : '';
             $cols = ! empty( $instance['cols'] ) ? $instance['cols'] : '';
             ?>
-            <p>Add your Bridge API Access Token and Screenname in Settings -> Zillow Reviews.</p>
+            <p><?php esc_html_e( 'Add your Bridge Server Token and Zillow screenname under Zillow Reviews › Settings.', 'easy-zillow-reviews' ); ?></p>
             <p>
                 <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>">
                     <?php esc_attr_e( 'Title:', 'easy-zillow-reviews' ); ?>

@@ -26,7 +26,7 @@ Release workflow. Not shipped: excluded from zips by `.gitattributes`.
 - [ ] Download the **free** and **premium** zips from Freemius into `~/Downloads`
       (`easy-zillow-reviews-free.X.Y.Z.zip`, `easy-zillow-reviews-premium.X.Y.Z.zip`).
 - [ ] Test on staging; purge WP Engine's cache after deploying (asset URLs keep `?ver=X.Y.Z`).
-- [ ] Check the free zip: version is X.Y.Z, `premium/` is absent, no dev files, PHP lints.
+- [ ] Check the free zip: version is X.Y.Z, `premium/` is absent, no dev files (`AGENTS.md`, `docs/`, `ROADMAP.md`, `RELEASING.md`), PHP lints.
       Freemius strips its own `README.md`/`composer.json`, adds `freemius` as a contributor, and reformats the main file; that's expected.
 
 ## 3. Publish the free version (WordPress.org)

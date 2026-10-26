@@ -3,7 +3,7 @@
 Working list of upgrades and context for future sessions. **Not part of the plugin** — leave this file
 (and `node_modules/`, `.git*`, `.DS_Store`) out of release zips.
 
-_Last updated: 2026-10-22_
+_Last updated: 2026-10-26_ (terms, Bridge API notes, and support answers moved to `docs/`; start with [AGENTS.md](AGENTS.md))
 
 ## Current state
 
@@ -12,7 +12,8 @@ _Last updated: 2026-10-22_
 | 1.6.5 | Committed, not released | Security/escaping fixes, newest-first reviews (`$orderby`/`$top`), `wp_remote_get` with 8s timeout, admin-only errors, fixed "More" button |
 | 1.7.0 | Released 2026-10-23 | Setup guide + "Test connection", "Reviews on Zillow" label, fixed Zillow logo, block apiVersion 3 + live preview, Premium team reviews + carousel, WP 6.3 / PHP 7.4 minimums |
 | 1.7.1 | Released 2026-10-25 | Removed the "Reviews on Zillow" heading (fine print only when the profile card and "View all" link are both hidden) |
-| 1.8.0 | Branch `feature/elementor-widget`, not released | Elementor widget (free) with per-widget show/hide, tablet/phone columns, style controls, Premium section for free users |
+| 1.8.0 | Released 2026-10-26 (README changelog) | Elementor widget (free) with per-widget show/hide, tablet/phone columns, style controls, Premium section for free users |
+| 1.8.1 | Implemented 2026-10-26, not released | Onboarding rewrite from the verified Bridge signup flow; see "1.8.1: onboarding" below |
 
 Before releasing 1.7.0 (1.6.5 was never released, so its fixes ship with 1.7.0; wordpress.org sites update
 from 1.6.4 straight to 1.7.0, so test both versions' changes):
@@ -45,56 +46,14 @@ from 1.6.4 straight to 1.7.0, so test both versions' changes):
   - Lender reviews still work (the asset-loading change affects them), including "Test connection" with lender credentials.
   - Activating Premium cleanly deactivates the free version.
 - [ ] **Environment**: PHP 7.4 and 8.x; `debug.log` clean after a full pass. Optional: settings page on a subdirectory install.
-- [ ] **Packaging**: check the zip Freemius actually produces. It excludes `node_modules/`, `ROADMAP.md`, and `package*.json`; it keeps `gutenberg/src/` (readable source) and `gutenberg/build/`. (`.gitattributes` only covers `git archive`.)
+- [ ] **Packaging**: check the zip Freemius actually produces. It excludes `node_modules/`, `ROADMAP.md`, `AGENTS.md`, `docs/`, and `package*.json`; it keeps `gutenberg/src/` (readable source) and `gutenberg/build/`. (`.gitattributes` only covers `git archive`.)
 
 Sibling plugin: Read More WP 1.1.8 and 1.2.0 (+ a duplicate-markup fix for Elementor/sliders) are also committed and unreleased in `read-more-wp/`.
 
 ## Zillow/Bridge rules that constrain ideas
 
-Source: https://bridgedataoutput.com/zillowterms (my reading — not legal advice)
-
-- **No caching or storing data** (§5.18b). The plugin fetches live on every display and only de-duplicates within a
-  request. How far this reaches (e.g., to a site's page cache) is an open question; see "Caching" below.
-- **No shared API key** (§5.1, §31.1, non-sublicensable license). Each site owner needs their own Bridge token. A partner exception would need Zillow's written approval (contact: api@bridgeinteractive.com).
-- **Chronology is the only allowed selection** when showing a subset (§31.2). No filtering by rating, city, or service type.
-- **Required display:** the label "Reviews on Zillow", and a link to the professional's profile using the URL from the API (§31.2).
-  Met by the profile card ("79 Reviews on Zillow") and the "View all … Reviews on Zillow" link; a fine-print label
-  appears only when both are hidden (1.7.1 removed the heading 1.7.0 added above the reviews).
-  - Placement: §31.2 sets no position for this label. Where the terms want placement they say so: "above any display"
-    for the Zestimate, Economic Data, and Public Records labels (§26.1.1, §27.1.1, §28.2.1) and for "Provided by Zillow"
-    on Directory API data (§31.2). The Reviews label has no such wording.
-  - "Any use of the words 'ratings' or 'reviews'" must use the label. Team reviews show "Review of [member]"; the
-    display as a whole still carries the label.
-- **Star graphics** (§31.2): ratings must use "the 'star' graphics provided therein" and no other graphic. The Bridge
-  Reviews API provides none (checked 2026-10-25 against a live response and the OData `$metadata`: the only rating
-  fields are the numbers `Rating` and `AverageReviewRating`; no image fields on `Reviews` or `Reviewees`). The clause
-  appears to date from Zillow's legacy API, which returned rating images. Best effort: draw the numeric rating as
-  plain stars, with no other badge or graphic. Bridge support has said a reasonable best effort on compliance
-  "should be fine." Builder style controls (star color/size) only restyle those stars.
-- **Logo size** (Bridge support, 2026-10-25): the Zillow house logo must be at least 58px tall; the primary logo
-  (house + name) must be more than 24px tall. The plugin shows the primary logo SVG from zillowstatic.com at 115x25.
-- **Rate limit:** 5,000 Reviews API calls/hour per token (§31.3). Each display uses 2 calls (3 with team reviews).
-- Keep Zillow data clearly attributed to Zillow (§5.5): don't mix it with other review sources in one feed.
-
-### Caching: literal vs. reasonable reading
-
-- **Literal reading:** no copy of Zillow data may exist anywhere, including a site's page cache or CDN. Then every
-  site with page caching is out of step today, and only loading reviews in the browser fixes it.
-- **Reasonable reading (current working stance):** the plugin itself never stores or persists Zillow data. A page
-  cache is general-purpose infrastructure the site owner controls; it holds rendered pages briefly and refreshes them.
-  The FAQ already tells users that new reviews appear when the cache refreshes.
-- On past questions, Bridge has leaned toward the reasonable reading, but **caching hasn't been asked about
-  specifically.** Ask before designing 1.8.0, and get the answer in writing (api@bridgeinteractive.com):
-  1. Is it acceptable for a site's page cache or CDN to hold pages that display reviews? For how long (e.g., 24 hours)?
-  2. May the plugin keep a short-lived server-side cache (e.g., 15–60 minutes, cleared on expiry) to stay within the
-     rate limit, especially for a badge shown on every page?
-  3. If yes, what's the maximum duration?
-- Until there's an answer: no plugin-side caching, and don't market browser loading as a compliance fix. Build so
-  either answer works: one cache-duration setting or filter, defaulting to 0.
-- How the answer changes the plan:
-  - **Short-lived cache allowed:** the quota concerns below mostly go away. Browser loading is a speed option, and
-    the badge and roster get cheap.
-  - **Not allowed:** browser loading becomes the default, and quota protection matters more.
+Moved to [docs/zillow-terms-notes.md](docs/zillow-terms-notes.md) (terms, display rules, caching question) and
+[docs/bridge-support-log.md](docs/bridge-support-log.md) (what Bridge has told us). Read them before designing a feature.
 
 ## Upgrade backlog
 
@@ -108,6 +67,44 @@ Source: https://bridgedataoutput.com/zillowterms (my reading — not legal advic
 5. **Then** — brokerage roster, once the batch lookup is confirmed (see item 7).
 
 Lender compliance helpers are small; fit them into any release with room.
+
+### 1.8.1: onboarding (implemented 2026-10-26, not released)
+
+Align setup with the Bridge flow verified on 2026-10-26 ([docs/bridge-onboarding.md](docs/bridge-onboarding.md)):
+one form, email verification, instant auto-approval, **Server Token** under API Access. Decisions made with Aaron.
+
+1. **Setup guide** (`ezrwp_section_for_zillow_professional_parameters_cb`): "about 5 minutes"; five steps: (1) fill
+   out the form at `/zgdata` — Website = the site where reviews appear (show this site's `home_url()`), Product
+   Name = business name, Product Type = Website, check Zillow Agent Reviews; ignore the "10+ days" note, it's usually
+   approved right away; (2) verify email (check spam), log in; (3) API Access › Server Token › Show Token (not the
+   Client ID, Client Secret, or Browser Token); (4) screenname; (5) Test connection, Save. Plus "Already have a
+   Bridge account? Create New Application, then request Zillow Agent Reviews under Data Access" (unverified past
+   the form; ship anyway). No Usage Description template.
+2. **Token field:** label "Bridge Server Token" (option key unchanged); help text points to API Access › Server
+   Token instead of repeating signup links.
+3. **Screenname field:** accept a full Zillow profile URL and extract the screenname (settings save + Test
+   connection).
+4. **`test_connection()`:** `Invalid access_token format` → "That isn't your Server Token…"; other 401/403 →
+   point to API Access and Data Access › Approved Datasets (drop "approved your access" emphasis); add 429 message;
+   update "Enter your … token first."
+5. **Other strings:** admin-only errors in `fetch_reviews_from_zillow()` (make translatable, "Server Token");
+   `setup_notice()` ("…a free Bridge Server Token (about 5 minutes to get)…"); deactivation survey option.
+6. **README:** How it works step 1; Installation mirrors the guide; rewrite "Where do I get a Bridge API access
+   token?"; new FAQs "Which Bridge token do I use?", "I have more than one website" (one application per site),
+   "I shared or leaked my token" (Regenerate Tokens). No web-designer FAQ until ticket 15282909 is answered.
+   Changelog 1.8.1. Retake screenshot 4 (Settings) in SVN assets.
+7. **Docs:** update the claims table in docs/bridge-onboarding.md.
+8. **Verify:** Test connection with Server/Browser/Client ID/Client Secret tokens, an unknown screenname, and a
+   pasted profile URL; settings page and dashboard notice; PHP lint and Plugin Check.
+   - Done 2026-10-26 via WP-CLI on bstest.local: PHP lint; `normalize_screenname()` (plain, URL, `%20`, query
+     string); Test connection: empty token, malformed token ("isn't your Server Token"), well-formed bad token
+     ("Access token not found" branch), saved token + profile URL (connected), unknown screenname; sanitizer saves
+     `pstalker` from a URL; settings section rendered and checked visually.
+   - Plugin Check run: no findings in changed files (see "Smaller cleanup"). Still to do: dashboard notice on a site without a token; real
+     Client ID/Secret/Browser Token in the browser; 429 message (can't trigger safely).
+   - Also changed: classic widget help text ("Bridge Server Token", correct menu path); README External services
+     wording. Screenname normalization also applies to block/shortcode/Elementor values (in
+     `fetch_reviews_from_zillow()`). Release steps (version bump, changelog date, screenshot 4) per RELEASING.md.
 
 ### Premium positioning (proposal)
 
@@ -142,7 +139,7 @@ rather than the main reason to buy.
 
 ### API quota notes
 
-- 5,000 calls/hour per token. Reviews display: 2 calls (3 with team reviews). Badge: 1. Roster: 1 per agent unless the
+- 5,000 calls/hour per token (§31.3; the FAQ's 1,000/day is the Public Records limit). Reviews display: 2 calls (3 with team reviews). Badge: 1. Roster: 1 per agent unless the
   batch lookup works.
 - Page caches currently absorb most traffic. Browser loading and sitewide badges remove that buffer.
 - On a 429 (rate limited), hide the section or badge for visitors; show admins why.
@@ -187,22 +184,18 @@ rather than the main reason to buy.
 
 ### Smaller cleanup
 
+- **Plugin Check (2026-10-26, after the 1.8.1 changes):** no findings in files changed for 1.8.1. One ERROR,
+  `OffloadedContent` in `public/class-easy-zillow-reviews-template-loader.php` (the Zillow logo `<img>` loaded from
+  zillowstatic.com, since 1.8.0). Defensible as the service's own branding, already disclosed under External
+  services, but bundling the SVG in the plugin would clear the error and the visitor-IP note. Bridge's 2026-02-16
+  reply to the "bundle a smaller logo" email gave only size rules, which reads as OK. Other findings: the known
+  prefix warnings, `load_plugin_textdomain()` discouraged, and the Elementor core hook
+  `elementor/element/should_render_shortcode` (false positive). Hidden files, `.DS_Store`, `.private/`, and dev
+  markdown are flagged only because Plugin Check scans the working folder; the release zip excludes them.
 - Premium settings callbacks are still nested functions in `add_premium_settings()` (same pattern Read More WP fixed); convert to methods.
 - Remaining Plugin Check warnings: naming-prefix and nonce-recommendation warnings in admin partials.
 - Grid layout: switch from floats to CSS Grid. At tablet widths a 3-column grid drops to 2 columns, but the plugin still clears after every third review, so rows read 2+1, 2+1. Remove the clearing `<div style="clear:both">` from `layout_reviews()` (professional and lender) when switching.
 
-## Bridge API notes
+## Bridge API notes and local testing
 
-- Reviewee lookup: `GET https://api.bridgedataoutput.com/api/v2/reviews/reviewee?RevieweeScreenName=…` → `AccountIdReviewee`, `RevieweeFullName`, `RevieweeProfileURL`, `ReviewCount`, `AverageReviewRating`, `ReviewRequestURL`, `RevieweeTitle`, `RevieweeBusinessName`.
-- Reviews: `GET …/api/v2/OData/reviews/Review?$filter=AccountIdReviewee eq 'ID'&$orderby=ReviewDate desc&$top=N`. Default page is 10 in no particular order, so always send `$orderby` and `$top`.
-- Team reviews: `$filter=AccountIdReviewee eq 'ID' or TeamLeadAccountId eq 'ID'`; batch name/profile lookup via `…/OData/reviews/Reviewee?$filter=AccountIdReviewee eq 'a' or …`.
-- Auth: `Authorization: Bearer <token>` header works (keeps the token out of URLs).
-- Data quirks: some records have shifted columns (service description in `FreeFormLocation`, year in `ServiceProviderDesc`); `FreeFormLocation` includes the street address (never display it).
-- Public test screennames: `missypittman` (56 reviews), `jeffreysellyohome` (team lead with team reviews).
-
-## Local testing tips
-
-- Site: http://bstest.local (Local by Flywheel). MySQL socket: `~/Library/Application Support/Local/run/8aQ1bxoAV/mysql/mysqld.sock`.
-- WP-CLI: `php -d mysqli.default_socket=<socket> wp-cli.phar --path="/Users/aaronbolton/Local Sites/bstest/app/public" …`
-- Build the block: `npm install && npm run build` (outputs to `gutenberg/build/`).
-- The "Test connection" button on the settings page checks Bridge and lender credentials without saving.
+Moved to [docs/bridge-api.md](docs/bridge-api.md) and [AGENTS.md](AGENTS.md).

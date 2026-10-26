@@ -232,7 +232,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Admin_Settings' ) ) {
             // Professional Reviews
             $settings[] = array(
                 'id'        => 'ezrwp_bridge_token_1', // id. Used only internally
-                'title'     => __( 'Bridge API Access Token', 'easy-zillow-reviews' ), // title
+                'title' => __( 'Bridge Server Token', 'easy-zillow-reviews' ), // title
                 'callback'  => 'ezrwp_bridge_token_text_field_cb', // callback
                 'tab'       => 'ezrwp_professional_reviews', // page
                 'section'   => 'ezrwp_section_for_zillow_professional_parameters'

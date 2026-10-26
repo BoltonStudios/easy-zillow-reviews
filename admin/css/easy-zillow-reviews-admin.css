@@ -25,3 +25,7 @@
   background: #fff;
   border-left: 4px solid #72aee6;
 }
+.ezrwp-setup-guide ul {
+  list-style: disc;
+  margin: 4px 0 4px 18px;
+}

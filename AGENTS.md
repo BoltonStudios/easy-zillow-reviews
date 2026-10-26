@@ -32,6 +32,12 @@ page and a plain fetch returns nothing. Don't guess at section numbers or limits
 - Rate limit: 5,000 Reviews API calls/hour per token (§31.3).
 - Zillow logo: primary logo > 24px tall (plugin uses 115x25).
 
+## Releases
+
+- When committing changes meant for a release, either bump the version (3 places; see RELEASING.md) in the same
+  commit or **tell Aaron plainly that the version is still the old one**. An unbumped zip uploaded to Freemius
+  prompts to override the existing release.
+
 ## Keeping these notes current
 
 - New fact from Bridge/Zillow → dated entry in `docs/bridge-support-log.md`; raw email in `.private/emails/`.

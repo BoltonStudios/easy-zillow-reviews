@@ -23,6 +23,9 @@ Release workflow. Not shipped: excluded from zips by `.gitattributes`.
 
 - [ ] On GitHub, download the repo zip (Code › Download ZIP). `.gitattributes` excludes dev files.
 - [ ] Upload it to Freemius as the new version. Each version number can only be used once in Freemius.
+      **If Freemius says "Version X already exists. Would you like to override the release?", stop and answer No.**
+      The zip wasn't bumped (step 1). Overriding replaces the released build under the old number, and sites that
+      already have that version never receive it (happened 2026-10-26: 1.8.1 code went out as 1.8.0 Premium).
 - [ ] Download the **free** and **premium** zips from Freemius into `~/Downloads`
       (`easy-zillow-reviews-free.X.Y.Z.zip`, `easy-zillow-reviews-premium.X.Y.Z.zip`).
 - [ ] Test on staging; purge WP Engine's cache after deploying (asset URLs keep `?ver=X.Y.Z`).

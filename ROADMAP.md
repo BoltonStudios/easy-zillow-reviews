@@ -13,7 +13,7 @@ _Last updated: 2026-10-26_ (terms, Bridge API notes, and support answers moved t
 | 1.7.0 | Released 2026-10-23 | Setup guide + "Test connection", "Reviews on Zillow" label, fixed Zillow logo, block apiVersion 3 + live preview, Premium team reviews + carousel, WP 6.3 / PHP 7.4 minimums |
 | 1.7.1 | Released 2026-10-25 | Removed the "Reviews on Zillow" heading (fine print only when the profile card and "View all" link are both hidden) |
 | 1.8.0 | Released 2026-10-26 (README changelog) | Elementor widget (free) with per-widget show/hide, tablet/phone columns, style controls, Premium section for free users |
-| 1.8.1 | Implemented 2026-10-26, not released | Onboarding rewrite from the verified Bridge signup flow; see "1.8.1: onboarding" below |
+| 1.8.1 | Version bumped 2026-10-26; uploading to Freemius | Onboarding rewrite from the verified Bridge signup flow; see "1.8.1: onboarding" below |
 
 Before releasing 1.7.0 (1.6.5 was never released, so its fixes ship with 1.7.0; wordpress.org sites update
 from 1.6.4 straight to 1.7.0, so test both versions' changes):

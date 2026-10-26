@@ -5,7 +5,7 @@ Tags: zillow, reviews, real estate, elementor, slider
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -165,6 +165,7 @@ Terms: [Zillow API Terms of Use](https://bridgedataoutput.com/zillowterms) (Revi
 == Changelog ==
 
 = 1.8.1 =
+* Date Released: 2026-10-26
 * Improvement: Clearer setup guide that matches Bridge's current sign-up: one form, email verification, and the Server Token, usually in about five minutes.
 * Improvement: "Test connection" explains when you've pasted a Bridge Client ID or Client Secret instead of the Server Token, and when Bridge is limiting requests.
 * Improvement: The screenname field accepts a full Zillow profile address.

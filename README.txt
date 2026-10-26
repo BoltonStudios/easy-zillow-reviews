@@ -152,7 +152,7 @@ Terms: [Zillow API Terms of Use](https://bridgedataoutput.com/zillowterms) (Revi
 == Changelog ==
 
 = 1.8.0 =
-* Date Released: Unreleased
+* Date Released: 2026-10-26
 * New Feature: Zillow Reviews widget for Elementor, with a live preview, style controls, and a dynamic tag option for the screenname. Supports the slider, team reviews, and lender reviews in Premium.
 * New Feature: Show or hide the date, stars, reviewer summary, profile card, "View all" link, Zillow logo, and disclaimer for each Elementor widget.
 * New Feature: Separate column counts for tablets and phones in the Elementor widget.

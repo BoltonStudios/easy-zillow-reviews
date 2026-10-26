@@ -572,6 +572,39 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Elementor_Widget' ) ) {
                 )
             );
 
+            // The five stars are one line of icon characters, so letter-spacing spaces them out.
+            $this->add_responsive_control(
+                'star_spacing',
+                array(
+                    'label'      => esc_html__( 'Spacing', 'easy-zillow-reviews' ),
+                    'type'       => \Elementor\Controls_Manager::SLIDER,
+                    'size_units' => array( 'px', 'em' ),
+                    'range'      => array(
+                        'px' => array( 'min' => -5, 'max' => 20 ),
+                        'em' => array( 'min' => -0.3, 'max' => 1, 'step' => 0.05 ),
+                    ),
+                    'selectors'  => array(
+                        '{{WRAPPER}} .ezrwp-col .ezrwp-stars::before' => 'letter-spacing: {{SIZE}}{{UNIT}};',
+                    ),
+                )
+            );
+
+            $this->add_responsive_control(
+                'star_space_below',
+                array(
+                    'label'      => esc_html__( 'Space Below', 'easy-zillow-reviews' ),
+                    'type'       => \Elementor\Controls_Manager::SLIDER,
+                    'size_units' => array( 'px', 'em' ),
+                    'range'      => array(
+                        'px' => array( 'min' => 0, 'max' => 40 ),
+                        'em' => array( 'min' => 0, 'max' => 3, 'step' => 0.1 ),
+                    ),
+                    'selectors'  => array(
+                        '{{WRAPPER}} .ezrwp-col .ezrwp-stars' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                    ),
+                )
+            );
+
             $this->end_controls_section();
 
             // Reviewer and date.

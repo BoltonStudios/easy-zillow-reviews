@@ -16,7 +16,7 @@ Show your Zillow reviews on WordPress with a block, an Elementor widget, a widge
 Display Zillow reviews for agents, teams, and lenders.
 
 = How it works =
-1. Connect your Zillow profile. Get a free [Bridge](https://bridgedataoutput.com/zgdata) token in about five minutes; the setup guide shows each step and tests the connection.
+1. Connect your Zillow profile with a free [Bridge](https://bridgedataoutput.com/zgdata) token. The setup guide shows each step and tests the connection.
 2. Pick a layout: list, grid, or slider (Premium).
 3. Add reviews with a block, Elementor widget, widget, or shortcode.
 

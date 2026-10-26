@@ -71,6 +71,8 @@ Source: https://bridgedataoutput.com/zillowterms (my reading — not legal advic
   appears to date from Zillow's legacy API, which returned rating images. Best effort: draw the numeric rating as
   plain stars, with no other badge or graphic. Bridge support has said a reasonable best effort on compliance
   "should be fine." Builder style controls (star color/size) only restyle those stars.
+- **Logo size** (Bridge support, 2026-10-25): the Zillow house logo must be at least 58px tall; the primary logo
+  (house + name) must be more than 24px tall. The plugin shows the primary logo SVG from zillowstatic.com at 147x32.
 - **Rate limit:** 5,000 Reviews API calls/hour per token (§31.3). Each display uses 2 calls (3 with team reviews).
 - Keep Zillow data clearly attributed to Zillow (§5.5): don't mix it with other review sources in one feed.
 

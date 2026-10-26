@@ -193,10 +193,11 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Template_Loader' ) ) {
 
             $zillow_logo = '';
             if( $hide_zillow_logo == false ){
+                // Zillow's primary logo (house + name). Bridge requires it to be more than 24px tall.
                 $zillow_logo = '
                     <p class="ezrwp-attribution">
                         <a href="'. esc_url( $profile_url ) . '" class="z-profile-link" target="_blank" rel="nofollow">
-                            <img src="https://www.zillowstatic.com/static/logos/Zillowlogo_200x50.gif" width="200" height="50" alt="Real Estate on Zillow">
+                            <img src="https://www.zillowstatic.com/s3/pfs/static/z-logo-default.svg" width="147" height="32" alt="Real Estate on Zillow">
                         </a>
                     </p>';
             }

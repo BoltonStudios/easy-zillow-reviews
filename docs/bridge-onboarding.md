@@ -182,8 +182,8 @@ So `test_connection()` can tell users what's wrong. Record HTTP code and respons
 
 **Improve `test_connection()`:** for both Client ID and Client Secret the message currently says "make sure ... Bridge
 has approved your access", which sends users looking for an approval problem that doesn't exist. When the response
-contains `Invalid access_token format`, say instead: "That isn't your Server Token. In Bridge, open API Access and
-click Show Token next to **Server Token**." Keep the current message for other 401/403 errors.
+contains `Invalid access_token format`, say instead: "Error: Invalid access token format. In your Bridge dashboard, open API Access and
+click "Show Token" next to Server Token, then copy the whole token." (Done in 1.8.1.) Keep the current message for other 401/403 errors.
 
 ## Then update
 

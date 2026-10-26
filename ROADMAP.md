@@ -84,7 +84,7 @@ one form, email verification, instant auto-approval, **Server Token** under API 
    Token instead of repeating signup links.
 3. **Screenname field:** accept a full Zillow profile URL and extract the screenname (settings save + Test
    connection).
-4. **`test_connection()`:** `Invalid access_token format` → "That isn't your Server Token…"; other 401/403 →
+4. **`test_connection()`:** `Invalid access_token format` → "Error: Invalid access token format. In your Bridge dashboard…"; other 401/403 →
    point to API Access and Data Access › Approved Datasets (drop "approved your access" emphasis); add 429 message;
    update "Enter your … token first."
 5. **Other strings:** admin-only errors in `fetch_reviews_from_zillow()` (make translatable, "Server Token");
@@ -97,7 +97,7 @@ one form, email verification, instant auto-approval, **Server Token** under API 
 8. **Verify:** Test connection with Server/Browser/Client ID/Client Secret tokens, an unknown screenname, and a
    pasted profile URL; settings page and dashboard notice; PHP lint and Plugin Check.
    - Done 2026-10-26 via WP-CLI on bstest.local: PHP lint; `normalize_screenname()` (plain, URL, `%20`, query
-     string); Test connection: empty token, malformed token ("isn't your Server Token"), well-formed bad token
+     string); Test connection: empty token, malformed token ("Invalid access token format"), well-formed bad token
      ("Access token not found" branch), saved token + profile URL (connected), unknown screenname; sanitizer saves
      `pstalker` from a URL; settings section rendered and checked visually.
    - Plugin Check run: no findings in changed files (see "Smaller cleanup"). Still to do: dashboard notice on a site without a token; real

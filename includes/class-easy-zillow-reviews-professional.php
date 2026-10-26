@@ -146,7 +146,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Professional' ) ) {
 
             if( ( $code === 401 || $code === 403 ) && stripos( $message, 'Invalid access_token format' ) !== false ){
                 // Bridge's response when the Client ID or Client Secret is pasted instead of a token.
-                $message = __( 'That isn\'t your Server Token. In your Bridge dashboard, open API Access and click "Show Token" next to Server Token, then copy the whole token.', 'easy-zillow-reviews' );
+                $message = __( 'Error: Invalid access token format. In your Bridge dashboard, open API Access and click "Show Token" next to Server Token, then copy the whole token.', 'easy-zillow-reviews' );
             } elseif( $code === 401 || $code === 403 ){
                 $message = __( 'Bridge did not accept this token. Copy the Server Token again from API Access in your Bridge dashboard, and check that Zillow Agent Reviews is listed under Data Access › Approved Datasets.', 'easy-zillow-reviews' ) . ' (' . $message . ')';
             } elseif( $code === 429 ){

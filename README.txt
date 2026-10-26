@@ -1,6 +1,5 @@
 === Easy Zillow Reviews ===
 Contributors: boltonstudios
-Donate link: https://ko-fi.com/boltonstudios
 Tags: zillow, reviews, real estate, elementor, slider
 Requires at least: 6.3
 Tested up to: 7.1
@@ -47,12 +46,6 @@ A native **Zillow Reviews** widget for Elementor 3.5 or later (Elementor Pro not
 * Layout and show/hide options for each widget, with separate columns for tablets and phones.
 * Style controls for the review text, stars, and dates, using your global colors and fonts.
 * Premium options (slider, team reviews, and lender reviews) in the same widget.
-
-= Supporting Easy Zillow Reviews =
-
-If you found this free plugin helpful, you can support the developer by upgrading to the Premium Version or making a donation:
-
-* [Buy me a coffee](http://ko-fi.com/boltonstudios)
 
 = Shortcode =
 

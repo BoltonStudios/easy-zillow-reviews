@@ -24,19 +24,6 @@ Reviews come from Zillow's official APIs: the **Reviews API** (through Bridge In
 
 View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 
-= Elementor widget =
-
-Easy Zillow Reviews includes a native **Zillow Reviews** widget for Elementor. You don't need a shortcode, and Elementor Pro is not required.
-
-* Search for "Zillow" in the Elementor panel and drag the widget onto your page.
-* See your actual Zillow reviews in the editor as you change settings.
-* Choose the layout, number of reviews, excerpt length, and columns, with separate column counts for tablets and phones.
-* Show or hide the date, stars, reviewer summary, profile card, "View all" link, Zillow logo, and disclaimer for each widget.
-* Style the review text, quote marks, stars, reviewer, and date on the Style tab, using your Elementor global colors and fonts.
-* Use a dynamic tag for the Zillow screenname, for example to show each agent's reviews from a custom field.
-* Premium options (slider, team reviews, and lender reviews) appear in the same widget.
-* Works with Elementor 3.5 or later. Reviews are never stored in Elementor's element cache, as Zillow's terms require.
-
 = Features (Free) =
 * Display the latest reviews for real estate agents.
 * Show reviews from multiple profiles.
@@ -52,6 +39,19 @@ Easy Zillow Reviews includes a native **Zillow Reviews** widget for Elementor. Y
 * Lender, loan officer, and company profile reviews.
 * Priority support.
 * [Get the Premium Version](https://www.boltonstudios.com/easy-zillow-reviews/).
+
+= Elementor widget =
+
+Easy Zillow Reviews includes a native **Zillow Reviews** widget for Elementor. You don't need a shortcode, and Elementor Pro is not required.
+
+* Search for "Zillow" in the Elementor panel and drag the widget onto your page.
+* See your actual Zillow reviews in the editor as you change settings.
+* Choose the layout, number of reviews, excerpt length, and columns, with separate column counts for tablets and phones.
+* Show or hide the date, stars, reviewer summary, profile card, "View all" link, Zillow logo, and disclaimer for each widget.
+* Style the review text, quote marks, stars, reviewer, and date on the Style tab, using your Elementor global colors and fonts.
+* Use a dynamic tag for the Zillow screenname, for example to show each agent's reviews from a custom field.
+* Premium options (slider, team reviews, and lender reviews) appear in the same widget.
+* Works with Elementor 3.5 or later. Reviews are never stored in Elementor's element cache, as Zillow's terms require.
 
 = Supporting Easy Zillow Reviews =
 
@@ -127,19 +127,13 @@ No. Zillow's terms require that reviews are not selected by rating; the plugin a
 
 == External services ==
 
-**Zillow Reviews API (Bridge Interactive)** fetches agent reviews.
+**Zillow** provides the reviews and the logo:
 
-* Sends your Bridge access token and Zillow screenname when a page shows reviews or you click "Test connection".
-* [Zillow API Terms of Use](https://bridgedataoutput.com/zillowterms), [Zillow Group Privacy Notice](https://www.zillowgroup.com/zg-privacy-policy/)
+* **Reviews API** (through Bridge Interactive) fetches agent reviews. Sends your Bridge access token and Zillow screenname when a page shows reviews or you click "Test connection".
+* **Mortgages API** (Premium) fetches lender reviews. Sends your Partner ID, NMLS#, and company name (if set) when a page shows lender reviews or you click "Test connection".
+* **Zillow logo.** Visitors' browsers load the logo from zillowstatic.com on pages that show it, which shares their IP address with Zillow. Turn it off in Settings › General.
 
-**Zillow Mortgages API** (Premium) fetches lender reviews.
-
-* Sends your Partner ID, NMLS#, and company name (if set) when a page shows lender reviews or you click "Test connection".
-* [Zillow Terms of Use](https://www.zillow.com/z/corp/terms/), [Zillow Group Privacy Notice](https://www.zillowgroup.com/zg-privacy-policy/)
-
-**Zillow logo.** Visitors' browsers load the logo from zillowstatic.com on pages that show it, which shares their IP address with Zillow. Turn it off in Settings › General.
-
-* [Zillow Terms of Use](https://www.zillow.com/z/corp/terms/), [Zillow Group Privacy Notice](https://www.zillowgroup.com/zg-privacy-policy/)
+Terms: [Zillow API Terms of Use](https://bridgedataoutput.com/zillowterms) (Reviews API), [Zillow Terms of Use](https://www.zillow.com/z/corp/terms/) (Mortgages API and logo). Privacy: [Zillow Group Privacy Notice](https://www.zillowgroup.com/zg-privacy-policy/) (all three).
 
 **Freemius** handles licensing, updates, and optional usage data.
 

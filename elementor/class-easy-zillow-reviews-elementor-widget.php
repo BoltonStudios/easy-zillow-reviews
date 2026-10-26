@@ -265,7 +265,11 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Elementor_Widget' ) ) {
          */
         private function register_premium_controls(){
 
-            $upgrade_url = function_exists( 'ezrwp_fs' ) ? ezrwp_fs()->get_upgrade_url() : '';
+            // Freemius only adds its pricing page after the opt-in screen has been answered; until then the page doesn't exist.
+            $upgrade_url = 'https://www.boltonstudios.com/easy-zillow-reviews/';
+            if( function_exists( 'ezrwp_fs' ) && ! ezrwp_fs()->is_activation_mode() && ezrwp_fs()->is_pricing_page_visible() ){
+                $upgrade_url = ezrwp_fs()->get_upgrade_url();
+            }
 
             $this->start_controls_section(
                 'section_premium',
@@ -277,7 +281,7 @@ if ( ! class_exists( 'Easy_Zillow_Reviews_Elementor_Widget' ) ) {
                 array(
                     'type' => \Elementor\Controls_Manager::RAW_HTML,
                     'raw'  => '<p>' . esc_html__( 'Easy Zillow Reviews Premium adds a slider layout, team members\' reviews, and lender and loan officer reviews.', 'easy-zillow-reviews' ) . '</p>'
-                        . '<p><a href="' . esc_url( $upgrade_url ? $upgrade_url : 'https://www.boltonstudios.com/easy-zillow-reviews/' ) . '" target="_blank" rel="noopener">' . esc_html__( 'Learn about Premium', 'easy-zillow-reviews' ) . '</a></p>',
+                        . '<p><a href="' . esc_url( $upgrade_url ) . '" target="_blank" rel="noopener">' . esc_html__( 'Learn about Premium', 'easy-zillow-reviews' ) . '</a></p>',
                 )
             );
 

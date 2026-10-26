@@ -41,17 +41,12 @@ View the [Demo](https://www.boltonstudios.com/easy-zillow-reviews/).
 * [Get the Premium Version](https://www.boltonstudios.com/easy-zillow-reviews/).
 
 = Elementor widget =
+A native **Zillow Reviews** widget for Elementor 3.5 or later (Elementor Pro not required):
 
-Easy Zillow Reviews includes a native **Zillow Reviews** widget for Elementor. You don't need a shortcode, and Elementor Pro is not required.
-
-* Search for "Zillow" in the Elementor panel and drag the widget onto your page.
-* See your actual Zillow reviews in the editor as you change settings.
-* Choose the layout, number of reviews, excerpt length, and columns, with separate column counts for tablets and phones.
-* Show or hide the date, stars, reviewer summary, profile card, "View all" link, Zillow logo, and disclaimer for each widget.
-* Style the review text, quote marks, stars, reviewer, and date on the Style tab, using your Elementor global colors and fonts.
-* Use a dynamic tag for the Zillow screenname, for example to show each agent's reviews from a custom field.
-* Premium options (slider, team reviews, and lender reviews) appear in the same widget.
-* Works with Elementor 3.5 or later. Reviews are never stored in Elementor's element cache, as Zillow's terms require.
+* Live preview of your reviews in the editor.
+* Layout and show/hide options for each widget, with separate columns for tablets and phones.
+* Style controls for the review text, stars, and dates, using your global colors and fonts.
+* Premium options (slider, team reviews, and lender reviews) in the same widget.
 
 = Supporting Easy Zillow Reviews =
 

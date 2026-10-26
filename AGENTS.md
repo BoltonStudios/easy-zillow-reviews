@@ -34,6 +34,8 @@ page and a plain fetch returns nothing. Don't guess at section numbers or limits
 
 ## Releases
 
+- For wording requests, change only what was asked (e.g., "remove the time" means delete those words, not rewrite
+  the sentence). Offer a rewrite separately if one seems needed.
 - When committing changes meant for a release, either bump the version (3 places; see RELEASING.md) in the same
   commit or **tell Aaron plainly that the version is still the old one**. An unbumped zip uploaded to Freemius
   prompts to override the existing release.
